@@ -73,6 +73,20 @@
 
 ## 2. 四種平行工作方式的選型
 
+> **釐清框：Workflow 與 Worktree 不是同一件事（常見混淆）**
+>
+> 兩者層次完全不同，而且**正交、常一起用**：
+>
+> | | Workflow（工作流） | Worktree（工作樹） |
+> |---|---|---|
+> | 本質 | Claude 寫的**編排腳本**，協調多個 agent 分階段平行跑 | **git 功能**：獨立的工作目錄 + branch，共用同一份 repo 歷史 |
+> | 解決什麼 | 誰做什麼、什麼順序、結果怎麼彙整（**協調**） | 平行工作各改各的、不互相覆蓋（**檔案隔離**） |
+> | 層次 | 工作協調層 | 檔案系統 / 版本控制層 |
+> | 誰在用 | `/deep-research`、`/batch`、ultracode effort | `claude --worktree`、subagent 的 `isolation: worktree`、`/batch` 每個單元 |
+> | 產物 | 彙整後的結果（報告、多個 PR） | 一個 `.claude/worktrees/<name>/` 目錄與一條 branch |
+>
+> 比喻：**Workflow = 工頭**（分派任務、收攏結果）；**Worktree = 每個工人的工作檯**（東西不混在一起）。一個 workflow 編排的多個 agent，可以各自在一個 worktree 裡改檔案——workflow 負責協調，worktree 負責隔離。
+
 > TODO：比較表 —— 誰決定下一步、中間結果放哪、檔案隔離方式、可否重播、規模、如何追蹤。
 
 ---
