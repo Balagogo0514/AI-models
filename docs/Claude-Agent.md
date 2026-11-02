@@ -67,7 +67,7 @@
 - **跟 code review 的關係**：同樣是拿來**自建應用**的，不是互動式 review 的入口。
 - **與 Tool Runner 的區別**：Agent SDK 是「整套 Claude Code 當函式庫」；Tool Runner 只是 API SDK 裡幫你跑工具迴圈的小助手，兩者不同套件。
 
-> **一句話定調**：做 code review，重點看 **1.1 Subagents**（同一 session 分工審查）、**1.2 Agent View**（多個獨立 session 並行追蹤）、**1.4 Workflows**（`/code-review ultra` 背後就是雲端多 agent）。1.3 用於需要協作的複雜任務；1.5／1.6 屬於 API 自建 agent，本文其餘章節不深入。
+> **一句話定調**：做 code review，重點看 **1.1 Subagents**（同一 session 分工審查）與 **1.2 Agent View**（多個獨立 session 並行追蹤）；另有內建的 **`/code-review ultra`**（雲端多 reviewer，見第 3 節）。**1.4 Workflows** 適合大規模掃描、**1.3 Agent teams** 用於需要協作的複雜任務；**1.5／1.6** 屬於 API 自建 agent，本文其餘章節不深入。
 
 ---
 
