@@ -1415,6 +1415,7 @@ Claude Code 提供三層程式碼審查，適用不同情境：
 /code-review low                      # 低 effort：少量高信心 findings
 /code-review medium
 /code-review high                     # 高 effort：更廣覆蓋，可能含不確定 findings
+/code-review xhigh                    # 介於 high 與 max 之間
 /code-review max
 /code-review ultra                    # 觸發雲端深度審查（見第十二章）
 /code-review --fix                    # 審查後自動套用 findings 到工作目錄
@@ -1422,6 +1423,9 @@ Claude Code 提供三層程式碼審查，適用不同情境：
 /code-review --fix --comment          # 同時套用並發 PR comment
 /code-review high --fix <path>        # 審查指定路徑
 /code-review ultra --fix              # 雲端深度審查後套用 findings
+/code-review --max-findings 5         # 最多回報 5 個 findings
+/code-review --max-findings all       # 回報全部 findings
+/code-review --max-findings default   # 恢復預設的回報數量
 ```
 
 #### Effort 等級說明
@@ -1429,8 +1433,22 @@ Claude Code 提供三層程式碼審查，適用不同情境：
 | Effort | Findings 特性 |
 |--------|------|
 | `low` / `medium` | 較少、信心高的 findings |
-| `high` → `max` | 較廣覆蓋，可能包含不確定的 findings |
-| 未指定 | 使用目前 session 的 effort 設定 |
+| `high` → `xhigh` → `max` | 較廣覆蓋，可能包含不確定的 findings |
+| 未指定 | 沿用上次輸入的 level（`/code-review` 說明：未指定 level 時重用上次的設定）|
+
+> `max` 是成本最高的等級，會啟動大量 reviewer subagent，建議只在確實需要時使用。
+
+#### `--max-findings`：限制回報數量
+
+| 值 | 效果 |
+|------|------|
+| `<n>`（正整數）| 最多回報 n 個 findings |
+| `all` | 回報全部 findings |
+| `default` | 恢復預設的回報數量 |
+
+- 此設定**會持續生效**：設定後之後的 `/code-review` 都沿用，直到再次傳入 `--max-findings default` 才恢復。
+- 與 level 不同，它控制的是「回報幾個」，而不是「審得多深」；可搭配使用，例如 `/code-review high --max-findings 10`。
+- 本節 `xhigh` 與 `--max-findings` 取自 `/code-review` skill 的說明；尚未在 v2.1.316 實際執行驗證各選項行為。
 
 #### 審查目標
 

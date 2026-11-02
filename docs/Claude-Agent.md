@@ -153,6 +153,39 @@
 
 > ⚠️ **文件 vs 程式碼**：`/code-review` 與 subagent 預設審的是**程式碼 diff**。若審查對象是 Markdown／文件，審查會偏向**內容與事實查核**，而非程式邏輯；此時手動派 subagent 分檔、在 prompt 裡講清楚「查事實正確性」會比 `/code-review` 更貼切。
 
+### 3.5 其他 review 相關指令總覽
+
+除了 `/code-review`，Claude Code 還有幾個與審查相關的入口。完整語法與選項見 `Claude-Code-CLI.md` 第十二章與第十五章。
+
+**Session 內斜線指令**
+
+| 指令 | 用途 | 備註 |
+|------|------|------|
+| `/review [PR]` | 在本地 session 審查 PR | 單次審查，計入一般用量 |
+| `/security-review` | 對目前 branch 的改動做安全漏洞分析 | 專攻安全，不是通用 review |
+| `/simplify [target]` | 找 cleanup 機會（reuse、簡化、效率）並自動套用 | **不找 correctness bug** |
+| `/ultrareview [PR]` | 雲端多 agent 深度審查 | 舊名，建議改用 `/code-review ultra` |
+| `/autofix-pr [prompt]` | 啟動 web session 監控 PR，自動推送修復 | 偏「修」而非「審」 |
+| `/diff` | 互動式 diff 檢視器 | 適合自己先看一遍 |
+| `/verify` | 啟動 app 觀察行為，確認改動真正生效 | 驗證執行結果，不是讀程式碼 |
+
+**命令列（非互動，適合 CI）**：`claude ultrareview [target]`，可加 `--json`（輸出原始 bugs.json）、`--post`（把 findings 貼回 PR，僅限 PR 目標）、`--timeout <分鐘>`（預設 45）。
+
+**GitHub 端（Team / Enterprise）**：Code Review GitHub App 會自動審 PR，PR 頂層留言 `@claude review`（審查並訂閱後續 push）或 `@claude review once`（只審一次）可手動觸發；findings 分 🔴 Important、🟡 Nit、🟣 Pre-existing 三類，可用 repo 根目錄的 `REVIEW.md` 調整審查行為。
+
+**依情境選擇**
+
+| 情境 | 建議 |
+|------|------|
+| 開發途中快速看一下 | `/code-review`（可加 level）或 `/review` |
+| 合併前重大變更 | `/code-review ultra` |
+| 只擔心安全 | `/security-review` |
+| 想整理程式碼、不找 bug | `/simplify` |
+| 要自動修 | `/code-review --fix` 或 `/autofix-pr` |
+| PR 要全自動審 | GitHub App（`@claude review`）|
+
+> 以上依 `Claude-Code-CLI.md` 的記載整理，尚未逐一實際執行驗證；你另外安裝的 plugin 可能提供更多 review 指令，可用 `/plugin` 或 `/skills` 查看。
+
 ---
 
 ## 4. 如何追蹤與彙整
