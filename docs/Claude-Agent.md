@@ -157,7 +157,54 @@
 
 ## 4. 如何追蹤與彙整
 
-> TODO：狀態圖示、peek 面板、task 通知、`/tasks` 與 Agent View、worktree 清理。
+平行工作最怕「派出去就看不到了」。依方式不同，追蹤入口也不同。
+
+### 4.1 追蹤入口一覽
+
+| 想看什麼 | 用哪個 |
+|------|------|
+| session 內執行中的 subagent | `/agents`（Running 分頁） |
+| 背景 session（含 Agent View 派發的）| `claude agents` 管理畫面 |
+| 背景 task | `/tasks`（別名 `/bashes`） |
+| workflow 進度 | `/workflows` 進度檢視器 |
+| 完成 / 待回應 | **task 通知**會主動回到 session，不必一直盯 |
+
+### 4.2 Agent View 的狀態與 peek
+
+`claude agents` 是多背景 session 的統一管理台，每列一個 session：
+
+| 狀態 | 意義 |
+|------|------|
+| Working（動畫 `✽`） | 正在執行工具或生成回應 |
+| Needs input（黃） | 等你回應問題或授權 |
+| Idle（暗） | 等待下一個指令 |
+| Completed（綠 `✻`） | 成功完成 |
+| Failed（紅） | 錯誤結束 |
+| Stopped（灰） | 被手動停止 |
+| `/loop` 睡眠中（`✢`） | 顯示執行次數與下次觸發倒數 |
+
+- 選一列按 `Space` 開 **peek 面板**：看最新輸出、待決問題、已開 PR，可**直接輸入回覆**而不必 attach。
+- **PR 狀態顏色**：黃＝等 CI／review 或 CI 失敗；綠＝通過且無阻擋；紫＝已合併；灰＝draft 或已關閉。
+- 完整鍵盤快捷鍵、篩選語法（`a:<name>`、`s:<state>`、`#<number>`）見 `Claude-Code-CLI.md` 第十四章。
+
+### 4.3 彙整結果
+
+- **Subagents**：各 subagent 跑完**回報給主 session**，由主 Claude 收攏、去重、排序，形成一份整體結論——適合把「每檔一份 findings」併成一張清單。
+- **Agent View**：各 session 結果留在各自的 session；你在管理畫面逐一 peek，或 attach 進去細看。
+- **Workflows**：中間結果在腳本變數裡，最後**彙整成一份報告**（例如 `/deep-research` 會附引用、過濾未通過交叉驗證的聲明）。
+- **`/code-review ultra`**：findings 以通知回到 session，每個含檔案位置與問題說明，可直接請 Claude 修。
+
+### 4.4 Worktree 清理
+
+當 agent 各自在 worktree 工作，收尾時：
+
+| 狀況 | 行為 |
+|------|------|
+| 無未提交變更、無新 commit | 自動刪除 worktree 與 branch |
+| 有變更或新 commit | 詢問是否保留 |
+| 非互動模式（`-p`）| 不自動清理，需手動 `git worktree remove` |
+
+Subagent 建立的 worktree 超過 `cleanupPeriodDays` 天、且無未提交變更或未推送 commit，會自動清除。細節見 `Claude-Code-CLI.md` 第十章（Worktree 使用方法）。
 
 ---
 
