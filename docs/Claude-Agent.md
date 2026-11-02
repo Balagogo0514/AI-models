@@ -102,10 +102,56 @@
 
 ## 3. Code Review 的多 Agent 做法
 
-> TODO：
-> - `/code-review ultra`（雲端多 reviewer + 每個 finding 獨立驗證）
-> - 手動派多個 subagent 分檔／分模組審查
-> - 各自的追蹤方式與適用時機
+「多個 agent 同時審查不同部分、而且能追蹤」有三條路：內建的雲端深度審查、手動分檔派 subagent、以及搭配 Agent View 做並行追蹤。先給結論，再逐一說明。
+
+> **速選**：合併前對重大變更深度把關 → **3.1 `/code-review ultra`**；想自己控制「誰審哪個檔案」並行跑 → **3.2 手動派 subagent**；多個獨立審查任務要用統一畫面盯著 → **3.3 Agent View**。
+
+### 3.1 `/code-review ultra`（雲端多 reviewer，內建首選）
+
+- **做什麼**：在 Claude Code on the web 的雲端沙箱裡，啟動**一批 reviewer agent 平行審查**你的 branch 或 PR，每個回報的問題都經**獨立 agent 驗證**，只回報真實存在的（降低誤報）。
+- **怎麼啟動**：
+  ```text
+  /code-review ultra           # 審目前 branch vs 預設 branch（含未提交變更）
+  /code-review ultra 1234      # 審 PR #1234
+  ```
+  非互動（CI / script）：`claude ultrareview 1234 --json`。
+- **追蹤**：findings 以**通知**回到 session；用 `/tasks` 看進度或停止。
+- **成本 / 條件**：需 claude.ai 帳號；約 5–10 分鐘；Pro / Max 各有 3 次免費，用完以 usage credits 計費（約 $5–$20／次）。
+- **適合**：合併前對**重大變更**的深度把關。這是「多 agent code review」最省事、最對味的選擇——你不用自己分工。
+
+### 3.2 手動派多個 subagent 分檔／分模組審查
+
+當你想**明確控制「誰審哪個檔案」**、repo 太大不好一次打包、或想在本機 session 內並行跑時，用這條路。
+
+- **做什麼**：一次派出多個背景 subagent，每個負責一個檔案或模組，各自跑完回報，再由主 Claude 彙整。
+- **怎麼啟動**：
+  - 在 session 內直接要求：「平行派三個 subagent，分別審 `a.ts`、`b.ts`、`c.ts`，各自回報問題」。主 Claude 會在**同一回合並行啟動**，而不是排隊。
+  - 或寫一個自訂 reviewer subagent（`.claude/agents/security-reviewer.md`，`tools: Read, Grep, Glob`），讓每個分身都用同一套審查準則。
+- **隔離**：純審查是**唯讀**，通常**不需要** worktree；只有當你要 agent 同時「審完順手改／修」時，才讓每個 agent 各開一個 `isolation: worktree` 避免改檔衝突。
+- **追蹤**：`/agents` 看執行中的 subagent；背景任務完成會通知；也可用 `/tasks`。
+- **適合**：分工清楚、各檔案相對獨立的審查；或想把審查結果**留在主 session** 一起討論。
+
+### 3.3 搭配 Agent View 做並行追蹤
+
+如果同時有**多個彼此無關**的審查／修復任務（例如「A 審前端、B 審後端、C 查 CI 失敗」），用 `claude agents` 把它們派成各自獨立的背景 session。
+
+- **做什麼**：每個任務一個完整 session，各自可取得 worktree。
+- **追蹤**：統一管理畫面顯示每個 session 的狀態（Working / Needs input / Completed / Failed）、PR 狀態顏色；按 `Space` peek 看輸出、直接回覆。
+- **適合**：任務多且互不相關，需要一個**總覽畫面**盯進度。
+
+### 3.4 對照：本機單次 vs 雲端多 agent
+
+| 面向 | `/code-review`（本機單次） | `/code-review ultra`（雲端多 agent） |
+|------|------|------|
+| 執行位置 | 本機 session | 雲端沙箱 |
+| 深度 | 單次審查 | 多 agent 平行 + 獨立驗證 |
+| 時間 | 數秒到幾分鐘 | 約 5–10 分鐘 |
+| 費用 | 計入一般用量 | 免費 3 次，之後約 $5–$20／次 |
+| 適合時機 | 開發途中快速回饋 | 合併前對重大變更深度把關 |
+
+> 補充：`/code-review` 可帶 level（`low`…`max`）與 `--fix`（自動套用）、`--comment`（貼成 PR inline 留言）；`/simplify` 只找 cleanup、不找 bug；`/security-review` 專做安全漏洞分析。
+
+> ⚠️ **文件 vs 程式碼**：`/code-review` 與 subagent 預設審的是**程式碼 diff**。若審查對象是 Markdown／文件，審查會偏向**內容與事實查核**，而非程式邏輯；此時手動派 subagent 分檔、在 prompt 裡講清楚「查事實正確性」會比 `/code-review` 更貼切。
 
 ---
 
