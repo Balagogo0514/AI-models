@@ -87,7 +87,16 @@
 >
 > 比喻：**Workflow = 工頭**（分派任務、收攏結果）；**Worktree = 每個工人的工作檯**（東西不混在一起）。一個 workflow 編排的多個 agent，可以各自在一個 worktree 裡改檔案——workflow 負責協調，worktree 負責隔離。
 
-> TODO：比較表 —— 誰決定下一步、中間結果放哪、檔案隔離方式、可否重播、規模、如何追蹤。
+下表把第 1 節的四種內建方式，依八個角度整體對照（Managed Agents / Agent SDK 屬 API 自建層級，不列入）：
+
+| 方式 | 誰決定下一步 | 中間結果放哪 | 檔案隔離 | 可否重播 | 規模 | 如何追蹤 | 適合情境 |
+|------|------|------|------|------|------|------|------|
+| **Subagents** | 主 session 的 Claude（逐 turn 委派） | 各自的 context window，再回報主 session | 可選（`isolation: worktree`），預設不隔離 | worker 定義可重用；單次委派不留存 | 少數任務 | `/agents` | 側邊搜尋／分析；**分檔／分模組審查** |
+| **Agent View** | 你手動派發；各 session 內部各自的 Claude | 各 session 自己的 context | 每個派發的 session 各一個 worktree | 任務各自獨立，可重新派 | 多個獨立任務 | `claude agents` 管理畫面（狀態圖示、peek、PR 顏色） | 多個**彼此無關**的任務並行 |
+| **Agent teams** | lead agent 指派 | 共享 task list | 預設不隔離（需手動分工） | team 定義可重用 | 少數長跑 peer | 共享 task list + 互傳訊息 | 需**協作／交叉驗證**的複雜任務 |
+| **Workflows** | 編排腳本（非逐 turn） | 腳本變數 | 各 agent 可選 worktree | 腳本本身可存成指令重用 | 數十到數百 agent（同時最多 16、單次最多 1,000） | `/workflows` 進度檢視器 | 大規模、可明確拆解的平行工作 |
+
+> 速記：**要分工審查 → Subagents**；**要並行多個無關任務 → Agent View**；**要協作討論 → Agent teams**；**要大規模掃描 → Workflows**。四者都可搭配 worktree 做檔案隔離（見上方釐清框）。
 
 ---
 
