@@ -3,7 +3,7 @@
 > 本文聚焦「工作流程與選型」：何時用哪種平行工作方式、如何同時審查不同部分、如何追蹤與彙整。
 > 指令與參數的完整清單請見 `Claude-Code-CLI.md`（第十四章 Multi-agent 使用方法）。
 >
-> 狀態：骨架草稿，逐節討論中。更新日期：2026-11-02
+> 狀態：初版完成（五節皆已填）。更新日期：2026-11-02
 
 ---
 
@@ -210,4 +210,32 @@ Subagent 建立的 worktree 超過 `cleanupPeriodDays` 天、且無未提交變�
 
 ## 5. 實務建議與陷阱
 
-> TODO：何時用哪種、token 成本、文件 vs 程式碼審查的差異、常見誤用。
+### 5.1 一句話選型
+
+- 任務**單一、可快速說清楚** → 不要用多 agent，一個 session 直接做。
+- **分工審查 / 改同一個 repo 的不同檔案** → Subagents（必要時各開 worktree）。
+- **多個彼此無關的任務並行、要總覽** → Agent View。
+- **需要 agent 互相討論、交叉驗證** → Agent teams。
+- **大規模、可機械拆解** → Workflows / `/batch`。
+- **合併前重大變更深度審查** → `/code-review ultra`。
+
+### 5.2 成本注意
+
+- **token 用量會乘上 agent 數**：workflow、多 subagent、`/code-review ultra` 都是「開很多 agent」，費用遠高於單次對話；大任務先在小範圍試跑。
+- **看「每個完成任務」的成本，不是每次請求**：一個便宜但要跑更多回合才完成的做法，未必真的便宜。
+- **`/code-review ultra` 免費額度有限**：Pro / Max 各 3 次，用完約 $5–$20／次；**提前停止仍會耗掉一次免費額度**。
+- **cache 不跨模型共用**：多模型級聯（例如用便宜模型當 worker）會放棄 cache 重用，有時反而更貴。
+
+### 5.3 常見陷阱
+
+- **純審查不必開 worktree**：worktree 是為了「改檔案不衝突」。唯讀審查不改檔，開 worktree 只是多餘開銷。
+- **Agent teams 預設不隔離**：共用同一個工作目錄，要靠明確分工避免彼此覆蓋；需要隔離時改用 subagent 的 `isolation: worktree` 或 Agent View。
+- **分檔派 subagent 時，prompt 要講清楚範圍與準則**：否則每個分身審查口徑不一；用自訂 reviewer subagent（固定 `tools` 與準則）可統一。
+- **文件（Markdown）不是程式碼**：`/code-review` 預設審程式邏輯；審文件要在 prompt 明確要求「查事實正確性、連結有效性」等，否則容易文不對題。
+- **`/code-review ultra` 的平台限制**：需 claude.ai 帳號登入，**不支援**只用 API key、Bedrock、Vertex AI、Foundry、Zero Data Retention 組織；repo 太大無法打包時改用 PR 模式（先推 branch 開 draft PR，再用 PR 號碼審）。
+- **別為了省錢自行降級模型**：模型選擇是使用者的決定；需要省成本時，先調 `effort`、善用 cache，再考慮換模型。
+
+### 5.4 延伸閱讀
+
+- 指令與參數：`Claude-Code-CLI.md` —— 第十章（Worktree）、第十二章（`/code-review ultra`）、第十四章（Multi-agent）。
+- 模型選擇與定價：`Claude-Model.md`。
