@@ -239,3 +239,187 @@ Subagent 建立的 worktree 超過 `cleanupPeriodDays` 天、且無未提交變�
 
 - 指令與參數：`Claude-Code-CLI.md` —— 第十章（Worktree）、第十二章（`/code-review ultra`）、第十四章（Multi-agent）。
 - 模型選擇與定價：`Claude-Model.md`。
+- 實戰範例：本文附錄 A（fastpath memory / refcount 難題的多 Agent 追蹤）。
+
+---
+
+## 附錄 A　實戰範例：用多 Agent 追蹤 fastpath 的 memory / refcount 難題
+
+> **範圍聲明**：本附錄是通用的 DPDK / fastpath 除錯方法論，搭配多 agent 的分工方式。**未針對 6WIND 原始碼或其內部機制逐項驗證**；DPDK 的 debug 選項名稱會隨版本改變，請以實際使用的版本文件為準。
+
+### A.1 問題特徵
+
+- 難以重現：原因（例如 refcount 多減一次）與症狀（幾秒後別的封包踩到已釋放的記憶體）**距離很遠**。
+- 常見成因：錯誤處理分支漏 `put` / 多 `put`、跨 core 的 refcount 競態、mbuf / 物件在 slow-path 與 fast-path 交界的所有權不清。
+- 核心策略：**不要追事後的崩潰，要讓錯誤在發生當下就爆**，把「原因到症狀」的距離縮成零。
+
+### A.2 先決條件：讓錯誤即時現形（人要先做，agent 才有東西可分析）
+
+多 agent 不能取代這一步，因為 agent 讀程式碼看不到「執行期的真相」。先上這些：
+
+| 手段 | 作用 |
+|------|------|
+| 釋放時 poison（填毒值）| use-after-free 立刻讀到毒值，不再悄悄沿用 |
+| refcount API 統一包一層（debug build）| `refcnt` 為 0 仍被使用時立即 assert；保留最近 N 次 inc/dec 的 backtrace 與 core id（ring buffer）|
+| canary / magic | double-free、越界寫入當場爆 |
+| mempool census | 穩定流量下 free mbuf 數應回到基準線；漂移即 leak 或 double-free，並可縮小到哪種流量 / 哪個 feature |
+| 各類物件 alloc / free 計數 | 差值超標即告警，把「數小時後 OOM」變成「數秒內數字不對」|
+
+### A.3 多 Agent 分工
+
+目標：把「靜態可見的配對錯誤」平行掃完、把「需要執行期證據的問題」交給有資料的 agent，並用**獨立驗證**壓低誤報。
+
+| 角色 | 方式（對應本文章節）| 做什麼 | 是否改檔 |
+|------|------|------|------|
+| **子系統稽核員 ×N** | Subagents（§3.2），每個認領一個子系統（mbuf / FIB / neighbour / route / ACL…）| 依同一份 checklist（A.4）掃「`get` 無對應 `put`」「錯誤路徑漏 `put`」「跨 core 共享物件的保護」| 否（唯讀）|
+| **全樹模式掃描** | Workflows（§1.4）| 全樹找某一類 pattern，例如所有 free 呼叫點是否可能重複釋放；規模大、可機械拆解 | 否 |
+| **instrumentation 實作** | Subagent + `isolation: worktree`（§1.1）| 實作 A.2 的 wrapper / poison / census，各自在 worktree 改，避免互相覆蓋 | 是（隔離）|
+| **重現 harness 建置** | 獨立 session（Agent View，§1.2）| 寫 pcap replay、固定參數（單核、固定 hash seed）、fault / delay injection 腳本 | 是（隔離）|
+| **log / core 分析** | Subagent | 讀 backtrace ring buffer、core dump、census 輸出，依簽章分群、找共同路徑 | 否 |
+| **競爭假說調查** | Agent teams（§1.3）| 每個 teammate 追一個不同假說（例如 A：錯誤分支漏 put；B：跨 core race；C：slow-path 所有權），互相質疑證據 | 視情況 |
+| **獨立驗證員** | Subagent | 對每個 finding 獨立複核：能否構造出具體交錯 / 呼叫序列？是否與實際程式碼矛盾？ | 否 |
+
+> 概念上等同 `/code-review ultra` 的做法：多個 reviewer 平行找，再由獨立 agent 驗證，只留下站得住腳的。
+
+### A.4 refcount 稽核 checklist（給人或 subagent 共用）
+
+1. 每個取得 reference 的點（`get` / `inc` / 查表後使用）是否有對應釋放？列出配對。
+2. **每個 `goto err` / 提前 `return` 路徑**是否釋放了此前取得的所有 reference？
+3. 物件放進容器（list / hash / ring）時是由誰持有 reference？取出時誰釋放？
+4. 跨 core 傳遞（ring、mbuf 轉送）後，原 core 是否還在使用該物件？
+5. 釋放後是否仍有指標被保留（未清空）或被快取？
+6. 同一物件是否可能被兩條路徑各釋放一次（例如 timeout 與正常完成並存）？
+7. 計數器操作是否為原子？讀改寫之間是否有 race？
+
+### A.5 追蹤帳本（讓平行工作不會「派出去就看不到」）
+
+在 repo 內放一個共用帳本（例如 `debug/ledger.md`），每個 finding 一列，由主 session 或 lead 彙整，欄位建議：
+
+| 欄位 | 說明 |
+|------|------|
+| ID | 唯一編號 |
+| 位置 | 檔案:行、函式 |
+| 主張 | 一句話：什麼情況下 refcount 會不平衡 |
+| 證據 | 呼叫序列 / 具體交錯 / log 片段；**沒有證據的標「推測」** |
+| 信心 | 高 / 中 / 低 |
+| 驗證狀態 | 未驗證 / 驗證員確認 / 已在 instrumented build 重現 / 已排除 |
+| 負責 agent | 哪個 agent 發現、哪個驗證 |
+
+追蹤入口沿用本文第 4 節：`/agents`、`claude agents`、`/tasks`、通知。
+
+### A.6 能做與做不到的事（務實預期）
+
+**多 agent 擅長：**
+- 在大型 codebase 裡**平行**追呼叫路徑、找出配對錯誤與漏掉的錯誤分支。
+- 讀 log / backtrace、歸納共同路徑、提出並排序假說。
+- 撰寫 instrumentation、重現腳本、單元測試。
+
+**多 agent 做不到或要小心：**
+- **時序 race 無法只靠讀程式碼確認**，必須有執行期證據（A.2）。agent 可以提出「可能的交錯」，但不能代替壓測驗證。
+- 若 agent **跑不到你的真實環境**（專有 fastpath、特定硬體 / NIC），它只能分析你提供的 log、core、程式碼；成效取決於你餵給它的資料與回饋迴圈。
+- 平行 agent 容易**產生看似合理但不成立的推論**；因此要求每個 finding 附證據，並由獨立驗證員複核（A.3）。
+- 平行會**乘上 token 用量**；先在單一子系統試跑，再擴大。
+
+> 關於「Claude 似乎已解決很多深度難解的 bug」：它在有明確線索與可驗證回饋時（可重現、有 log / core、能跑測試）通常很有幫助，但並非每個 bug 都能被解開，尤其是缺乏執行期證據的競態。比較可靠的使用方式是把它當成**平行的稽核與假說驗證工具**，而不是單靠它「猜」出根因。
+
+### A.7 建議的實際流程
+
+1. 人 / agent（worktree）上 A.2 的 fail-fast instrumentation。
+2. 同時平行：子系統稽核員跑 A.4 checklist（靜態）＋ 重現 harness 建置。
+3. 將所有 finding 填入 A.5 帳本，由獨立驗證員複核。
+4. 取得穩定重現後，用 `git bisect` 鎖定引入的 commit。
+5. 對高信心 finding 先寫會失敗的測試，再修，最後在 instrumented build 跑回歸。
+
+### A.8 範例 prompt
+
+> 下列 prompt 的 `<…>` 為佔位符，請替換成你的實際路徑、子系統與資料。共通原則：**限定範圍、指定輸出格式、要求證據、區分「已確認」與「推測」**。
+
+#### A.8.1 主 session：一次並行派發子系統稽核員
+
+```text
+請平行派出 4 個唯讀 subagent，各自稽核一個子系統的 refcount 配對：
+1. <src/mbuf/>   2. <src/fib/>   3. <src/neighbour/>   4. <src/route/>
+
+每個 subagent 都使用相同的稽核準則（見下方 checklist），只讀不改檔，
+不要開 worktree。每個 subagent 完成後回報 findings，格式見下。
+你（主 session）負責彙整、去重，並寫入 <debug/ledger.md>。
+
+[稽核準則]
+<貼上 A.4 的七條 checklist>
+
+[回報格式]
+每個 finding 一列：ID｜檔案:行｜一句話主張｜證據（呼叫序列或程式碼片段）｜信心（高/中/低）｜
+是否為推測。沒有具體證據者一律標「推測」，不要省略但不要寫成確定。
+```
+
+#### A.8.2 子系統稽核員（單一 subagent 的 prompt）
+
+```text
+你是 refcount 稽核員，只讀、不改檔。範圍：<src/fib/> 底下所有檔案。
+
+任務：找出 reference 取得與釋放不配對的地方。
+1. 先列出此子系統中所有「取得 reference」的 API 與「釋放」的 API（含 wrapper）。
+2. 逐一檢查每個取得點：是否在所有出口都有對應釋放？特別檢查每個 goto err、
+   提前 return、錯誤處理分支。
+3. 檢查物件放入容器／取出時，reference 的持有者是否一致。
+4. 檢查跨 core 傳遞後，原 core 是否仍使用該物件。
+
+規則：
+- 只回報你能指出「具體呼叫序列」的問題；無法指出序列的，標為「推測」並說明缺什麼證據。
+- 不要回報風格問題或與 refcount 無關的缺陷。
+- 看不懂的巨集或 wrapper，先追到定義再下結論，不要猜。
+- 輸出格式：ID｜檔案:行｜主張｜證據｜信心｜推測與否。無發現時回報「未發現」並列出已檢查的函式。
+```
+
+#### A.8.3 獨立驗證員（對單一 finding 複核）
+
+```text
+你是獨立驗證員，只讀、不改檔，且你不知道原稽核員的推理過程，只看下列主張：
+
+[主張] <F-012：在 fib_entry_add() 的 err_nomem 分支，nexthop 的 reference 未釋放>
+[位置] <src/fib/fib_entry.c:218>
+
+請依序做：
+1. 到該位置讀實際程式碼（含呼叫者與被呼叫者），確認主張描述的程式碼確實存在。
+2. 構造一條會觸發該路徑的具體呼叫序列，逐步追蹤 refcount 的變化。
+3. 檢查是否有其他機制補償（例如外層 cleanup、destructor、其他分支的補釋放）。
+
+結論只能是三種之一：
+- 成立：附上呼叫序列與逐步 refcount 數值。
+- 不成立：指出哪一行／哪個機制使其不成立。
+- 無法判定：說明缺少什麼資訊（例如需要執行期資料）。
+不要為了附和原主張而勉強成立。
+```
+
+#### A.8.4 競爭假說調查員（Agent teams）
+
+```text
+我們有一個難重現的問題：<穩定流量下運行數小時後，free mbuf 數緩慢下降，偶發 crash>。
+已知：<crash 的 backtrace 位於 …；census 顯示 …；僅在啟用 <feature X> 時出現>。
+
+請建立 3 位 teammate，各自調查一個不同假說，並互相挑戰證據：
+- 假說 A：錯誤處理分支漏釋放（leak）
+- 假說 B：跨 core 的 refcount 競態（double-free / use-after-free）
+- 假說 C：slow-path 與 fast-path 交界的所有權不清
+
+每位 teammate：
+1. 說明該假說應該留下什麼可觀察的痕跡（log、census 曲線、backtrace 型態）。
+2. 對照我們已有的資料，判斷是支持還是矛盾。
+3. 提出能區分各假說的最小實驗（例如只開 feature X 並加上某個計數器）。
+
+lead 最後彙整：哪些假說被資料排除、哪些仍成立、建議的下一個實驗。
+共用 task list 追蹤，不要改檔。
+```
+
+#### A.8.5 log / core 分析員
+
+```text
+請分析 <logs/crash-*/> 內的 backtrace ring buffer 與 core 摘要，只讀不改。
+
+1. 依 crash 簽章（最頂的 frame ＋ 觸發的物件類型）分群，統計每群次數。
+2. 對每一群，列出物件「最後 N 次 inc/dec」的 backtrace 與 core id，
+   找出多減／漏減的那一次，以及是否跨 core。
+3. 找出各群共同的前置事件（例如特定 feature、特定封包類型、特定 timer）。
+4. 輸出：群組表（簽章｜次數｜疑似肇因路徑｜證據）＋ 建議下一步要加什麼 instrumentation。
+資料不足的地方明說，不要補猜。
+```
