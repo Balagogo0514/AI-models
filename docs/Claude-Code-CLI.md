@@ -1,7 +1,7 @@
 # Claude Code CLI 完整參考
 
-> 資料來源：https://code.claude.com/docs/en/cli-reference 、https://code.claude.com/docs/en/commands 、`claude --help`（v2.1.208 實測驗證）
-> 更新日期：2026-07-14
+> 資料來源：https://code.claude.com/docs/en/cli-reference 、https://code.claude.com/docs/en/commands 、`claude --help`（v2.1.316 實測驗證）
+> 更新日期：2026-11-02
 
 ---
 
@@ -15,26 +15,32 @@
 | `cat file \| claude -p "query"` | 處理 pipe 輸入 | `cat logs.txt \| claude -p "explain"` |
 | `claude -c` | 繼續最近一次對話 | `claude -c` |
 | `claude -r "<name>"` | 以 ID 或名稱恢復對話 | `claude -r "auth-refactor"` |
-| `claude update` | 更新至最新版 | `claude update` |
+| `claude update` | 更新至最新版（別名：`claude upgrade`） | `claude update` |
 | `claude install [version]` | 安裝指定版本（stable/latest） | `claude install stable` |
 | `claude auth login` | 登入帳號 | `claude auth login --console` |
 | `claude auth logout` | 登出 | `claude auth logout` |
 | `claude auth status` | 顯示登入狀態（JSON） | `claude auth status` |
 | `claude agents` | 開啟 Agent View 監控背景 session | `claude agents --json` |
-| `claude attach <id>` | 附加到背景 session | `claude attach 7c5dcf5d` |
-| `claude auto-mode defaults` | 印出 auto mode 分類規則 | `claude auto-mode defaults > rules.json` |
+| `claude attach <id\|name>` | 附加到背景 session（名稱可只寫一部分）| `claude attach 7c5dcf5d` |
+| `claude auto-mode defaults` | 印出 auto mode 預設分類規則 | `claude auto-mode defaults > rules.json` |
+| `claude auto-mode config` | 印出目前生效的 auto mode 設定（JSON）| `claude auto-mode config` |
+| `claude auto-mode critique` | 讓 AI 針對你自訂的 auto mode 規則給回饋 | `claude auto-mode critique` |
+| `claude auto-mode reset` | 移除使用者設定中的 `autoMode` 區段，回復預設 | `claude auto-mode reset` |
 | `claude daemon status` | 顯示背景 supervisor 狀態 | `claude daemon status` |
 | `claude daemon stop --any` | 停止 supervisor 與其管理的 session | `claude daemon stop --any` |
-| `claude logs <id>` | 印出背景 session 近期輸出 | `claude logs 7c5dcf5d` |
+| `claude doctor` | 檢查安裝健康狀態（讀取目前目錄的 settings，不跳 trust 提示；完整檢查與自動修復請在 session 內用 `/doctor`） | `claude doctor` |
+| `claude gateway` | 執行企業用 auth/telemetry gateway | `claude gateway --config gateway.yaml` |
+| `claude import [source]` | 從其他 AI coding agent（`codex`、`gemini`、`cursor`）匯入設定 | `claude import codex --dry-run` |
+| `claude logs <id\|name>` | 印出背景 session 近期輸出 | `claude logs 7c5dcf5d` |
 | `claude mcp` | 設定 MCP server | — |
 | `claude plugin` | 管理 plugin（別名：`claude plugins`） | `claude plugin install code-review@...` |
-| `claude project purge [path]` | 刪除專案所有本地 Claude 狀態 | `claude project purge ~/work/repo --dry-run` |
+| `claude purge [path]` | 刪除專案的本地 Claude 資料（transcript、task、檔案歷史、`~/.claude.json` 中的專案條目）；`--all` 清除所有專案、`--dry-run` 預覽、`-i` 逐項確認、`-y` 略過確認。舊寫法 `claude project purge` 仍可用，但會提示已改名 | `claude purge ~/work/repo --dry-run` |
 | `claude remote-control` | 啟動 Remote Control server | `claude remote-control --name "My Project"` |
-| `claude respawn <id>` | 重啟背景 session（保留對話） | `claude respawn 7c5dcf5d` |
-| `claude rm <id>` | 從列表移除背景 session | `claude rm 7c5dcf5d` |
+| `claude respawn <id>` | 重啟背景 session（保留對話），使其改用目前安裝的 Claude Code 版本；`--all` 重啟全部 | `claude respawn 7c5dcf5d` |
+| `claude rm <id>` | 刪除背景 session（安全時一併移除其 worktree；已結束的 session 也可刪）| `claude rm 7c5dcf5d` |
 | `claude setup-token` | 產生長效 OAuth token（給 CI/script 用）| `claude setup-token` |
-| `claude stop <id>` | 停止背景 session | `claude stop 7c5dcf5d` |
-| `claude ultrareview [target]` | 非互動式執行 ultrareview | `claude ultrareview 1234 --json` |
+| `claude stop <id>` | 停止背景 session，對話保留，之後可用 `claude attach` 恢復（別名：`claude kill`） | `claude stop 7c5dcf5d` |
+| `claude ultrareview [target]` | 非互動式執行 ultrareview（選項：`--json`、`--post`、`--no-post`、`--timeout`、`--trust-workspace`）| `claude ultrareview 1234 --json` |
 
 ---
 
@@ -48,59 +54,71 @@
 | `--allow-dangerously-skip-permissions` | 將 bypassPermissions 加入 Shift+Tab 循環 |
 | `--allowedTools` | 指定不需確認的工具白名單 |
 | `--append-system-prompt` | 附加文字到預設 system prompt 結尾 |
-| `--append-system-prompt-file` | 從檔案附加到 system prompt |
-| `--bare` | 最小模式：跳過 hooks/skills/plugins/MCP/memory |
+| `--append-system-prompt-file` | 從檔案附加到 system prompt；未列於 `claude --help`，實測 v2.1.316 仍被接受 |
+| `--autocompact <auto\|tokens>` | 設定自動 compact 的視窗大小（`auto`，或 100k–1M tokens）|
+| `--ax-screen-reader` | 螢幕閱讀器友善輸出（純文字，無裝飾邊框與動畫）|
+| `--bare` | 最小模式：跳過 hooks（settings 與 plugin 定義的）、LSP、plugin sync、attribution、auto-memory、背景預取、keychain 讀取與 CLAUDE.md 自動探索；設定 `CLAUDE_CODE_SIMPLE=1`。驗證僅接受 `ANTHROPIC_API_KEY` 或 `apiKeyHelper`；skill 仍可用 `/skill-name` 呼叫 |
 | `--betas` | 啟用 beta headers（僅 API key 用戶）|
-| `--bg` | 以背景 agent 啟動，立即返回 |
-| `--channels` | 指定 MCP channel 監聽通知（Research preview）|
+| `--bg`, `--background` | 以背景 agent 啟動，立即返回並印出 id；搭配 `--resume <session-id>` 可在背景繼續該 session |
+| `--brief` | 啟用 `SendUserMessage` 工具，供 agent 對使用者通訊 |
+| `--channels` | 指定 MCP channel 監聽通知（Research preview）；未列於 `claude --help`，實測 v2.1.316 仍被接受 |
 | `--chrome` | 啟用 Chrome 瀏覽器整合 |
+| `--cloud [description\|session_id\|url]` | 建立雲端 session，或以 session ID / claude.ai/code URL 附加到既有雲端 session |
 | `--continue`, `-c` | 載入最近一次對話 |
 | `--dangerously-skip-permissions` | 跳過所有權限提示 |
 | `--debug [categories]` | 啟用 debug mode（可過濾類別）|
 | `--debug-file <path>` | 將 debug log 寫入指定檔案 |
+| `--desktop` | 改在 Claude Desktop app 開啟（可搭配 `--continue` 或 `--resume <id>` 指定 session）|
 | `--disable-slash-commands` | 停用所有 skills 與指令 |
 | `--disallowedTools` | 工具黑名單（可 deny 特定 pattern）|
 | `--effort` | 設定 effort level（low/medium/high/xhigh/max）|
 | `--exclude-dynamic-system-prompt-sections` | 把動態 system prompt 段移至 user message（改善 cache 命中）|
-| `--exec` | 以 PTY 背景 job 執行 shell 指令 |
-| `--fallback-model` | 主要模型不可用時自動 fallback |
+| `--environment <environment_id>` | 在指定的自架環境（`ccpool_...`）上建立新的雲端 session |
+| `--fallback-model` | 主要模型過載或不可用時自動 fallback；可用逗號分隔多個模型依序嘗試，每個 user turn 開始時會重試主要模型 |
+| `--file <file_id:relative_path...>` | 啟動時下載檔案資源，例如 `--file file_abc:doc.txt` |
+| `--forward-subagent-text` | 將 subagent 的文字與 thinking 區塊以帶 `parent_tool_use_id` 的訊息轉發（僅限 `--print` 搭配 `--output-format=stream-json`）|
 | `--fork-session` | Resume 時建立新 session ID |
 | `--from-pr` | 恢復與特定 PR 連結的 session |
 | `--ide` | 啟動時自動連接 IDE |
-| `--init` | 執行 Setup hooks（print mode）|
-| `--init-only` | 執行 Setup 與 SessionStart hooks 後退出 |
+| `--init` | 執行 Setup hooks（print mode）；未列於 `claude --help`，實測 v2.1.316 仍被接受 |
+| `--init-only` | 執行 Setup 與 SessionStart hooks 後退出；未列於 `claude --help`，實測 v2.1.316 仍被接受 |
 | `--include-hook-events` | 輸出 hook 生命週期事件（需 stream-json）|
 | `--include-partial-messages` | 包含部分串流事件（需 stream-json）|
 | `--input-format` | 指定 print mode 輸入格式（text/stream-json）|
 | `--json-schema` | 要求 JSON schema 驗證的結構化輸出 |
-| `--maintenance` | 執行 maintenance Setup hooks（print mode）|
+| `--maintenance` | 執行 maintenance Setup hooks（print mode）；未列於 `claude --help`，實測 v2.1.316 仍被接受 |
 | `--max-budget-usd` | 設定 API 費用上限（print mode）|
-| `--max-turns` | 限制最大回合數（print mode）；未列於 `claude --help` 輸出，但實測 v2.1.208 仍可正常使用 |
+| `--max-turns` | 限制最大回合數（print mode）；未列於 `claude --help` 輸出，但實測 v2.1.316 仍可正常使用 |
 | `--mcp-config` | 從 JSON 檔載入 MCP server |
-| `--model` | 設定本次 session 使用的模型 |
+| `--model` | 設定本次 session 使用的模型；可用別名（如 `fable`、`opus`、`sonnet`）取得該系列最新模型，或給完整模型名稱 |
 | `--name`, `-n` | 為 session 命名 |
 | `--no-chrome` | 停用 Chrome 整合 |
 | `--no-session-persistence` | 不儲存 session 到磁碟（print mode）|
 | `--output-format` | 指定輸出格式（text/json/stream-json）|
-| `--permission-mode` | 啟動指定權限模式，實測 v2.1.208 可選值：`acceptEdits`（自動允許檔案編輯）、`auto`（auto mode 分類器判斷）、`bypassPermissions`（跳過所有權限提示）、`manual`（逐次詢問，即一般互動預設）、`dontAsk`（僅允許 `permissions.allow` 規則內的呼叫，其餘一律拒絕不詢問）、`plan`（進入 plan mode）|
+| `--permission-mode` | 啟動指定權限模式，實測 v2.1.316 可選值：`acceptEdits`（自動允許檔案編輯）、`auto`（auto mode 分類器判斷）、`bypassPermissions`（跳過所有權限提示）、`manual`（逐次詢問，即一般互動預設）、`dontAsk`（僅允許 `permissions.allow` 規則內的呼叫，其餘一律拒絕不詢問）、`plan`（進入 plan mode）|
 | `--permission-prompt-tool` | 指定 MCP 工具處理權限提示（非互動模式）|
+| `--permission-prompts <host\|none>` | 搭配 `--print` 決定誰回應權限提示：`host`（預設，SDK host 或 `--permission-prompt-tool`）；`none` 則任何會觸發提示的呼叫一律自動拒絕，其餘仍由 permission mode 決定 |
 | `--plugin-dir` | 從目錄或 zip 載入 plugin（僅本次 session）|
 | `--plugin-url` | 從 URL 下載 plugin zip（僅本次 session）|
 | `--print`, `-p` | Print mode，不進入互動模式 |
 | `--prompt-suggestions` | 每次回應後輸出預測的下一步 prompt |
-| `--remote` | 在 claude.ai 建立新 web session |
-| `--remote-control`, `--rc` | 啟動可從 claude.ai 遠端控制的 session |
+| `--remote` | 在 claude.ai 建立新 web session；未列於 `claude --help`，實測 v2.1.316 仍被接受（新版建議改用 `--cloud`）|
+| `--remote-control [name]`, `--rc` | 啟動可從 claude.ai 遠端控制的互動 session |
+| `--remote-control-session-name-prefix <prefix>` | Remote Control 自動產生 session 名稱的前綴（預設為 hostname）|
 | `--replay-user-messages` | 將 stdin 的 user message 回傳 stdout |
+| `--restricted` | 受限模式：移除會執行指令或程式碼的內建工具（Bash、PowerShell 等）與 WebFetch（除非用 `--tools` 明列），並忽略 user/project/local settings（managed settings 與 `--settings` 仍生效；要連 MCP 也略過請加 `--strict-mcp-config`）|
 | `--resume`, `-r` | 以 ID 或名稱恢復特定 session |
+| `--safe-mode` | 停用所有自訂內容（CLAUDE.md、skills、已安裝 plugins、hooks、MCP servers、自訂指令與 agents、output styles、workflows、主題、快捷鍵等）啟動，用於排查設定損壞；admin 管理的 policy settings 仍生效 |
 | `--session-id` | 使用指定 UUID 作為 session ID |
 | `--setting-sources` | 指定載入哪些設定來源（user/project/local）|
 | `--settings` | 載入指定 settings JSON |
 | `--strict-mcp-config` | 只使用 `--mcp-config` 指定的 MCP server |
 | `--system-prompt` | 完全取代 system prompt |
-| `--system-prompt-file` | 從檔案取代 system prompt |
-| `--teleport` | 將 web session 拉到本地終端機繼續 |
-| `--teammate-mode` | 設定 agent team 顯示模式（auto/in-process/tmux）|
-| `--tmux` | 為 worktree 建立 tmux session |
+| `--system-prompt-file` | 從檔案取代 system prompt；未列於 `claude --help`，實測 v2.1.316 仍被接受 |
+| `--system-prompt-snapshot <on\|off>` | 每個對話只在第一次請求時渲染並記錄 system prompt（含 `--system-prompt` / `--append-system-prompt`），之後每次請求與 resume 都原樣重用；預設 `on`（`--bare` 且非雲端 / 背景 session 時除外）|
+| `--teleport [session]` | 將 web session 拉到本地終端機繼續 |
+| `--teammate-mode` | 設定 agent team 顯示模式（auto/in-process/tmux）；未列於 `claude --help`，實測 v2.1.316 仍被接受 |
+| `--tmux` | 為 worktree 建立 tmux session（需搭配 `--worktree`；有 iTerm2 時使用原生 pane，`--tmux=classic` 改用傳統 tmux）|
 | `--tools` | 限制可用的內建工具 |
 | `--verbose` | 詳細輸出每個 turn |
 | `--version`, `-v` | 顯示版本號 |
@@ -123,25 +141,34 @@
 
 > **[S]** = Skill（prompt 交給 Claude 執行）
 > **[W]** = Workflow（多 subagent 平行背景執行）
+>
+> v2.1.316 已與安裝檔內的內建指令名稱比對：新增 18 個先前未列的指令。`/code-review`、`/deep-research`、`/loop`、`/review`、`/security-review`、`/simplify`、`/verify` 為 skill / workflow，`/cost`、`/stats` 為別名，因此不在內建指令定義中。互動模式的實際可用清單會依帳號、平台與設定而異，以 `/help` 為準。
 
 | 指令 | 類型 | 說明 |
 |------|------|------|
 | `/add-dir <path>` | 內建 | 本次 session 新增工作目錄 |
 | `/agents` | 內建 | 管理 subagent 設定 |
+| `/advisor` | 內建 | 讓 Claude 在關鍵時刻諮詢更強的模型 |
 | `/autofix-pr [prompt]` | 內建 | 啟動 web session 監控 PR，自動推送修復 |
+| `/artifacts` | 內建 | 瀏覽你發佈與被分享的 artifacts |
+| `/autocompact [auto\|<tokens>]` | 內建 | 設定自動 compact 的視窗大小（context 填到多滿才自動摘要）|
 | `/background [prompt]` | 內建 | 將目前 session 轉為背景 agent，釋放終端機（別名：`/bg`）|
 | `/batch <instruction>` | **[S]** | 大規模跨 codebase 平行修改，每個獨立單元各開一個 worktree |
 | `/branch [name]` | 內建 | 分支目前對話（別名：`/fork`）|
+| `/brief` | 內建 | 切換 brief-only 模式 |
 | `/btw <question>` | 內建 | 不加入 context 的旁白提問 |
+| `/cd <path>` | 內建 | 將本次 session 移到新的工作目錄 |
 | `/chrome` | 內建 | 設定 Claude in Chrome |
 | `/claude-api [migrate\|managed-agents-onboard]` | **[S]** | 載入 Claude API 參考資料；`migrate` 升級模型版本 |
 | `/clear [name]` | 內建 | 清空 context 開始新對話（別名：`/reset`, `/new`）|
+| `/cloud-plugins` | 內建 | 選擇雲端 session 是否使用本機已啟用的 plugins |
 | `/code-review [level] [--fix] [--comment] [target]` | **[S]** | 審查 diff；`ultra` 觸發雲端深度審查；`--fix` 自動套用 |
 | `/color [color\|default]` | 內建 | 設定 prompt bar 顏色（red/blue/green/yellow/purple/orange/pink/cyan）|
 | `/compact [instructions]` | 內建 | 摘要對話以釋放 context window |
 | `/config` | 內建 | 開啟設定介面（別名：`/settings`）|
 | `/context [all]` | 內建 | 視覺化 context 使用狀況與優化建議 |
 | `/copy [N]` | 內建 | 複製最近第 N 條回應到剪貼簿；有 code block 時顯示選擇器 |
+| `/daemon` | 內建 | 管理背景服務與 routines |
 | `/cost` | 內建 | `/usage` 的別名 |
 | `/debug [description]` | **[S]** | 啟用 debug log 並分析問題 |
 | `/deep-research <question>` | **[W]** | 多 agent 平行網路搜尋，產生引用報告 |
@@ -160,19 +187,24 @@
 | `/help` | 內建 | 顯示說明與指令清單 |
 | `/hooks` | 內建 | 檢視 hook 設定 |
 | `/ide` | 內建 | 管理 IDE 整合狀態 |
+| `/import [codex\|gemini\|cursor] [--dry-run]` | 內建 | 從其他 AI coding agent 匯入設定（等同 `claude import`）|
 | `/init` | 內建 | 初始化專案 CLAUDE.md |
 | `/insights` | 內建 | 分析 Claude Code session 使用模式與摩擦點報告 |
 | `/install-github-app` | 內建 | 設定 Claude GitHub Actions app |
 | `/install-slack-app` | 內建 | 安裝 Claude Slack app |
 | `/keybindings` | 內建 | 開啟或建立快捷鍵設定檔 |
+| `/list-agents` | 內建 | 列出可傳訊息的 subagents、teammates 與其他 Claude sessions（別名：`/peers`）|
 | `/login` | 內建 | 登入帳號 |
 | `/logout` | 內建 | 登出帳號 |
 | `/loop [interval] [prompt]` | **[S]** | 以固定間隔重複執行 prompt（別名：`/proactive`）|
+| `/loops` | 內建 | 列出、建立與刪除 loops |
 | `/mcp` | 內建 | 管理 MCP server 連線與 OAuth |
 | `/memory` | 內建 | 編輯 CLAUDE.md 記憶檔案、管理 auto-memory |
 | `/mobile` | 內建 | 顯示手機 app QR Code（別名：`/ios`, `/android`）|
 | `/model [model]` | 內建 | 切換 AI 模型並儲存為新 session 預設 |
+| `/output-style [style]` | 內建 | 列出 output styles 或切換 |
 | `/passes` | 內建 | 分享免費週給朋友（限符合資格帳號）|
+| `/pause-memory` | 內建 | 暫停 / 恢復記憶功能（別名：`/memory-pause`、`/toggle-memory`）；說明為依名稱推定，未驗證 |
 | `/permissions` | 內建 | 管理工具權限規則（別名：`/allowed-tools`）|
 | `/plan [description]` | 內建 | 進入 plan mode |
 | `/plugin` | 內建 | 管理 plugin |
@@ -187,6 +219,7 @@
 | `/remote-env` | 內建 | 設定 web session 預設遠端環境 |
 | `/rename [name]` | 內建 | 為目前 session 命名並顯示在 prompt bar |
 | `/resume [session]` | 內建 | 以 ID 或名稱恢復對話（別名：`/continue`）|
+| `/restart` | 內建 | 重啟 Claude Code（別名：`/update`）；程式內無說明文字，用途為依名稱推定，未驗證 |
 | `/review [PR]` | 內建 | 在本地 session 審查 PR |
 | `/rewind` | 內建 | 回滾對話與程式碼到先前 checkpoint（別名：`/checkpoint`, `/undo`）|
 | `/run` | **[S]** | 啟動並驅動 app，驗證改動在 runtime 生效（v2.1.145+）|
@@ -195,15 +228,18 @@
 | `/schedule [description]` | 內建 | 建立/管理定期執行的 routine（別名：`/routines`）|
 | `/scroll-speed` | 內建 | 調整滾輪速度（fullscreen mode 限定）|
 | `/security-review` | 內建 | 對目前 branch 的改動做安全漏洞分析 |
+| `/session` | 內建 | 顯示雲端 session 的 URL 與 QR Code（別名：`/remote`）|
 | `/setup-bedrock` | 內建 | 設定 Amazon Bedrock（需 `CLAUDE_CODE_USE_BEDROCK=1`）|
 | `/setup-vertex` | 內建 | 設定 Google Vertex AI（需 `CLAUDE_CODE_USE_VERTEX=1`）|
 | `/simplify [target]` | **[S]** | 找 cleanup 機會並自動套用，不找 correctness bug（v2.1.154+）|
 | `/skills` | 內建 | 列出所有可用 skill；按 `t` 依 token 排序 |
+| `/skill-doctor` | 內建 | 顯示哪些已載入的 skill 未被使用卻占用 context |
 | `/stats` | 內建 | `/usage` 別名（開啟 Stats tab）|
 | `/status` | 內建 | 顯示版本、模型、帳號、連線狀態（回應中也可開啟）|
 | `/statusline` | 內建 | 設定 Claude Code 狀態列 |
 | `/stickers` | 內建 | 訂購 Claude Code 貼紙 |
 | `/stop` | 內建 | 停止背景 session（附加中才可用）|
+| `/subtask <task>` | 內建 | 帶著完整 context 派出 subagent，結果回到本 session |
 | `/tasks` | 內建 | 列出並管理背景 task（別名：`/bashes`）|
 | `/team-onboarding` | 內建 | 從 session 歷史產生團隊上手指南 |
 | `/teleport` | 內建 | 將 web session 拉入本地終端機（別名：`/tp`）|
@@ -215,9 +251,11 @@
 | `/upgrade` | 內建 | 開啟升級方案頁面 |
 | `/usage` | 內建 | 顯示費用、用量、活動統計（別名：`/cost`, `/stats`）|
 | `/usage-credits` | 內建 | 設定使用額度（前身：`/extra-usage`）|
+| `/version` | 內建 | 顯示本 session 正在執行的版本（autoupdate 可能已有更新版本）|
 | `/verify` | **[S]** | 啟動 app 觀察行為，確認改動真正生效（v2.1.145+）|
 | `/voice [hold\|tap\|off]` | 內建 | 切換語音聽寫（需 claude.ai 帳號）|
 | `/web-setup` | 內建 | 連接 GitHub 帳號到 Claude Code on the web |
+| `/wellbeing` | 內建 | 設定休息提醒與安靜時段提示（別名：`/breaks`、`/break-reminder`、`/downtime`）|
 | `/workflows` | 內建 | 開啟 workflow 進度檢視器（可暫停/恢復/儲存）|
 
 ---
@@ -940,8 +978,12 @@ claude ultrareview                  # 審查目前 branch
 claude ultrareview 1234             # 審查 PR #1234
 claude ultrareview origin/main      # 審查 vs 指定 base branch
 claude ultrareview 1234 --json      # 輸出原始 bugs.json
-claude ultrareview --timeout 60     # 設定逾時（分鐘，預設 30）
+claude ultrareview --timeout 60     # 設定逾時（分鐘，預設 45）
+claude ultrareview 1234 --post      # 將 findings 以一則留言貼回 PR（僅限 PR 目標）
+claude ultrareview 1234 --trust-workspace   # 本次執行信任目前資料夾（CI 用，須先寫 PR 號碼或 base branch）
 ```
+
+> `--no-post` 為預設行為（不貼回 PR），僅為與 `/ultrareview`、`/code-review ultra` 的旗標保持一致而保留。`--trust-workspace` 只可用在你信任的資料夾。
 
 Exit code：`0` = 成功（有無 findings 都算）；`1` = 啟動失敗 / 遠端錯誤 / 逾時；`130` = Ctrl-C 中斷（遠端仍繼續跑）
 
@@ -1674,6 +1716,36 @@ Hooks 讓你在 Claude Code 生命週期的特定時間點自動執行 shell 指
 | `Notification` | Claude Code 發送通知 | 否（唯讀）|
 | `SessionEnd` | Session 結束 | 否 |
 
+> 以下為 v2.1.316 安裝檔內可辨識的其餘事件（說明取自程式內建摘要）。「可阻擋？」欄只標有證據的項目：程式內有對應「blocked by … hook」訊息者標「是」，其餘標「未驗證」，使用前請以 `/hooks` 或實測確認。
+
+| Event | 觸發時機 | 可阻擋？ |
+|-------|------|------|
+| `UserPromptExpansion` | 使用者輸入的斜線指令展開成 prompt 時 | 是 |
+| `PostToolBatch` | 一批（含平行）工具呼叫全部完成後；每批只觸發一次 | 未驗證 |
+| `PermissionDenied` | auto mode 拒絕某次工具呼叫後 | 未驗證 |
+| `SubagentStart` | Subagent（Agent 工具呼叫）啟動時 | 未驗證 |
+| `SubagentStop` | Subagent 即將結束其回應前 | 未驗證 |
+| `PreCompact` | 對話 compact 前 | 是 |
+| `PostCompact` | 對話 compact 後 | 未驗證 |
+| `PreModelSwitch` | 模型切換（`/model`、模型選擇器、`set_model`）生效前 | 是 |
+| `PostModelSwitch` | Session 模型改變後（任何原因）| 未驗證 |
+| `Setup` | Repo 設定 hooks：init 與 maintenance（對應 `--init` / `--init-only` / `--maintenance`）| 未驗證 |
+| `TeammateIdle` | Agent team 的 teammate 即將進入閒置時 | 是 |
+| `TaskCreated` | Task 建立時 | 是 |
+| `TaskCompleted` | Task 被標記為完成時 | 是 |
+| `Elicitation` | MCP server 請求使用者輸入時 | 是 |
+| `ElicitationResult` | 使用者回應 MCP elicitation 後 | 是 |
+| `ConfigChange` | Session 中設定檔變動時 | 是 |
+| `InstructionsLoaded` | 載入指示檔（CLAUDE.md 或 rule）時 | 未驗證 |
+| `CwdChanged` | 工作目錄改變後 | 未驗證 |
+| `FileChanged` | 被監看的檔案變動時 | 未驗證 |
+| `DirectoryAdded` | Session 中途新增工作目錄後 | 未驗證 |
+| `WorktreeCreate` | 建立隔離 worktree（可供非 git VCS 自訂）| 未驗證 |
+| `WorktreeRemove` | 移除先前建立的 worktree | 未驗證 |
+| `MessageDisplay` | 助理訊息文字顯示期間 | 未驗證 |
+
+另外，`StopFailure` 為 fire-and-forget：hook 的輸出與 exit code 都會被忽略（已與程式內說明相符）。
+
 ### 設定結構
 
 ```json
@@ -1850,6 +1922,12 @@ exit 0
 | `if` | 可選：Permission rule 過濾，如 `"Bash(git *)"` |
 | `timeout` | 可選：逾時秒數（預設 600）|
 | `statusMessage` | 可選：自訂 spinner 訊息 |
+| `once` | 可選：`true` 時執行一次後即移除 |
+| `async` | 可選：`true` 時在背景執行，不阻塞 |
+| `asyncRewake` | 可選：`true` 時在背景執行，並在 exit code 2（阻擋錯誤）時喚醒模型；隱含 `async` |
+| `shell` | 可選：`bash`（用 `$SHELL`）或 `powershell`（用 `pwsh`）；預設 bash（Windows 無 Git Bash 時為 powershell）|
+
+> `async`、`asyncRewake`、`once`、`shell` 的欄位說明取自 v2.1.316 設定 schema；各欄位適用於哪些 handler 類型尚未逐一驗證。
 
 ### 查看與管理 Hooks
 
@@ -1943,12 +2021,22 @@ claude mcp list
 # 查看單一 server 詳情
 claude mcp get github
 
-# 移除 server
+# 移除 server（不指定 --scope 時，從它所在的 scope 移除）
 claude mcp remove github
+claude mcp remove github --scope project
 
 # 重置 project-scope 的核准選擇
 claude mcp reset-project-choices
+
+# 對 HTTP / SSE server 或 claude.ai connector 進行 OAuth 認證
+claude mcp login my-server
+claude mcp login my-server --no-browser   # SSH / headless：印出授權 URL，認證後把 redirect URL 貼回
+
+# 清除某個 server 儲存的 OAuth 憑證
+claude mcp logout my-server
 ```
+
+> `claude mcp list` / `get` 對尚未核准的 `.mcp.json` server 會顯示「⏸ Pending approval」且不會連線；已核准的 server 會做健康檢查（除非該專案停用）。（v2.1.316 `claude mcp --help` 實測）
 
 ```text
 # 在 Claude Code session 內查看 server 狀態
@@ -2034,7 +2122,7 @@ MCP_CLIENT_SECRET=your-secret claude mcp add --transport http \
   my-server https://mcp.example.com/mcp
 ```
 
-OAuth 認證 token 安全儲存於系統鑰匙圈（macOS）或憑證檔案，並自動更新。在 `/mcp` 選擇「Clear authentication」可撤銷授權。
+OAuth 認證 token 安全儲存於系統鑰匙圈（macOS）或憑證檔案，並自動更新。在 `/mcp` 選擇「Clear authentication」，或執行 `claude mcp logout <name>`，可撤銷授權。
 
 #### 限制 OAuth Scopes
 
@@ -2127,7 +2215,15 @@ ENABLE_CLAUDEAI_MCP_SERVERS=false claude
 ```bash
 # 以 stdio MCP server 模式啟動
 claude mcp serve
+
+# 改用 HTTP transport（僅綁定 127.0.0.1；--port 預設 0 = 由 kernel 分配）
+claude mcp serve --transport http --port 8123
+
+# 工具結果以模型實際看到的文字呈現（預設 raw 為工具輸出的 JSON）
+claude mcp serve --result-format rendered
 ```
+
+`claude mcp serve` 選項（v2.1.316）：`--transport <stdio|http>`、`--port <port>`、`--result-format <raw|rendered>`、`--session-tunnel`（搭配 `--transport http --port 28471`，從 stdin 讀一行 JSON 後連接 session tunnel）、`-d, --debug`、`--verbose`。
 
 在 Claude Desktop 的 `claude_desktop_config.json` 中加入：
 
@@ -2378,6 +2474,15 @@ claude plugin tag
 claude plugin tag --push   # 同時推到遠端
 ```
 
+#### 其他子指令（v2.1.316 `claude plugin --help` 列出）
+
+| 指令 | 說明 |
+|------|------|
+| `claude plugin configure <plugin>` | 顯示 plugin 的選項與尚未設定的項目；`--values-stdin` 從 stdin 儲存設定值，`--json` 輸出 JSON |
+| `claude plugin eval [target]` | 對 plugin 執行 eval 案例（預設讀 `evals/` 下的 `case.yaml` 或 `prompt.md` + `graders/*.md`）並輸出評分結果；target 可為路徑、plugin 名稱或 `plugin@marketplace` |
+| `claude plugin marketplace` | 管理 marketplace |
+| `claude plugin test [dir]` | 執行 mod 的測試（預設為目前資料夾）|
+
 ---
 
 ### Session 內 Plugin 管理（`/plugin`）
@@ -2573,7 +2678,7 @@ claude --debug
 
 ## 二十、非互動模式（Headless / Print Mode）詳細用法
 
-> 以下旗標行為已用本機安裝的 Claude Code v2.1.208（`claude --help` / 實際執行）驗證。
+> 以下旗標行為已用本機安裝的 Claude Code v2.1.316（`claude --help` / 實際執行）驗證。
 
 ### 核心概念
 
@@ -2675,6 +2780,7 @@ claude -p "extract the title and author from README.md" \
 | `--permission-mode bypassPermissions` | 跳過所有權限提示，全自動執行（僅建議在無網路存取的沙箱使用）|
 | `--permission-mode dontAsk` | 未在 `permissions.allow` 規則內的工具呼叫一律拒絕，不詢問（適合預先定義好白名單的 CI）|
 | `--no-session-persistence` | 不將 session 存到磁碟（print mode 專用，適合一次性、不需要之後 `-r` 恢復的呼叫）|
+| `--permission-prompts none` | 無人回應提示時，任何會觸發權限提示的呼叫一律自動拒絕（預設 `host`：交給 SDK host 或 `--permission-prompt-tool`）|
 
 ```bash
 # CI 中安全跑一次性任務：限制回合數、限制費用、限制工具
