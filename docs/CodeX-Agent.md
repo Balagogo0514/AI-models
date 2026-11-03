@@ -338,7 +338,72 @@ codex apply <TASK_ID>                                # 不經 cloud 子命令，
 
 ## 5. 實務建議與陷阱
 
-> TODO：sandbox 與 approval 組合、成本、Git repo 限制、何時用哪種。
+標記 ✅🔎⚠️ 意義見文首。
+
+### 5.1 一句話選型
+
+- 任務**單一、可快速說清楚** → 不要用多 agent，一個 session 直接做。
+- **同一 session 內分檔唯讀審查** → Subagents（要明確要求才會 spawn）。
+- **多個獨立、耗時的審查並行、不想盯電腦** → Codex Cloud。
+- **接 CI、需精確控制輸入輸出** → 多個 `codex exec`。
+- **多個 agent 同時寫程式碼** → 一定要自己建 worktree（Codex 沒有已驗證的內建隔離）。
+- **PR 想全自動審** → GitHub `@codex review`。
+- **需要自訂編排邏輯、agent 之間交接** → 才考慮 `codex mcp-server` ＋ Agents SDK（API 層級）。
+
+### 5.2 Sandbox 與 approval 怎麼配 ✅
+
+| 需求 | 建議 | 說明 |
+|------|------|------|
+| 一般本機開發 | `-s workspace-write -a on-request` | 可寫工作區，由模型決定何時請你批准 |
+| 嚴格審查／唯讀分析 | `-s read-only -a untrusted` | 只能讀；只有 trusted commands 直接執行 |
+| CI 非互動 | `codex exec -a never --json` | 永不詢問，失敗直接回傳；不會卡在提示 |
+| 外部已隔離的自動化環境 | 視情況用 `--dangerously-bypass-approvals-and-sandbox` | 近乎完全存取，風險最高，**只在已有外部隔離（容器／microVM）時才考慮** |
+
+- 審查類工作建議**預設 `read-only`**，只有明確要產生修復檔或分析檔時才用 `workspace-write`，且限定在隔離的 worktree。
+- `on-failure` 已標示 deprecated，不要用在新腳本。✅
+
+### 5.3 成本注意
+
+- **token 用量會乘上 agent 數**：多 subagent、多個 cloud task、多個 `codex exec` 都是「開很多次」，費用遠高於單次；Subagents 官方也提醒 token 用量高於同樣工作的單 agent 流程。🔎 大任務先在單一子系統試跑，再擴大。
+- **看「每個完成任務」的成本，不是每次請求**：一個便宜但要多跑幾輪才完成的做法，未必真的便宜。
+- **用漏斗降成本**：先做不呼叫模型的去重與確定性分流，再用標準模型，最後才用深度分析；參考 `openAI-python-agent.md`「每案成本控制」的四層漏斗。✅
+- **為每個獨立事件開新的 `codex exec`**，不要預設 `resume`：`resume` 會延續先前 session，不利於成本、資料隔離與 per-ticket token 預算。✅
+- **`--attempts <N>`（best-of-N）會乘上次數**：預設 1，調高前先想清楚值不值得。✅
+
+### 5.4 常見陷阱
+
+- **Subagent 不會自己 spawn**：你不明講，Codex 就單 agent 做完；prompt 要寫「請 spawn N 個 subagent，分別審…」。🔎
+- **權限隔離 ≠ 檔案隔離**：subagent 繼承 sandbox，但多個 agent 同時**寫**同一份程式碼仍會衝突；要寫就各自建 worktree（見第 2 節）。🔎
+- **別調高 `max_depth`**：預設 1 已夠；調高會讓 fan-out、token 與延遲倍增。🔎
+- **純審查不必開 worktree**：把 sandbox 設成 `read-only` 即可，開 worktree 只是多餘開銷。
+- **`codex exec` 預設要求在 Git repository 中執行**：非 Git 目錄需 `--skip-git-repo-check`，且只應在安全的隔離目錄使用。✅ 平行跑多個程序時，也別讓它們共用同一個會被寫入的目錄。
+- **`codex cloud` 是 experimental**：指令行為可能隨版本調整；套用 `apply` 前先 `diff`，並確認工作樹乾淨。✅
+- **分檔派 agent 時 prompt 要講清楚範圍與準則**：否則每個分身審查口徑不一；用自訂 reviewer agent（固定準則）或把準則寫進 `AGENTS.md` 可統一。🔎
+- **文件（Markdown）不是程式碼**：`/review` 預設審程式邏輯；審文件要在 prompt 明確要求「查事實正確性、連結有效性」。
+- **設定檔欄位與版本不符**：開了 `--strict-config` 時，`config.toml` 的未知欄位會直接報錯；先跑 `codex doctor`、`codex --help`、`codex <subcommand> --help`，再比對版本與官方文件。✅ 這也適用於 `[agents]` 的上限設定：不同版本欄位可能有差異。
+- **不可信輸入要隔離**：審查或分析來自外部的內容（例如 coredump、第三方 PR）時，用容器或 microVM、預設禁止網路、唯讀掛載來源；建立 issue、改程式、推送、重新部署等動作保留人工核准。✅（見 `openAI-python-agent.md`「安全邊界」）
+- **啟用旗標與官方文件不一致時，以你本機版本為準**：subagents 的啟用方式各來源說法不一，先用 `/experimental` 看實際清單。⚠️
+- **別為了省錢自行降級模型**：模型選擇是使用者的決定；要省成本，先調整 reasoning effort、善用漏斗，再考慮換模型。（可用 `/model` 切換模型與 reasoning effort ✅）
+
+### 5.5 與 Claude Code 的主要差異（做多 agent 審查時）
+
+| 面向 | Claude Code | Codex |
+|------|------|------|
+| 一鍵雲端多 reviewer ＋ 獨立驗證 | `/code-review ultra` | 無已驗證的對應指令 ⚠️ |
+| 多背景 session 總覽 | Agent View（`claude agents`）| 無內建；用 `codex cloud list` 或自己的腳本 |
+| subagent 檔案隔離 | `isolation: worktree` | 無已驗證的內建設定；自建 worktree ＋ `-C` |
+| 腳本編排大量 agent | Workflows | 無內建；用 `codex exec` 腳本或 Agents SDK |
+| 完成通知 | 主動回到 session | 未見已驗證機制 |
+| 工作區無變更時自動清 worktree | 有 | 無已驗證的對應行為 |
+| 設定中心 | `settings.json`、hooks | `config.toml`、profiles、sandbox／approval、MCP、plugin marketplace ✅ |
+
+### 5.6 延伸閱讀
+
+- 指令與旗標：`CodeX-CLI.md` —— 第七章（`codex exec`）、第八章（`codex review`）、第九章（session 管理）、第十五章（Codex Cloud）、第十六章（Sandbox 與 approval）、第十九章（Slash Commands）。
+- 模型選擇與定價：`OpenAI-Model.md`。
+- Agents SDK、coredump 分析架構、成本漏斗與安全邊界：`openAI-python-agent.md`。
+- 實戰範例：本文附錄 A（fastpath memory／refcount 難題的 Codex 追蹤）。
+- Claude Code 對應版：`Claude-Agent.md`。
 
 ---
 
