@@ -143,7 +143,115 @@
 
 ## 3. Code Review 的多 Agent 做法
 
-> TODO：`/review`、`codex review`、`codex exec review`、Cloud 並行、手動分檔、GitHub `@codex review`，以及 review 相關指令總覽。
+Codex 的 code review 入口比較分散：本機有單次審查指令，「多 agent 同時審不同部分」則要靠 subagent、Cloud 多任務，或自己用 `codex exec` 平行。先給結論，再逐一說明（標記 ✅🔎⚠️ 意義見文首）。
+
+> **速選**：開發途中快速看 → **3.1 本機 `/review`／`codex review`**；同一 session 內分檔唯讀並行審 → **3.2 Subagents**；多個獨立耗時審查要並行追蹤 → **3.3 Codex Cloud**；接 CI、精確控制輸出 → **3.4 多個 `codex exec`**；PR 全自動審 → **3.5 GitHub `@codex review`**。
+
+> **與 Claude Code 的差異**：Codex 沒有已驗證的「一鍵啟動雲端多 reviewer 並獨立驗證每個 finding」指令（對應 Claude 的 `/code-review ultra`）。要多 agent 審查，得自己用 3.2–3.4 組合；若要降低誤報，可仿照 Claude 附錄的做法，另派一個獨立驗證 agent 複核（見附錄 A）。
+
+### 3.1 本機單次審查：`/review`、`codex review`、`codex exec review`
+
+- **做什麼**：對本機改動做一次審查。依文件為**單次審查**，未見多 agent 並行或獨立驗證的說明（此為依文件推論 ⚠️）。
+- **怎麼啟動**：
+  ```text
+  /review                              # 互動式 CLI：對 working tree 做 review ✅
+  ```
+  ```bash
+  codex review --uncommitted           # review staged、unstaged、untracked 變更 ✅
+  codex review --base main             # 與指定 base branch 比較 ✅
+  codex review --commit abc1234        # review 某個 commit 引入的變更 ✅
+  codex review "focus on security and backward compatibility"   # 以 prompt 指定焦點 ✅
+  codex exec review                    # 在 exec 工作流下做 review ✅
+  ```
+  `--title <TITLE>` 可額外指定 review summary title。✅
+- **追蹤**：互動模式在畫面上看；非互動用 `--json` 取事件流，或 `-o` 把最後一則訊息寫檔。
+- **適合**：開發途中快速回饋；用 prompt 指定焦點（安全、相容性…）取代 Claude 的 `/security-review`。
+
+### 3.2 手動派多個 subagent 分檔／分模組審查 🔎
+
+當你想**明確控制「誰審哪個檔案」**、並在同一個 session 內並行跑時，用這條路。
+
+- **做什麼**：一次要求 Codex spawn 多個 subagent，每個負責一個檔案或模組，各自跑完回報，再由主 Codex 彙整。
+- **怎麼啟動**：subagent **只有在你明確要求時才會 spawn**，所以 prompt 要講明白：
+  ```text
+  請 spawn 三個 subagent，分別審 src/fib/、src/neighbour/、src/route/。
+  每個 subagent 只讀、不改檔，依下列準則找 refcount 配對問題，
+  各自回報 findings，最後由你彙整去重。
+  ```
+  先確認功能已啟用（實驗性，`/experimental`；旗標名稱各來源不一 ⚠️）。
+- **自訂 reviewer**：可建立 `.codex/agents/<name>.toml`（專案共享）或 `~/.codex/agents/`（個人），每個 agent 一個 TOML 檔，可設描述、developer instructions，並覆寫 model、sandbox 等。**欄位的確切名稱我未驗證，請以官方文件為準。**
+- **隔離**：審查要唯讀，把該 agent 的 sandbox 覆寫成 `read-only`；subagent 繼承你目前的政策，所以只要整個 session 本來就是 `read-only` 就不用額外設定。純審查**不需要 worktree**。🔎
+- **上限**：同時最多 `max_threads` 個（預設 6）；`max_depth` 預設 1，不要調高。🔎
+- **追蹤**：`/agent` 切換 thread；可要求 Codex steer、stop、close。🔎
+- **成本**：token 用量高於單 agent，大任務先小範圍試跑。🔎
+- **適合**：分工清楚、各檔案相對獨立的審查；或想把結果留在主 session 一起討論。
+
+### 3.3 Codex Cloud 並行提交多個審查任務 ✅
+
+當有**多個彼此獨立、耗時**的審查，想提交後不用一直開著電腦時用。
+
+- **做什麼**：每個審查範圍提交一個 cloud task：
+  ```bash
+  codex cloud exec --env <ENV_ID> --branch feature-x "審查 src/fib/ 的 refcount 配對問題，只讀不改"
+  codex cloud exec --env <ENV_ID> --branch feature-x "審查 src/route/ 的 refcount 配對問題，只讀不改"
+  ```
+  （`--attempts <N>` 可做 best-of-N；預設 1。）
+- **追蹤**：`codex cloud list`（可 `--env`、`--limit`、`--json`）、`codex cloud status <TASK_ID>`。
+- **取回結果**：`codex cloud diff <TASK_ID>` 看 unified diff；`codex cloud apply <TASK_ID>` 套回本機。
+- **注意**：`codex cloud` 在本機 help 標示為 **experimental**；任務是否以文字 findings（而非 diff）回報、以及每個 task 的隔離與額度，**我未驗證** ⚠️。需要先設定好雲端環境（`--env`）。
+- **適合**：多個獨立耗時任務並行；因為不在你的工作樹裡跑，不會覆蓋本機檔案。
+
+### 3.4 多個 `codex exec` 平行（CI／精確控制）✅
+
+編排由你負責，Codex 不會幫你協調。
+
+- **做法**：每個審查範圍開一個唯讀的非互動程序，輸出落地成檔，最後自己彙整。示意如下（**未在實際環境執行**，請依你的目錄與需求調整）：
+  ```bash
+  mkdir -p out
+  printf '%s\n' src/fib src/neighbour src/route |
+    xargs -P 3 -I{} sh -c '
+      codex exec --sandbox read-only -a never \
+        --output-last-message "out/$(echo {} | tr / _).md" \
+        "審查 {} 的 refcount 配對問題，只回報有具體呼叫序列的問題，其餘標為推測"'
+  ```
+- **要點**：`--sandbox read-only` 保證不改檔；`-a never` 讓 CI 不會卡在提示；`-o` 把結果寫檔；要固定輸出格式可加 `--output-schema <FILE>`；要事件流用 `--json`。
+- **適合**：CI 批次審查、需要精確控制「每個程序審什麼、輸出什麼格式」。
+
+### 3.5 GitHub 端：`@codex review` 🔎
+
+- **做什麼**：在 PR 頂層留言 `@codex review`，Codex 以 eyes reaction 表示接手，並貼出標準的 GitHub review。
+- **前置條件**：需先設定好 Codex cloud，並在 Codex 設定中對該 repo 開啟 Code review。
+- **指定焦點**：可附一次性的焦點，例如 `@codex review for security regressions`；常駐規則寫在 repo 的 `AGENTS.md`（用 `/init` 可產生 scaffold ✅）。
+- **嚴重度**：GitHub 上只標 **P0／P1**，讓留言聚焦在高優先風險。
+- **自動審查**：設定中有開關，可在 PR 開啟時自動審，不必留言。（觸發時機的細節各來源略有出入，以官方最新文件為準 ⚠️。）
+- **後續動作**：其他 `@codex` 留言，例如 `@codex fix the P1 issue`，會以 PR 為脈絡啟動雲端任務；有權限時可把修正推到分支。
+- **適合**：PR 想全自動、不必人工在本機下指令。
+
+### 3.6 review 相關入口總覽與選擇
+
+| 入口 | 位置 | 用途 | 備註 |
+|------|------|------|------|
+| `/review` | 互動 CLI | 對 working tree 做 review | ✅ |
+| `codex review` | CLI | `--uncommitted`／`--base`／`--commit`／prompt 焦點 | ✅ 單次審查 |
+| `codex exec review` | CLI（非互動）| 在 exec 工作流下 review | ✅ |
+| `/diff` | 互動 CLI | 顯示 Git diff（含未追蹤檔案），適合自己先看一遍 | ✅ |
+| `codex cloud exec …` | CLI → 雲端 | 提交雲端任務 | ✅ experimental |
+| `@codex review` | GitHub PR | PR 自動／手動審查 | 🔎 需 Codex cloud 設定 |
+| `@codex fix …` | GitHub PR | 以 PR 為脈絡啟動雲端修復任務 | 🔎 |
+
+| 情境 | 建議 |
+|------|------|
+| 開發途中快速看一下 | `/review` 或 `codex review --uncommitted` |
+| 只擔心安全／相容性 | `codex review "focus on security …"`（prompt 指定焦點）|
+| 同一 session 分檔並行唯讀審 | 3.2 Subagents |
+| 多個耗時審查並行、不盯電腦 | 3.3 Codex Cloud |
+| 接 CI、精確控制輸出 | 3.4 多個 `codex exec` |
+| PR 全自動審 | 3.5 `@codex review` |
+| 要自動修 | `@codex fix …` 或在本機讓 Codex 依 finding 修改 |
+
+> Codex 沒有已驗證的內建對應 Claude 的 `/security-review`（專攻安全）與 `/simplify`（只找 cleanup）；用 prompt 指定焦點即可達到類似效果。
+
+> ⚠️ **文件 vs 程式碼**：`/review` 與 subagent 預設審的是**程式碼 diff**。若審查對象是 Markdown／文件，審查會偏向**內容與事實查核**；此時在 prompt 裡講清楚「查事實正確性、連結有效性」，並用 3.2 分檔派 subagent，會比單次 `/review` 更貼切。
 
 ---
 
