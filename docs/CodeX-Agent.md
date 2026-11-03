@@ -109,7 +109,35 @@
 
 ## 2. 平行工作方式的選型
 
-> TODO：Workflow vs Worktree 釐清框（Codex 的隔離：git worktree vs sandbox 模式，兩件事）＋八欄選型對照表。
+> **釐清框：Sandbox 與 Worktree 不是同一件事（Codex 最常見的混淆）**
+>
+> 兩者都叫「隔離」，但隔離的東西完全不同，而且**正交、常一起用**：
+>
+> | | Sandbox（沙箱）＋ approval | Worktree（工作樹）|
+> |---|---|---|
+> | 本質 | Codex 的**權限邊界**：能讀寫哪裡、能否連網、哪些操作要先問你 | **git 功能**：獨立的工作目錄 + branch，共用同一份 repo 歷史 |
+> | 解決什麼 | agent **能做什麼**（防止它碰不該碰的東西）| 平行工作**改哪份檔案**（防止彼此覆蓋）|
+> | 層次 | 作業系統／權限層 | 檔案系統／版本控制層 |
+> | 怎麼設 | `-s` / `--sandbox`：`read-only`、`workspace-write`、`danger-full-access`；`-a` / `--ask-for-approval`：`untrusted`、`on-request`、`never` ✅ | `git worktree add …`，再用 `codex exec -C <DIR>` 或在該目錄啟動 Codex ✅（`git worktree` 為 git 功能）|
+> | 對 subagent | 繼承目前政策，可單一 agent 覆寫 🔎 | **官方未見內建的 per-subagent worktree 機制** ⚠️；多個 agent 寫同一份程式碼會衝突 🔎 |
+>
+> 比喻：**Sandbox ＝ 每個工人的權限證**（能進哪些房間、能不能動工具）；**Worktree ＝ 每個工人各自的工作檯**（東西不混在一起）。唯讀審查只需要 sandbox 設成 `read-only`，**不需要 worktree**；要多個 agent「同時寫」才需要 worktree。
+>
+> 常見組合（✅ 取自 `CodeX-CLI.md`）：一般本機開發 `-s workspace-write -a on-request`；嚴格審查 `-s read-only -a untrusted`；CI 非互動 `codex exec -a never --json`。
+
+> **與 Claude Code 對照**：Claude 的 subagent 可設 `isolation: worktree` 自動開 worktree；Codex 沒有已驗證的對應設定，要隔離檔案得**自己建 worktree** 並用 `-C` 指向它。Claude 的 Workflows（腳本編排大量 agent）在 Codex 裡沒有內建對應，同類需求要走 1.3（自己寫腳本）或 1.5（Agents SDK）。
+
+下表把第 1 節的三種 CLI 層級方式，依八個角度整體對照（Desktop App、`mcp-server` ＋ Agents SDK 屬桌面／API 層級，不列入）：
+
+| 方式 | 誰決定下一步 | 中間結果放哪 | 檔案隔離 | 可否重播 | 規模 | 如何追蹤 | 適合情境 |
+|------|------|------|------|------|------|------|------|
+| **Subagents** 🔎 | 主 session 的 Codex（你明確要求才 spawn）| 各 thread 自己的 context，再回報主 session | 無內建；僅 sandbox 權限可個別覆寫 | 自訂 agent 的 TOML 定義可重用；單次委派不留存 | `max_threads` 預設 6、`max_depth` 預設 1 | `/agent` 切換 thread；可要求 steer／stop／close | 唯讀的分檔／分模組審查、探索、分流 |
+| **Codex Cloud** ✅ | 你手動提交每個 task | 雲端 task（不在你的工作樹）| 不碰你的本機檔案；套回前先 `diff` 檢視 | task ID 可隨時 `status`／`diff`／`apply`；`--attempts` 做 best-of-N | 由雲端環境與額度決定（細節未驗證 ⚠️）| `codex cloud list`／`status` | 多個獨立、耗時任務並行，不用盯著電腦 |
+| **多個 `codex exec`** ✅ | 你的腳本 | 各程序自己的 session；用 `--json`／`-o` 落地 | 自建 `git worktree` 並用 `-C` 指向 | `codex exec resume`；腳本本身可版控重用 | 自行決定，受機器與額度限制 | 自己的腳本與 log（`--json` 事件流）| CI 批次審查、需精確控制輸入輸出格式 |
+
+> 速記：**要同一 session 內唯讀分工審查 → Subagents**；**要多個獨立耗時任務並行、可追蹤 → Codex Cloud**；**要接 CI、精確控制 → 多個 `codex exec`**。要多個 agent **同時寫**程式碼時，一定要自己建 worktree（見上方釐清框）。
+>
+> 標記：✅ 本地文件、🔎 官方間接、⚠️ 未驗證（見文首說明）。表格中以標記放在方式名稱後者，表示該列整體的主要來源；單格若與其不同，會另外註記。
 
 ---
 
