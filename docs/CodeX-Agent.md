@@ -257,7 +257,82 @@ Codex 的 code review 入口比較分散：本機有單次審查指令，「多 
 
 ## 4. 如何追蹤與彙整
 
-> TODO：`codex cloud list/status/diff/apply`、`resume` / `fork`、`/agent`、`/goal`、worktree 清理。
+平行工作最怕「派出去就看不到了」。Codex 沒有 Claude 那種統一的 Agent View 畫面（見第 1 節），所以**追蹤入口依做法而分散**，彙整多半要自己動手。標記 ✅🔎⚠️ 意義見文首。
+
+### 4.1 追蹤入口一覽
+
+| 想看什麼 | 用哪個 |
+|------|------|
+| session 內的 subagent | `/agent` 切換目前的 agent thread ✅；可要求 Codex steer、stop、close 🔎 |
+| Cloud 任務 | `codex cloud list`、`codex cloud status <TASK_ID>` ✅ |
+| 背景 terminal | `/ps` 檢視、`/stop` 停止 ✅（指**背景 terminals**，不是 subagent 或 cloud task）|
+| 自己的 `codex exec` 程序 | 你的腳本與 log；`--json` 事件流、`-o` 寫檔 ✅ |
+| 先前的 session | `codex resume`、`codex fork`、`codex archive`／`unarchive` ✅ |
+| 目前 session 狀態與用量 | `/status`（設定、token usage 等）✅ |
+| 完成通知 | 未見已驗證的「主動通知回 session」機制 ⚠️；非互動程序以 exit code 與輸出檔判斷 |
+
+### 4.2 Cloud 任務的追蹤與取回 ✅
+
+```bash
+codex cloud list --env <ENV_ID> --limit 20 --json   # 列任務（--limit 為 1–20，預設 20；--cursor 分頁）
+codex cloud status <TASK_ID>                         # 查單一任務狀態
+codex cloud diff <TASK_ID> [--attempt <N>]           # 看 unified diff
+codex cloud apply <TASK_ID> [--attempt <N>]          # 把 diff 套回本機工作樹
+codex apply <TASK_ID>                                # 不經 cloud 子命令，直接以 git apply 套用最新 diff
+```
+
+- 用 `--attempts <N>`（best-of-N）提交時，`diff`／`apply` 用 `--attempt <N>` 指定要看或套用哪一次嘗試。
+- **套回前先 `diff` 檢視**：`apply` 會直接改你的工作樹；先確認沒有不該動的檔案，並確保工作樹乾淨，才好 `git diff` 出差異。
+- `list --json` 可接腳本做簡易看板（例如定時輪詢、列出尚未完成的 task）。
+- 本機 help 標示 `codex cloud` 為 **experimental**，指令行為可能隨版本調整。
+
+### 4.3 Subagent 的追蹤 🔎
+
+- 在主 session 裡用 `/agent` 在各 thread 之間切換，查看各自的進度與輸出。
+- 子 agent 跑偏時，直接對 Codex 說要 **steer**（改方向）、**stop**（停止）或 **close**（關閉）。
+- `max_threads`（預設 6）決定同時開啟的 thread 上限；超過的要等有空位。
+- **沒有跨 session 的總覽**：subagent 活在主 session 裡，關掉主 session 就看不到了；需要長期追蹤的工作，改走 Cloud（4.2）或自己的 `codex exec`（4.5）。
+
+### 4.4 Session 管理：resume、fork、archive ✅
+
+| 指令 | 用途 |
+|------|------|
+| `codex resume [SESSION_ID] [PROMPT]` | 恢復先前互動式 session；`--last` 取最近一次、`--all` 列出所有 cwd 的 session、`--include-non-interactive` 連非互動 session 也列入 |
+| `codex fork [SESSION_ID] [PROMPT]` | 從舊 session **分叉**成新 session（`--last`、`--all`）；適合「同一份 context，試另一種做法」 |
+| `codex archive <SESSION>`／`unarchive` | 封存或還原已儲存的 session |
+| `/resume`、`/fork`、`/new`、`/clear` | 互動模式內的對應操作 |
+| `codex exec resume [SESSION_ID]` | 延續**非互動** session |
+
+- 想把一個調查「分支」成兩條假說各自追，`fork` 是最直接的工具（附錄 A 的競爭假說調查會用到）。
+- `resume` 會延續先前 session，所以**不適合當作有嚴格成本、資料隔離或 per-ticket token 預算時的預設機制**；每個獨立事件通常應開新的 `codex exec`，只有明確需要延續同一工作時才 `resume`。✅（本地文件原則）
+
+### 4.5 自己編排時的追蹤（多個 `codex exec`）✅
+
+沒有內建看板，建議自己建立最小的追蹤機制：
+
+- **一個程序一份輸出檔**：`-o out/<範圍>.md`（最後訊息）或 `--json > out/<範圍>.jsonl`（完整事件流）。
+- **一個帳本檔**：沿用 `Claude-Agent.md` 附錄 A.5 的格式（ID、位置、主張、證據、信心、驗證狀態、負責 agent），由你或主腳本彙整。
+- **exit code**：腳本檢查每個程序是否成功；失敗的範圍重跑。
+- **固定輸出格式**：`--output-schema <FILE>` 讓各程序輸出同一個 JSON 結構，彙整時直接合併，不必解析自由文字。
+
+### 4.6 彙整結果
+
+- **Subagents**：各 subagent 回報給主 session，由主 Codex 收攏、去重、排序，形成一份整體結論。🔎
+- **Codex Cloud**：每個任務的結果留在各自的 task；你用 `diff` 逐一檢視，再決定要 `apply` 哪些。✅ 若要合併多份審查意見，需自己整理（或開一個本機 session 讀這些 diff 再彙整）。
+- **多個 `codex exec`**：輸出檔由你的腳本合併；建議再開一個**獨立驗證**的 `codex exec`，只看彙整清單與程式碼，逐條複核（做法見附錄 A）。
+- **GitHub `@codex review`**：結果以 GitHub review／留言呈現在 PR 上，標 P0／P1。🔎
+
+### 4.7 Worktree 與暫存清理
+
+- 本文建議的 worktree 都是**你自己用 `git worktree` 建的**（見第 2 節），因此**清理也由你負責**：
+
+  ```bash
+  git worktree list
+  git worktree remove ../review-fib          # 無未提交變更時
+  git worktree prune                         # 清除已不存在目錄的登記
+  ```
+- Claude Code 會自動刪除「無變更」的 worktree；Codex 沒有已驗證的對應自動清理行為。桌面 App 若自己管理 worktree，其保留數量與清理規則只見於第三方且互相矛盾 ⚠️，不採用。
+- `codex exec --ephemeral` 不把 session 檔案存到磁碟 ✅，適合不需要日後 `resume` 的一次性審查，可減少殘留。
 
 ---
 
