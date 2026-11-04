@@ -1,7 +1,7 @@
 # Codex 多 Agent 工作與 Code Review 指南
 
 > 本文是 `Claude-Agent.md` 的 OpenAI Codex 對應版：聚焦「工作流程與選型」——何時用哪種平行工作方式、如何同時審查不同部分、如何追蹤與彙整。
-> 指令與旗標的完整清單請見 `CodeX-CLI.md`；Agents SDK 與 coredump 分析架構請見 `openAI-python-agent.md`。
+> 指令與旗標的完整清單請見 `CodeX-CLI.md`；Agents SDK 與 coredump 分析架構請見 `OpenAI-Python-Agent.md`。
 >
 > 狀態：初版完成（五節與附錄 A 皆已填）。更新日期：2026-11-03
 
@@ -100,7 +100,7 @@
 ### 1.5 `codex mcp-server` 與 Agents SDK（API 層級）
 
 - **`codex mcp-server`**：把 Codex 自己啟動成 MCP server，讓其他 client 以 stdio 接入。✅ 也就是說，別的程式（例如用 Agents SDK 寫的編排器）可以把 Codex 當成一個工具來呼叫。
-- **OpenAI Agents SDK**：用 SDK 自己寫編排邏輯、多個 agent 之間交接。本 repo 的 `openAI-python-agent.md` 有以 coredump 分析為例的架構與選型。✅
+- **OpenAI Agents SDK**：用 SDK 自己寫編排邏輯、多個 agent 之間交接。本 repo 的 `OpenAI-Python-Agent.md` 有以 coredump 分析為例的架構與選型。✅
 - **與 code review 的關係**：這是**產品整合／自建編排**用的，不是在 Codex CLI 裡做互動式 review 的入口。如果你要的是「審這次改動」，用 1.1–1.3 即可。
 
 > **一句話定調**：做 code review，重點看 **1.1 Subagents**（同一 session 唯讀分工審查）與 **1.2 Codex Cloud**（多個獨立任務並行、可追蹤）；需要精確控制或接 CI 時用 **1.3 多個 `codex exec`**；**1.4／1.5** 屬於桌面或 API 層級，本文其餘章節不深入。另有內建的 review 入口（`/review`、`codex review`、GitHub `@codex review`），見第 3 節。
@@ -366,7 +366,7 @@ codex apply <TASK_ID>                                # 不經 cloud 子命令，
 
 - **token 用量會乘上 agent 數**：多 subagent、多個 cloud task、多個 `codex exec` 都是「開很多次」，費用遠高於單次；Subagents 官方也提醒 token 用量高於同樣工作的單 agent 流程。🔎 大任務先在單一子系統試跑，再擴大。
 - **看「每個完成任務」的成本，不是每次請求**：一個便宜但要多跑幾輪才完成的做法，未必真的便宜。
-- **用漏斗降成本**：先做不呼叫模型的去重與確定性分流，再用標準模型，最後才用深度分析；參考 `openAI-python-agent.md`「每案成本控制」的四層漏斗。✅
+- **用漏斗降成本**：先做不呼叫模型的去重與確定性分流，再用標準模型，最後才用深度分析；參考 `OpenAI-Python-Agent.md`「每案成本控制」的四層漏斗。✅
 - **為每個獨立事件開新的 `codex exec`**，不要預設 `resume`：`resume` 會延續先前 session，不利於成本、資料隔離與 per-ticket token 預算。✅
 - **`--attempts <N>`（best-of-N）會乘上次數**：預設 1，調高前先想清楚值不值得。✅
 
@@ -381,7 +381,7 @@ codex apply <TASK_ID>                                # 不經 cloud 子命令，
 - **分檔派 agent 時 prompt 要講清楚範圍與準則**：否則每個分身審查口徑不一；用自訂 reviewer agent（固定準則）或把準則寫進 `AGENTS.md` 可統一。🔎
 - **文件（Markdown）不是程式碼**：`/review` 預設審程式邏輯；審文件要在 prompt 明確要求「查事實正確性、連結有效性」。
 - **設定檔欄位與版本不符**：開了 `--strict-config` 時，`config.toml` 的未知欄位會直接報錯；先跑 `codex doctor`、`codex --help`、`codex <subcommand> --help`，再比對版本與官方文件。✅ 這也適用於 `[agents]` 的上限設定：不同版本欄位可能有差異。
-- **不可信輸入要隔離**：審查或分析來自外部的內容（例如 coredump、第三方 PR）時，用容器或 microVM、預設禁止網路、唯讀掛載來源；建立 issue、改程式、推送、重新部署等動作保留人工核准。✅（見 `openAI-python-agent.md`「安全邊界」）
+- **不可信輸入要隔離**：審查或分析來自外部的內容（例如 coredump、第三方 PR）時，用容器或 microVM、預設禁止網路、唯讀掛載來源；建立 issue、改程式、推送、重新部署等動作保留人工核准。✅（見 `OpenAI-Python-Agent.md`「安全邊界」）
 - **啟用旗標與官方文件不一致時，以你本機版本為準**：subagents 的啟用方式各來源說法不一，先用 `/experimental` 看實際清單。⚠️
 - **別為了省錢自行降級模型**：模型選擇是使用者的決定；要省成本，先調整 reasoning effort、善用漏斗，再考慮換模型。（可用 `/model` 切換模型與 reasoning effort ✅）
 
@@ -401,7 +401,7 @@ codex apply <TASK_ID>                                # 不經 cloud 子命令，
 
 - 指令與旗標：`CodeX-CLI.md` —— 第七章（`codex exec`）、第八章（`codex review`）、第九章（session 管理）、第十五章（Codex Cloud）、第十六章（Sandbox 與 approval）、第十九章（Slash Commands）。
 - 模型選擇與定價：`OpenAI-Model.md`。
-- Agents SDK、coredump 分析架構、成本漏斗與安全邊界：`openAI-python-agent.md`。
+- Agents SDK、coredump 分析架構、成本漏斗與安全邊界：`OpenAI-Python-Agent.md`。
 - 實戰範例：本文附錄 A（fastpath memory／refcount 難題的 Codex 追蹤）。
 - Claude Code 對應版：`Claude-Agent.md`。
 
@@ -501,7 +501,7 @@ Codex 沒有統一看板（見第 4 節），所以**帳本是必要的**。在 
 }
 ```
 
-若問題是從 coredump 起手，案件事實檔（`case_facts.json`）、第一輪模型可見的最小證據集與工具集，見 `openAI-python-agent.md`。✅
+若問題是從 coredump 起手，案件事實檔（`case_facts.json`）、第一輪模型可見的最小證據集與工具集，見 `OpenAI-Python-Agent.md`。✅
 
 ### A.6 能做與做不到的事（務實預期）
 
@@ -621,4 +621,4 @@ codex exec --sandbox read-only -a never -o out/log-analysis.md \
    資料不足的地方明說，不要補猜。"
 ```
 
-> 實務提醒：審查不可信輸入（coredump、第三方資料）時，在容器或 microVM 中執行、預設禁網路、唯讀掛載來源，並對建立 issue、改程式、推送等動作保留人工核准。✅（見 `openAI-python-agent.md`「安全邊界」）
+> 實務提醒：審查不可信輸入（coredump、第三方資料）時，在容器或 microVM 中執行、預設禁網路、唯讀掛載來源，並對建立 issue、改程式、推送等動作保留人工核准。✅（見 `OpenAI-Python-Agent.md`「安全邊界」）
