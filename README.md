@@ -1,8 +1,8 @@
 # AI 模型與 Agent 筆記庫
 
-AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理與訓練、Claude Code／Codex 等 Agent 工具的使用與選型，以及工作中的工程分析。以繁體中文撰寫。
+AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理與訓練、Claude Code／Codex 等 Agent 工具的使用與選型。以繁體中文撰寫。
 
-> 共 13 篇筆記，另有 3 份工程分析。點標題即可開啟對應文件。
+> 共 13 篇筆記。點標題即可開啟對應文件。
 
 ## 模型與訓練
 
@@ -27,22 +27,11 @@ AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理�
 | [Codex 多 Agent 與 Code Review](docs/CodeX-Agent.md) | Codex 的 Subagents、Cloud、`codex exec` 平行與 code review 做法 |
 | [Python + OpenAI coredump 分析 Agent](docs/OpenAI-Python-Agent.md) | 以 Python 控制的 coredump 自動分析流程設計 |
 
-## 工程分析
-
-> 以下為工程分析文件，檔案保留在原位置，僅在此建立索引。
-
-| 文件 | 主題 |
-|---|---|
-| [FRR-framework.md](FRR-framework.md) | 6WIND FastPath + FRR 架構與流程 |
-| [fp-rte-crash-11332.md](fp-rte-crash-11332.md) | FP RTE Crash Analysis |
-| [glibc-malloc-trim.md](glibc-malloc-trim.md) | glibc malloc_trim 對 conntrack fallback fragmentation 的修改評估 |
-
 ## 其他
 
 | 項目 | 說明 |
 |---|---|
 | [c-code-review/](c-code-review/SKILL.md) | C 程式碼審查用的 skill（`SKILL.md`） |
-| [AGENTS.md](AGENTS.md) | 協作規則：建立、修改、搬移或刪除檔案前，先說明並等待核准 |
 
 ---
 
