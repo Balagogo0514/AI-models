@@ -1,8 +1,8 @@
 # AI 模型與 Agent 筆記庫
 
-AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理與訓練、Claude Code／Codex 等 Agent 工具的使用與選型，以及工作中的工程分析與報告。以繁體中文撰寫。
+AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理與訓練、Claude Code／Codex 等 Agent 工具的使用與選型，以及工作中的工程分析。以繁體中文撰寫。
 
-> 共 13 篇筆記，另有 9 份工程分析與報告。點標題即可開啟對應文件。
+> 共 13 篇筆記，另有 3 份工程分析。點標題即可開啟對應文件。
 
 ## 模型與訓練
 
@@ -27,21 +27,15 @@ AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理�
 | [Codex 多 Agent 與 Code Review](docs/CodeX-Agent.md) | Codex 的 Subagents、Cloud、`codex exec` 平行與 code review 做法 |
 | [Python + OpenAI coredump 分析 Agent](docs/OpenAI-Python-Agent.md) | 以 Python 控制的 coredump 自動分析流程設計 |
 
-## 工程分析與報告
+## 工程分析
 
-> 以下為工程分析與簡報大綱，檔案保留在原位置，僅在此建立索引。
+> 以下為工程分析文件，檔案保留在原位置，僅在此建立索引。
 
 | 文件 | 主題 |
 |---|---|
 | [FRR-framework.md](FRR-framework.md) | 6WIND FastPath + FRR 架構與流程 |
 | [fp-rte-crash-11332.md](fp-rte-crash-11332.md) | FP RTE Crash Analysis |
 | [glibc-malloc-trim.md](glibc-malloc-trim.md) | glibc malloc_trim 對 conntrack fallback fragmentation 的修改評估 |
-| [reports/ksm-10589.md](reports/ksm-10589.md) | YAMS certificate reload 的重複 YANG validation 最佳化（簡報大綱） |
-| [reports/ksm-10705.md](reports/ksm-10705.md) | WLAN 大量規則異動效能調查（簡報大綱） |
-| [reports/ksm-10714.md](reports/ksm-10714.md) | NETCONF edit-config 完成狀態查詢設計（簡報大綱） |
-| [reports/ksm-10724.md](reports/ksm-10724.md) | ncagent NETCONF 回覆逾時可依 RPC 個別設定（簡報大綱） |
-| [reports/ksm-10770.md](reports/ksm-10770.md) | YANG Validation 效能稽核：全庫掃描高成本驗證寫法（簡報大綱） |
-| [reports/mib-callback-to-restapi.md](reports/mib-callback-to-restapi.md) | SNMP MIB Callback 透過共通介面呼叫 restd REST API |
 
 ## 其他
 
