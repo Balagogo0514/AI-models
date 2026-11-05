@@ -1,0 +1,709 @@
+<title>AI Post-Training</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+/* Layout: one reading column; a chip row jumps to sections; each method is a short block with a three-part facts grid. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --fg: #1c2330;
+  --muted: #5b6678;
+  --line: #dfe3ea;
+  --accent: #2f5fd0;
+  --accent-soft: #e7eefc;
+  --good: #1f7a4d;
+  --warn: #a4521a;
+  --k1: #2f5fd0; --k2: #0f766e; --k3: #7c3aed; --k4: #b4232a; --k5: #a4521a; --k6: #5b6678;
+  --font-body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161d; --surface: #1a2029; --fg: #e6e9ef; --muted: #98a2b3; --line: #2b3340;
+    --accent: #8fb0ff; --accent-soft: #1f2b47; --good: #5cc796; --warn: #e5a06a;
+    --k1: #8fb0ff; --k2: #5fd0c4; --k3: #b79bff; --k4: #ff8f94; --k5: #e5a06a; --k6: #98a2b3;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161d; --surface: #1a2029; --fg: #e6e9ef; --muted: #98a2b3; --line: #2b3340;
+  --accent: #8fb0ff; --accent-soft: #1f2b47; --good: #5cc796; --warn: #e5a06a;
+  --k1: #8fb0ff; --k2: #5fd0c4; --k3: #b79bff; --k4: #ff8f94; --k5: #e5a06a; --k6: #98a2b3;
+  color-scheme: dark;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.75;
+  padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+main { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 36px; min-width: 0; }
+header { display: flex; flex-direction: column; gap: 12px; }
+.kicker { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; color: var(--accent); text-transform: uppercase; }
+h1 { font-size: clamp(28px, 6vw, 38px); line-height: 1.25; margin: 0; font-weight: 700; text-wrap: balance; }
+h2 { font-size: 22px; line-height: 1.35; margin: 0 0 14px; font-weight: 700; text-wrap: balance; }
+h3 { font-size: 17px; line-height: 1.4; margin: 0; font-weight: 700; }
+p { margin: 0; }
+.lede { color: var(--muted); }
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 4px; }
+.pair div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; min-width: 0; }
+.pair b { display: block; font-size: 13px; color: var(--accent); margin-bottom: 2px; }
+nav { display: flex; flex-wrap: wrap; gap: 8px; }
+nav a {
+  font-size: 14px; text-decoration: none; color: var(--fg);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px;
+}
+nav a:hover, nav a:focus-visible { border-color: var(--accent); color: var(--accent); outline: none; }
+nav a:focus-visible { box-shadow: 0 0 0 2px var(--accent-soft), 0 0 0 3px var(--accent); }
+ul, ol { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 4px; }
+section { min-width: 0; scroll-margin-top: 12px; }
+.methods { display: flex; flex-direction: column; gap: 14px; }
+.method { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.method .tag { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+.facts > div { min-width: 0; font-size: 14.5px; }
+.facts h4 { margin: 0 0 4px; font-size: 12.5px; letter-spacing: .06em; font-weight: 700; }
+.facts .fit h4 { color: var(--accent); }
+.facts .pro h4 { color: var(--good); }
+.facts .con h4 { color: var(--warn); }
+.facts ul { padding-left: 1.1em; gap: 2px; }
+.note { font-size: 14.5px; color: var(--muted); border-left: 3px solid var(--line); padding-left: 12px; }
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 14.5px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12.5px; letter-spacing: .05em; color: var(--muted); font-weight: 700; background: var(--accent-soft); }
+tr:last-child td { border-bottom: 0; }
+td:first-child { font-weight: 700; white-space: nowrap; }
+.flow { font-family: var(--font-mono); font-size: 13.5px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; overflow-x: auto; line-height: 1.8; margin-top: 14px; }
+.flow span { color: var(--accent); }
+.choose { display: flex; flex-direction: column; gap: 8px; list-style: none; padding: 0; }
+.choose li { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.1fr); gap: 10px; align-items: baseline; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; }
+.choose .goal { color: var(--muted); }
+.choose .arrow { color: var(--accent); }
+.choose .pick { font-weight: 500; }
+@media (max-width: 520px) { .choose li { grid-template-columns: 1fr; gap: 2px; } .choose .arrow { display: none; } }
+.user-opts { display: flex; flex-direction: column; gap: 14px; }
+.user-opts > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; }
+.user-opts h3 { margin-bottom: 4px; }
+.summary { background: var(--accent-soft); border-radius: 12px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+.summary b { color: var(--accent); }
+footer { color: var(--muted); font-size: 13px; }
+.chip { display: inline-block; font-size: 13px; line-height: 1.6; padding: 2px 10px; border-radius: 999px; white-space: nowrap; color: var(--k); background: color-mix(in oklab, var(--k) 14%, var(--surface)); border: 1px solid color-mix(in oklab, var(--k) 40%, var(--surface)); font-weight: 500; }
+.c1 { --k: var(--k1); } .c2 { --k: var(--k2); } .c3 { --k: var(--k3); } .c4 { --k: var(--k4); } .c5 { --k: var(--k5); } .c6 { --k: var(--k6); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.map { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.map-title { font-size: 13px; font-weight: 700; letter-spacing: .05em; color: var(--muted); margin-top: 18px; }
+.map-row { display: grid; grid-template-columns: 168px auto minmax(0, 1fr); gap: 10px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+.map-row .chip { justify-self: start; }
+.map-row .arrow { color: var(--muted); }
+.meths { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.m { font-size: 14px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 1px 8px; }
+@media (max-width: 520px) { .map-row { grid-template-columns: 1fr; gap: 6px; } .map-row .arrow { display: none; } }
+.steps { list-style: none; padding: 0; margin: 16px 0 0; display: flex; flex-direction: column; gap: 0; }
+.step { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 0 12px; position: relative; padding-bottom: 16px; }
+.step:last-child { padding-bottom: 0; }
+.step::before { content: ""; position: absolute; left: 16px; top: 34px; bottom: 0; width: 2px; background: var(--line); }
+.step:last-child::before { display: none; }
+.dot { width: 34px; height: 34px; border-radius: 50%; background: var(--accent); color: var(--bg); display: grid; place-items: center; font-family: var(--font-mono); font-size: 14px; font-weight: 500; }
+.step.pre .dot { background: var(--surface); border: 2px dashed var(--muted); color: var(--muted); }
+.step .body { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.step.pre .body { border-style: dashed; }
+.step .body b { font-size: 16px; }
+.step .opt { font-size: 12.5px; color: var(--muted); margin-left: 6px; font-weight: 400; }
+figure.dg { margin: 16px 0 0; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+figure.dg svg { display: block; width: 100%; max-width: 480px; height: auto; margin: 0 auto; }
+figure.dg figcaption { margin-top: 10px; font-size: 13.5px; color: var(--muted); }
+.dg text { fill: var(--fg); font-size: 12px; font-family: var(--font-body); }
+.dg .s { fill: var(--muted); font-size: 11px; }
+.dg .b { font-weight: 700; }
+.dg .h { fill: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .04em; }
+.dg .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+.dg .dash { stroke-dasharray: 4 3; }
+.dg .bad { fill: color-mix(in oklab, var(--warn) 14%, var(--surface)); stroke: var(--warn); stroke-width: 1.2; }
+.dg .good { fill: color-mix(in oklab, var(--good) 14%, var(--surface)); stroke: var(--good); stroke-width: 1.2; }
+.dg .acc { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.2; }
+.dg .ln { stroke: var(--muted); stroke-width: 1.4; fill: none; }
+.dg .ar { fill: var(--muted); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
+<main>
+  <header>
+    <div class="kicker">Post-Training</div>
+    <h1>AI Post-Training</h1>
+    <p class="lede">AI 的「後訓練」（post-training）是指模型完成預訓練（pretraining）後，為了讓模型更符合任務需求、回答偏好、安全規範與推理能力，而追加的一系列訓練與優化方法。</p>
+    <div class="pair">
+      <div><b>預訓練</b>解決「模型看過很多資料」</div>
+      <div><b>後訓練</b>解決「模型更會做事、更像你要的助手」</div>
+    </div>
+    <nav aria-label="章節">
+      <a href="#goals">目標</a>
+      <a href="#methods">常見方法</a>
+      <a href="#compare">方法比較</a>
+      <a href="#rl">RL 詳解</a>
+      <a href="#pipeline">實務流程</a>
+      <a href="#choose">怎麼選</a>
+      <a href="#rag">RAG 夠不夠</a>
+      <a href="#rag-rl">RAG 不夠的 RL</a>
+      <a href="#rag-model">要不要開源</a>
+      <a href="#users">使用者可做的優化</a>
+    </nav>
+  </header>
+
+  <section id="goals">
+    <h2>後訓練在做什麼</h2>
+    <ul>
+      <li><b>指令遵循</b>：更會照需求完成任務</li>
+      <li><b>領域適配</b>：更懂醫療、法律、金融、企業內部知識</li>
+      <li><b>回答偏好</b>：更符合人類期待的品質、格式與風格</li>
+      <li><b>安全對齊</b>：降低有害、越獄、違規輸出</li>
+      <li><b>推理與工具使用</b>：更會做多步推理、調用工具、產出結構化結果</li>
+    </ul>
+    <div class="map-title">目標 → 對應方法</div>
+    <div class="map" role="group" aria-label="後訓練目標與對應方法">
+      <div class="map-row"><span class="chip c1">指令遵循</span><span class="arrow">→</span><div class="meths"><span class="m">SFT</span></div></div>
+      <div class="map-row"><span class="chip c2">領域適配</span><span class="arrow">→</span><div class="meths"><span class="m">Continued Pretraining / Domain Adaptation</span></div></div>
+      <div class="map-row"><span class="chip c3">回答偏好</span><span class="arrow">→</span><div class="meths"><span class="m">Preference Learning</span><span class="m">RLHF</span><span class="m">RLAIF</span><span class="m">DPO</span></div></div>
+      <div class="map-row"><span class="chip c4">安全對齊</span><span class="arrow">→</span><div class="meths"><span class="m">Safety / Alignment Tuning</span><span class="m">Preference Learning</span></div></div>
+      <div class="map-row"><span class="chip c5">推理與工具使用</span><span class="arrow">→</span><div class="meths"><span class="m">RL 後訓練</span><span class="m">Tool Use / Agent 能力微調</span></div></div>
+      <div class="map-row"><span class="chip c6">效率與資料手段</span><span class="arrow">→</span><div class="meths"><span class="m">Distillation</span><span class="m">PEFT</span><span class="m">Rejection Sampling</span></div></div>
+    </div>
+    <p class="note" style="margin-top:12px">對照為依本文各方法的「適合場景」整理。同一方法常服務多個目標，實務上會混合使用。</p>
+  </section>
+
+  <section id="methods">
+    <h2>常見方法</h2>
+    <div class="methods">
+
+      <article class="method">
+        <div class="tag">1</div>
+        <h3>SFT / 監督式微調</h3>
+        <p>SFT（Supervised Fine-Tuning）是最常見的後訓練方法。用高品質的指令資料、問答資料、範例輸出，直接監督模型學習。</p>
+        <div class="facts">
+          <div class="fit"><h4>適合場景</h4><ul><li>指令跟隨</li><li>摘要、翻譯、分類</li><li>客服機器人</li><li>程式助手</li><li>特定語氣或格式輸出</li></ul></div>
+          <div class="pro"><h4>優點</h4><ul><li>直接、穩定、成本相對可控</li><li>是大多數後訓練流程的基礎步驟</li></ul></div>
+          <div class="con"><h4>限制</h4><ul><li>模型會模仿資料品質</li><li>不一定能學到「哪個答案更好」</li></ul></div>
+        </div>
+      </article>
+
+      <article class="method">
+        <div class="tag">2</div>
+        <h3>Continued Pretraining / Domain Adaptation</h3>
+        <p>在預訓練後，用特定領域的大量語料繼續訓練模型。有些人把它和狹義 post-training 分開談，但實務上常一起討論。</p>
+        <div class="facts">
+          <div class="fit"><h4>適合場景</h4><ul><li>醫療、法律、金融模型</li><li>公司內部知識或專屬術語</li><li>特定語言或產業資料強化</li></ul></div>
+          <div class="pro"><h4>優點</h4><ul><li>能補足模型對領域語料的理解</li><li>後續再做 SFT 效果通常更穩</li></ul></div>
+          <div class="con"><h4>限制</h4><ul><li>需要大量乾淨領域資料</li><li>成本通常高於一般 LoRA 型微調</li></ul></div>
+        </div>
+      </article>
+
+      <article class="method">
+        <div class="tag">3</div>
+        <h3>Preference Learning / 偏好學習</h3>
+        <p>重點不是只學「正確答案」，而是學「比較好的答案」。常見做法是蒐集 A/B 回答排序，讓模型理解人類偏好。</p>
+        <ul>
+          <li>RLHF：Reinforcement Learning from Human Feedback</li>
+          <li>RLAIF：Reinforcement Learning from AI Feedback</li>
+          <li>DPO：Direct Preference Optimization</li>
+          <li>IPO、ORPO、SimPO：偏好優化的不同變體</li>
+        </ul>
+        <div class="facts">
+          <div class="fit"><h4>適合場景</h4><ul><li>幫助模型更自然、更有幫助</li><li>優化回覆品質、風格、一致性</li><li>提升拒答與安全對齊表現</li></ul></div>
+          <div class="pro"><h4>優點</h4><ul><li>能更直接優化「回答品質」</li><li>DPO 類方法通常比完整 RLHF 更容易訓練</li></ul></div>
+          <div class="con"><h4>限制</h4><ul><li>偏好資料品質決定上限</li><li>偏好本身可能主觀且有分佈偏差</li></ul></div>
+        </div>
+      </article>
+
+      <article class="method">
+        <div class="tag">4</div>
+        <h3>RL 後訓練</h3>
+        <p>強化學習後訓練會根據 reward 來優化模型策略，特別適合有可驗證目標的任務。</p>
+        <ul>
+          <li><b>RLHF</b>：用人類偏好資料訓練 reward model，再用 RL 優化模型</li>
+          <li><b>RLAIF</b>：用 AI 提供偏好訊號或評分，降低人工標註成本</li>
+          <li><b>Verifier-based / Rule-based RL</b>：用規則或驗證器直接給 reward，例如數學答案、單元測試、編譯結果</li>
+          <li><b>Environment / Tool-interaction RL</b>：讓模型和工具或環境互動，再依任務完成度給 reward</li>
+          <li><b>Self-play / Self-improvement RL</b>：模型自己生成題目、答案、對局或候選解，再透過對抗、比較或篩選學習</li>
+        </ul>
+        <p>常見演算法：PPO、REINFORCE、Actor-Critic、GRPO、TRPO，以及其他基於 reward model 或 verifier 的 policy optimization 變體。</p>
+        <div class="facts">
+          <div class="fit"><h4>適合場景</h4><ul><li>數學題</li><li>程式生成與修復</li><li>長鏈推理</li><li>有明確評分器或驗證器的任務</li></ul></div>
+          <div class="pro"><h4>優點</h4><ul><li>能直接針對最終任務結果優化</li><li>對推理與 search 型問題常有效</li></ul></div>
+          <div class="con"><h4>限制</h4><ul><li>訓練不穩定，調參成本高</li><li>reward 設計不當會導致 reward hacking</li></ul></div>
+        </div>
+        <p class="note">DPO、IPO、ORPO、SimPO 常和 RLHF 放在同一類討論，但嚴格說它們比較屬於偏好優化，不是傳統 RL。在 LLM 場景中，最有價值的通常不是通用 control 型 RL，而是能結合 verifier、工具使用與任務完成率的 RL。</p>
+      </article>
+
+      <article class="method">
+        <div class="tag">5</div>
+        <h3>Rejection Sampling / Best-of-N</h3>
+        <p>先讓模型生成多個候選答案，再透過規則、reward model、驗證器或人工方式選出較好的結果。用途有兩種：直接當推論策略（生成多次，挑最好的）；或當資料蒐集方式（把篩選後的好答案回灌成 SFT 或偏好資料）。</p>
+        <div class="facts">
+          <div class="pro"><h4>優點</h4><ul><li>實作簡單</li><li>常能有效提升結果品質</li></ul></div>
+          <div class="con"><h4>限制</h4><ul><li>推論成本高</li><li>需要好的打分或篩選機制</li></ul></div>
+        </div>
+      </article>
+
+      <article class="method">
+        <div class="tag">6</div>
+        <h3>Distillation / 蒸餾</h3>
+        <p>讓大模型當老師、小模型當學生，把能力壓縮到更小、更快、更便宜的模型上。</p>
+        <div class="facts">
+          <div class="fit"><h4>適合場景</h4><ul><li>邊緣部署</li><li>降低推論成本</li><li>需要高吞吐量的產品</li></ul></div>
+          <div class="pro"><h4>優點</h4><ul><li>兼顧效果與效率</li><li>能保留部分大模型能力</li></ul></div>
+          <div class="con"><h4>限制</h4><ul><li>小模型仍有容量上限</li><li>蒸餾資料與 teacher 輸出品質很重要</li></ul></div>
+        </div>
+      </article>
+
+      <article class="method">
+        <div class="tag">7</div>
+        <h3>PEFT / 參數高效微調</h3>
+        <p>PEFT（Parameter-Efficient Fine-Tuning）不是訓練目標，而是訓練方式：只更新少量參數，而不是整個模型。常見方法有 LoRA、QLoRA、Adapter、Prefix Tuning。</p>
+        <div class="facts">
+          <div class="fit"><h4>適合場景</h4><ul><li>資源有限</li><li>需要快速做多個任務版本</li><li>想保留 base model，不做全量改動</li></ul></div>
+          <div class="pro"><h4>優點</h4><ul><li>成本低</li><li>訓練快</li><li>部署靈活</li></ul></div>
+          <div class="con"><h4>限制</h4><ul><li>能力上限通常不如全參數訓練</li><li>對極複雜能力提升未必足夠</li></ul></div>
+        </div>
+      </article>
+
+      <article class="method">
+        <div class="tag">8</div>
+        <h3>Safety / Alignment Tuning</h3>
+        <p>專門針對模型安全、合規與拒答策略做調整。</p>
+        <ul>
+          <li>避免違規內容</li>
+          <li>抵抗 prompt injection 或 jailbreak</li>
+          <li>改善拒答邏輯</li>
+          <li>符合產品政策與法規要求</li>
+        </ul>
+        <p>這通常不是單一方法，而是混合 SFT、偏好學習、規則資料與對抗式資料。</p>
+      </article>
+
+      <article class="method">
+        <div class="tag">9</div>
+        <h3>Tool Use / Agent 能力微調</h3>
+        <p>讓模型更會呼叫函式或 API、搜尋外部知識、使用工具鏈、輸出 JSON / schema，以及做多步規劃與任務分解。</p>
+        <p>對 agent 系統來說，這類後訓練很重要，因為它決定模型是否真的能穩定操作工具，而不只是生成文字。</p>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="compare">
+    <h2>方法比較</h2>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>方法</th><th>主要目標</th><th>優點</th><th>限制</th></tr></thead>
+        <tbody>
+          <tr><td>SFT</td><td>指令跟隨、格式與任務能力</td><td>穩定、直接、常作為基礎</td><td>高度依賴資料品質</td></tr>
+          <tr><td>Continued Pretraining</td><td>領域知識補強</td><td>領域適配效果強</td><td>需要大量語料與算力</td></tr>
+          <tr><td>Preference Learning</td><td>學習「更好的回答」</td><td>回答品質提升明顯</td><td>偏好資料難蒐集</td></tr>
+          <tr><td>RL</td><td>直接最佳化任務 reward</td><td>對推理／程式／數學有效</td><td>訓練不穩定、成本高</td></tr>
+          <tr><td>Rejection Sampling</td><td>從多答案中選好答案</td><td>簡單有效</td><td>推論成本高</td></tr>
+          <tr><td>Distillation</td><td>壓縮能力到小模型</td><td>降成本、提速度</td><td>有能力損失</td></tr>
+          <tr><td>PEFT</td><td>低成本微調</td><td>快、便宜、彈性高</td><td>上限受限</td></tr>
+          <tr><td>Safety Tuning</td><td>安全與合規</td><td>產品化必要</td><td>容易影響可用性平衡</td></tr>
+          <tr><td>Tool/Agent Tuning</td><td>工具調用與流程能力</td><td>對 agent 產品很關鍵</td><td>需要高品質任務資料</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="rl">
+    <h2>RL 的分類與為何有效</h2>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>類型</th><th>reward 來源</th><th>典型用途</th><th>備註</th></tr></thead>
+        <tbody>
+          <tr><td>RLHF</td><td>人類偏好訓練出的 reward model</td><td>對話品質、風格、有用性</td><td>演算法常用 PPO；成本高、不穩定</td></tr>
+          <tr><td>RLAIF／Constitutional</td><td>AI 依規則或原則評分</td><td>安全、無害性、降低標註成本</td><td>reward 品質取決於評分模型</td></tr>
+          <tr><td>RLVR（可驗證獎勵）</td><td>規則或程式直接判對錯</td><td>數學、程式（單元測試）、格式、邏輯題</td><td>近年最主流；訊號乾淨、可大量擴增</td></tr>
+          <tr><td>Rubric／LLM-as-judge RL</td><td>評分標準加模型當裁判</td><td>寫作、分析等無標準答案的任務</td><td>想把 RLVR 推到「不可驗證」領域</td></tr>
+          <tr><td>Agentic／環境 RL</td><td>任務是否完成（跑程式、操作工具、瀏覽器）</td><td>工具使用、多步任務、軟體工程</td><td>多輪、長序列，工程複雜度高</td></tr>
+          <tr><td>Process 型 RL</td><td>對推理每一步評分（PRM）</td><td>長鏈推理</td><td>標註成本高，實務上不如結果型普及</td></tr>
+          <tr><td>Self-play／自我改進</td><td>自己出題、互相對抗或篩選</td><td>推理、遊戲</td><td>仍偏研究</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:12px">演算法層面常見 PPO、REINFORCE 系（含 RLOO），以及 GRPO 與其改良版（如 DAPO）。GRPO 不需要另外訓練 value model，成本比 PPO 低。DPO、IPO、ORPO、SimPO 嚴格說屬偏好優化，不是傳統 RL。</p>
+    <h3 style="margin-top:24px">為什麼進版常靠 RL 就有明顯改善</h3>
+    <ol style="margin-top:10px; gap:8px">
+      <li><b>SFT 只能模仿，RL 直接優化結果。</b>SFT 學的是示範答案的樣子，上限被資料品質卡住；RL 讓模型自己生成、以結果當回饋，去學「哪種推理路徑真的會對」。</li>
+      <li><b>可驗證的 reward 便宜又準。</b>數學和程式不需要人標，只要題目加檢查器，就能產生大量、低雜訊的訊號。</li>
+      <li><b>長推理鏈是 RL 帶出來的。</b>模型學到先想再答、回頭檢查、換方法重試；多花推論算力換準確度，這種行為很難靠示範資料教出來。</li>
+      <li><b>基礎模型本來就有潛力。</b>預訓練已讓模型「有時候能做對」，RL 主要是把「偶爾對」變成「穩定對」，所以進版常看到 pass@1 大幅上升。</li>
+      <li><b>成本與迭代速度。</b>相對預訓練，RL 較便宜且可頻繁重跑，所以各家把越來越多算力放在這一段。</li>
+    </ol>
+    <div class="user-opts" style="margin-top:18px">
+      <div>
+        <h3>需要保留的看法</h3>
+        <ul style="margin-top:6px">
+          <li><b>「只做 RL」是簡化說法。</b>實際上通常還有 SFT 冷啟動、mid-training、蒸餾與大量資料篩選；各家細節多半沒公開，個別模型進版動了什麼無法確認。</li>
+          <li><b>改善集中在可驗證的領域</b>：數學、程式、推理、agent 任務。知識量與事實正確性主要仍取決於預訓練。</li>
+          <li><b>學界仍有爭論</b>：有研究指出，取樣很多次時，基礎模型的覆蓋率不輸 RL 後的模型，意思是 RL 比較像「銳化」而不是「擴大能力邊界」。這不是定論，也依任務而異。</li>
+          <li><b>風險</b>：reward hacking、訓練不穩定、在不可驗證的領域改善不穩定。</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note" style="margin-top:12px">以上為截至 2026 年中的整理。</p>
+  </section>
+
+  <section id="pipeline">
+    <h2>常見實務流程</h2>
+    <p>現代大模型很常見的後訓練路線是：</p>
+    <ol class="steps">
+      <li class="step pre"><div class="dot">0</div><div class="body"><b>預訓練<span class="opt">不屬於後訓練</span></b><p>模型看過很多資料。從下一步開始才是後訓練。</p></div></li>
+      <li class="step"><div class="dot">1</div><div class="body"><b>Domain Adaptation<span class="opt">依需求</span></b><p>用特定領域的大量語料繼續訓練。</p><div class="chips"><span class="chip c2">領域適配</span></div></div></li>
+      <li class="step"><div class="dot">2</div><div class="body"><b>SFT</b><p>建立基本指令能力。</p><div class="chips"><span class="chip c1">指令遵循</span></div></div></li>
+      <li class="step"><div class="dot">3</div><div class="body"><b>偏好優化（DPO／RLHF）</b><p>學「比較好的答案」，讓回答更符合人類期待。</p><div class="chips"><span class="chip c3">回答偏好</span></div></div></li>
+      <li class="step"><div class="dot">4</div><div class="body"><b>安全對齊</b><p>補安全與拒答資料，降低有害、越獄與違規輸出。</p><div class="chips"><span class="chip c4">安全對齊</span></div></div></li>
+      <li class="step"><div class="dot">5</div><div class="body"><b>RL／蒸餾／工具使用強化<span class="opt">視需求</span></b><p>RL 強化推理；蒸餾把能力壓縮到小模型；工具使用強化讓模型穩定操作工具。</p><div class="chips"><span class="chip c5">推理與工具使用</span><span class="chip c6">效率與資料手段</span></div></div></li>
+    </ol>
+  </section>
+
+  <section id="choose">
+    <h2>怎麼選</h2>
+    <ul class="choose">
+      <li><span class="goal">讓模型先變得可用</span><span class="arrow">→</span><span class="pick">先做 SFT</span></li>
+      <li><span class="goal">讓模型更懂特定領域</span><span class="arrow">→</span><span class="pick">continued pretraining 或 domain adaptation</span></li>
+      <li><span class="goal">讓回答品質更像人喜歡的樣子</span><span class="arrow">→</span><span class="pick">DPO / RLHF / RLAIF</span></li>
+      <li><span class="goal">讓模型在數學、程式、推理上更強</span><span class="arrow">→</span><span class="pick">加 RL 或 verifier-based training</span></li>
+      <li><span class="goal">讓部署更省成本</span><span class="arrow">→</span><span class="pick">做蒸餾</span></li>
+      <li><span class="goal">算力有限但想快速微調</span><span class="arrow">→</span><span class="pick">用 LoRA / QLoRA</span></li>
+    </ul>
+  </section>
+
+  <section id="rag">
+    <h2>企業知識整合：RAG 夠不夠？</h2>
+    <p class="lede">用開源模型整合企業自己的知識，通常先做 RAG（檢索增強）。夠不夠，不要憑感覺，拿評測集做錯誤分析，看答錯的題目屬於哪一類。</p>
+    <figure class="dg">
+      <svg viewBox="0 0 440 560" role="img" aria-label="判斷流程：評測集上答錯的題目分三類，檢索失敗要修檢索、微調幫不上忙；有證據卻答錯先換更強模型或改 prompt、穩定重現再考慮微調；格式風格不符用 SFT 或 LoRA。數字與結構化資料、跨文件或全局問題屬於題型本身不適合單純 RAG，要用 text-to-SQL、API 工具或 Agentic RAG。最後是 RAG 加微調搭配。">
+        <defs>
+          <marker id="dgA" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker>
+        </defs>
+
+        <rect class="acc" x="110" y="4" width="220" height="34" rx="8"/>
+        <text class="b" x="220" y="26" text-anchor="middle">評測集上答錯的題目</text>
+        <line class="ln" x1="220" y1="39" x2="220" y2="62" marker-end="url(#dgA)"/>
+        <text class="s" x="230" y="55">做錯誤分析、歸類</text>
+        <text class="h" x="0" y="78">依失敗類型，對策不同</text>
+
+        <rect class="box" x="0" y="86" width="120" height="72" rx="8"/>
+        <text class="b" x="10" y="116">檢索失敗</text>
+        <text class="s" x="10" y="134">正確資料沒被找回來</text>
+        <line class="ln" x1="121" y1="122" x2="158" y2="122" marker-end="url(#dgA)"/>
+        <text class="s" x="139" y="115" text-anchor="middle">對策</text>
+        <rect class="box" x="160" y="86" width="150" height="72" rx="8"/>
+        <text x="170" y="110">修檢索：切塊、</text>
+        <text x="170" y="128">embedding、混合</text>
+        <text x="170" y="146">檢索、reranker</text>
+        <line class="ln" x1="311" y1="122" x2="344" y2="122" marker-end="url(#dgA)"/>
+        <text class="s" x="327" y="115" text-anchor="middle">微調</text>
+        <rect class="bad" x="346" y="86" width="94" height="72" rx="8"/>
+        <text class="b" x="393" y="118" text-anchor="middle">幫不上忙</text>
+        <text class="s" x="393" y="136" text-anchor="middle">先修檢索</text>
+
+        <rect class="box" x="0" y="168" width="120" height="72" rx="8"/>
+        <text class="b" x="10" y="198">有證據卻答錯</text>
+        <text class="s" x="10" y="216">資料在 context 裡</text>
+        <line class="ln" x1="121" y1="204" x2="158" y2="204" marker-end="url(#dgA)"/>
+        <text class="s" x="139" y="197" text-anchor="middle">對策</text>
+        <rect class="box" x="160" y="168" width="150" height="72" rx="8"/>
+        <text x="170" y="192">換更強模型、</text>
+        <text x="170" y="210">改 prompt、</text>
+        <text x="170" y="228">加驗證步驟</text>
+        <line class="ln" x1="311" y1="204" x2="344" y2="204" marker-end="url(#dgA)"/>
+        <text class="s" x="327" y="197" text-anchor="middle">微調</text>
+        <rect class="box" x="346" y="168" width="94" height="72" rx="8"/>
+        <text class="b" x="393" y="200" text-anchor="middle">穩定重現</text>
+        <text class="s" x="393" y="218" text-anchor="middle">再考慮</text>
+
+        <rect class="box" x="0" y="250" width="120" height="72" rx="8"/>
+        <text class="b" x="10" y="280">格式風格不符</text>
+        <text class="s" x="10" y="298">答對但不合規範</text>
+        <line class="ln" x1="121" y1="286" x2="158" y2="286" marker-end="url(#dgA)"/>
+        <text class="s" x="139" y="279" text-anchor="middle">對策</text>
+        <rect class="box" x="160" y="250" width="150" height="72" rx="8"/>
+        <text x="170" y="274">SFT／LoRA</text>
+        <text x="170" y="292">固定格式、語氣</text>
+        <text x="170" y="310">與專有術語</text>
+        <line class="ln" x1="311" y1="286" x2="344" y2="286" marker-end="url(#dgA)"/>
+        <text class="s" x="327" y="279" text-anchor="middle">微調</text>
+        <rect class="good" x="346" y="250" width="94" height="72" rx="8"/>
+        <text class="b" x="393" y="282" text-anchor="middle">最划算</text>
+        <text class="s" x="393" y="300" text-anchor="middle">適合微調</text>
+
+        <text class="h" x="0" y="346">題型本身不適合單純 RAG</text>
+
+        <rect class="box dash" x="0" y="356" width="120" height="66" rx="8"/>
+        <text class="b" x="10" y="383">數字、結構化資料</text>
+        <text class="s" x="10" y="401">統計、對帳、報表</text>
+        <line class="ln" x1="121" y1="389" x2="158" y2="389" marker-end="url(#dgA)"/>
+        <text class="s" x="139" y="382" text-anchor="middle">改用</text>
+        <rect class="box dash" x="160" y="356" width="150" height="66" rx="8"/>
+        <text x="170" y="384">text-to-SQL、</text>
+        <text x="170" y="402">API 工具</text>
+        <text class="s" x="330" y="393">不走向量檢索</text>
+
+        <rect class="box dash" x="0" y="430" width="120" height="66" rx="8"/>
+        <text class="b" x="10" y="457">跨文件、全局題</text>
+        <text class="s" x="10" y="475">多份拼推理、總覽</text>
+        <line class="ln" x1="121" y1="463" x2="158" y2="463" marker-end="url(#dgA)"/>
+        <text class="s" x="139" y="456" text-anchor="middle">改用</text>
+        <rect class="box dash" x="160" y="430" width="150" height="66" rx="8"/>
+        <text x="170" y="452">Agentic RAG、</text>
+        <text x="170" y="470">GraphRAG、</text>
+        <text x="170" y="488">分層摘要</text>
+        <text class="s" x="330" y="467">強化 RAG 架構</text>
+
+        <rect class="acc" x="0" y="512" width="440" height="40" rx="8"/>
+        <text class="b" x="220" y="537" text-anchor="middle">RAG ＋ 微調搭配：微調管行為與格式，RAG 管事實</text>
+      </svg>
+      <figcaption>先用評測集歸類答錯的原因：檢索失敗要修檢索（微調幫不上忙）；有證據卻答錯先換模型或改 prompt；格式風格不符才是微調最划算的地方。數字與跨文件題型要靠工具或進階 RAG。</figcaption>
+    </figure>
+    <p class="note" style="margin-top:12px">經驗上，第一類（檢索失敗）通常占最大宗，所以多數團隊先把檢索與資料品質做好，再看是否需要微調。微調不適合用來灌事實：容易幻覺、知識會過期、也難以更新。這是通用判斷，實際比例要看你們自己的評測結果。</p>
+  </section>
+
+  <section id="rag-rl">
+    <h2>RAG 不夠時可以做的 RL</h2>
+    <p class="lede">RL 通常不是第一步。先修檢索與資料品質，再用 SFT 處理格式與術語，回答偏好還不夠時用 DPO 這類離線偏好優化，有可驗證的 reward 時才上 RL。</p>
+    <figure class="dg">
+      <svg viewBox="0 0 440 392" role="img" aria-label="RAG 不夠時的順序：先修檢索與資料品質，仍不夠用 SFT，回答偏好還不夠用 DPO 等離線偏好優化，最後問有沒有可驗證的 reward。有就做 RL（RAG 行為 RL、Text-to-SQL 與工具 RL、搜尋型 Agent RL），沒有就先補評測集與評分標準，不要硬上 RL。">
+        <defs>
+          <marker id="dgB" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker>
+        </defs>
+
+        <rect class="box" x="70" y="4" width="300" height="46" rx="8"/>
+        <text class="b" x="220" y="24" text-anchor="middle">1　修檢索與資料品質</text>
+        <text class="s" x="220" y="42" text-anchor="middle">檢索失敗：微調與 RL 都幫不上</text>
+        <line class="ln" x1="220" y1="51" x2="220" y2="74" marker-end="url(#dgB)"/>
+        <text class="s" x="230" y="67">仍不夠</text>
+
+        <rect class="box" x="70" y="76" width="300" height="46" rx="8"/>
+        <text class="b" x="220" y="96" text-anchor="middle">2　SFT</text>
+        <text class="s" x="220" y="114" text-anchor="middle">格式、語氣、術語</text>
+        <line class="ln" x1="220" y1="123" x2="220" y2="146" marker-end="url(#dgB)"/>
+        <text class="s" x="230" y="139">回答偏好還不夠</text>
+
+        <rect class="box" x="70" y="148" width="300" height="46" rx="8"/>
+        <text class="b" x="220" y="168" text-anchor="middle">3　DPO 等離線偏好優化</text>
+        <text class="s" x="220" y="186" text-anchor="middle">比線上 RL 便宜、穩定</text>
+        <line class="ln" x1="220" y1="195" x2="220" y2="218" marker-end="url(#dgB)"/>
+
+        <rect class="acc" x="70" y="220" width="300" height="46" rx="8"/>
+        <text class="b" x="220" y="248" text-anchor="middle">有可驗證的 reward 嗎？</text>
+
+        <line class="ln" x1="160" y1="267" x2="108" y2="298" marker-end="url(#dgB)"/>
+        <text class="b" x="116" y="285" text-anchor="end">有</text>
+        <line class="ln" x1="280" y1="267" x2="332" y2="298" marker-end="url(#dgB)"/>
+        <text class="b" x="324" y="285" text-anchor="start">沒有</text>
+
+        <rect class="good" x="0" y="300" width="214" height="84" rx="8"/>
+        <text class="b" x="10" y="320">4　做 RL</text>
+        <text x="10" y="340">RAG 行為 RL</text>
+        <text x="10" y="357">Text-to-SQL／工具 RL</text>
+        <text x="10" y="374">搜尋型 Agent RL</text>
+
+        <rect class="bad" x="226" y="300" width="214" height="84" rx="8"/>
+        <text class="b" x="236" y="320">先別上 RL</text>
+        <text x="236" y="340">補評測集與評分標準</text>
+        <text x="236" y="357">或回頭修檢索與資料</text>
+      </svg>
+      <figcaption>RAG 不夠時的順序：先修檢索與資料，再 SFT，再離線偏好優化；有可驗證的 reward 才做 RL，沒有就先補評測與評分標準。</figcaption>
+    </figure>
+
+    <h3 style="margin-top:24px">可以做的 RL（依實用性排序）</h3>
+    <div class="scroll" style="margin-top:10px">
+      <table>
+        <thead><tr><th>類型</th><th>reward 怎麼設計</th><th>解決什麼</th><th>難度</th></tr></thead>
+        <tbody>
+          <tr><td>RAG 行為 RL</td><td>答案正確、引用的片段真的包含該論點、沒證據時正確拒答、不亂編</td><td>有證據卻答錯、幻覺、該拒答卻亂答</td><td>中</td></tr>
+          <tr><td>Text-to-SQL／API 工具 RL</td><td>執行結果和標準答案一致；API 呼叫成功且參數正確</td><td>結構化資料、數字、工具呼叫不穩</td><td>中（好驗證）</td></tr>
+          <tr><td>搜尋型 Agent RL</td><td>最終答案正確，並對檢索次數加懲罰</td><td>多跳推理、跨文件問題、何時該檢索、查詢改寫</td><td>高</td></tr>
+          <tr><td>格式／Schema RL</td><td>JSON 合法、符合 schema、欄位完整</td><td>輸出格式不穩定</td><td>低</td></tr>
+          <tr><td>Rubric／LLM-as-judge RL</td><td>依評分標準由模型打分</td><td>報告類、分析類等沒有標準答案的任務</td><td>高（reward 可被鑽漏洞）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:12px"><b>最值得先試的是 RAG 行為 RL</b>：訓練時餵入真實檢索結果（含夾雜的無關文件），reward 同時看「答對、引用正確、沒證據就說不知道」。三項要互相平衡，否則模型會學到「永遠拒答」或「每句都亂貼引用」。搜尋型 Agent RL 適合跨文件、多跳的失敗，但工程最複雜。</p>
+
+    <div class="user-opts" style="margin-top:18px">
+      <div>
+        <h3>動手前的前提</h3>
+        <ul style="margin-top:6px">
+          <li><b>先有 SFT 冷啟動</b>：基礎模型直接上 RL 常不穩。</li>
+          <li><b>訓練題與評測題要分開</b>，否則測到的只是背題。</li>
+          <li><b>訓練環境要接近正式環境</b>：用同一套檢索、切塊、reranker；換了檢索器，學到的行為可能失效。</li>
+          <li><b>reward 要防呆</b>：觀察模型有沒有鑽漏洞。</li>
+          <li><b>資源</b>：RL 比 SFT 貴很多，可用 LoRA 降低成本；常見框架有 TRL、verl、OpenRLHF，GRPO 是常見起點。</li>
+        </ul>
+      </div>
+      <div>
+        <h3>不該用 RL 的情況</h3>
+        <ul style="margin-top:6px">
+          <li>失敗主要是檢索或資料品質：先修這個。</li>
+          <li>沒有可驗證的 reward，也沒有可靠的評分標準。</li>
+          <li>只是想灌入新知識：這是 RAG 的工作，RL 不負責。</li>
+          <li>評測集太小、不穩定，無法判斷 RL 有沒有真的變好。</li>
+        </ul>
+      </div>
+      <div>
+        <h3>需要保留的看法</h3>
+        <ul style="margin-top:6px">
+          <li>這是通用判斷，沒有針對特定企業的資料與失敗案例，實際效益無法預測。</li>
+          <li>RL 教的是行為，不是事實，所以知識更新時不必重訓；但檢索器或切塊方式改了，行為可能要重新校準。</li>
+          <li>這個領域變動很快，具體方法的效果只整理到 2026 年中。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="rag-model">
+    <h2>只做 RAG，還需要開源模型嗎？</h2>
+    <p class="lede">RAG 一定需要一個生成答案的語言模型，但不一定要開源。商用 API 搭配 RAG 完全可行，也是很多企業的起點。</p>
+    <figure class="dg">
+      <svg viewBox="0 0 440 408" role="img" aria-label="開源或商用 API 的判斷順序：資料不能送到外部就開源自架；可以送出則看有沒有 GPU 與維運能力，沒有就用商用 API；有的話再看是否需要微調或呼叫量極大，是就開源自架並先算清楚總成本，否則先用商用 API 驗證且讓模型可替換。資料有分級時可混合路由。">
+        <defs>
+          <marker id="dgC" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker>
+        </defs>
+
+        <rect class="acc" x="0" y="4" width="220" height="50" rx="8"/>
+        <text class="b" x="110" y="34" text-anchor="middle">資料能送到外部嗎？</text>
+        <line class="ln" x1="221" y1="29" x2="268" y2="29" marker-end="url(#dgC)"/>
+        <text class="b" x="244" y="22" text-anchor="middle">不能</text>
+        <rect class="box" x="270" y="4" width="170" height="50" rx="8"/>
+        <text class="b" x="280" y="26">開源自架</text>
+        <text class="s" x="280" y="43">地端或私有雲</text>
+        <line class="ln" x1="110" y1="55" x2="110" y2="94" marker-end="url(#dgC)"/>
+        <text class="s" x="120" y="80">可以</text>
+
+        <rect class="acc" x="0" y="96" width="220" height="50" rx="8"/>
+        <text class="b" x="110" y="126" text-anchor="middle">有 GPU 與維運能力嗎？</text>
+        <line class="ln" x1="221" y1="121" x2="268" y2="121" marker-end="url(#dgC)"/>
+        <text class="b" x="244" y="114" text-anchor="middle">沒有</text>
+        <rect class="box" x="270" y="96" width="170" height="50" rx="8"/>
+        <text class="b" x="280" y="118">商用 API</text>
+        <text class="s" x="280" y="135">不必自己維運</text>
+        <line class="ln" x1="110" y1="147" x2="110" y2="186" marker-end="url(#dgC)"/>
+        <text class="s" x="120" y="172">有</text>
+
+        <rect class="acc" x="0" y="188" width="220" height="50" rx="8"/>
+        <text class="b" x="110" y="218" text-anchor="middle">需要微調，或呼叫量極大？</text>
+        <line class="ln" x1="221" y1="213" x2="268" y2="213" marker-end="url(#dgC)"/>
+        <text class="b" x="244" y="206" text-anchor="middle">是</text>
+        <rect class="box" x="270" y="188" width="170" height="50" rx="8"/>
+        <text class="b" x="280" y="210">開源自架</text>
+        <text class="s" x="280" y="227">先算清楚總成本</text>
+        <line class="ln" x1="110" y1="239" x2="110" y2="278" marker-end="url(#dgC)"/>
+        <text class="s" x="120" y="264">否</text>
+
+        <rect class="good" x="0" y="280" width="260" height="56" rx="8"/>
+        <text class="b" x="10" y="304">先用商用 API 驗證</text>
+        <text class="s" x="10" y="322">模型做成可替換，用評測集決定</text>
+
+        <rect class="box dash" x="0" y="356" width="440" height="46" rx="8"/>
+        <text class="b" x="10" y="376">資料有分級時：混合路由</text>
+        <text class="s" x="10" y="393">敏感文件走自架模型，一般文件走商用 API</text>
+      </svg>
+      <figcaption>開源或商用 API：先看資料能不能出去，再看維運能力與是否需要微調。虛線框是資料有分級時的混合做法。</figcaption>
+    </figure>
+
+    <h3 style="margin-top:24px">RAG 裡的三個模型角色</h3>
+    <div class="scroll" style="margin-top:10px">
+      <table>
+        <thead><tr><th>角色</th><th>做什麼</th><th>開源</th><th>商用 API</th></tr></thead>
+        <tbody>
+          <tr><td>Embedding 模型</td><td>把文件與問題轉成向量，決定檢索品質</td><td>可以（常見選擇）</td><td>可以</td></tr>
+          <tr><td>Reranker</td><td>對檢索結果重新排序</td><td>可以</td><td>可以</td></tr>
+          <tr><td>生成模型（LLM）</td><td>讀檢索結果、產生答案</td><td>可以</td><td>可以</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:12px">三個角色可以混搭，例如 embedding 與 reranker 用開源自架，生成用商用 API。</p>
+
+    <div class="user-opts" style="margin-top:18px">
+      <div>
+        <h3>傾向用開源（開放權重）模型的條件</h3>
+        <ul style="margin-top:6px">
+          <li><b>資料不能出公司</b>（法規、客戶合約、機密）：商用 API 要把內容送到外部；即使有「不用於訓練」的條款，部分企業仍不接受。</li>
+          <li><b>必須地端或離線運行</b>（內網、隔離環境）：商用 API 需要連網。</li>
+          <li><b>要自己控制版本</b>：商用模型可能被下架或改版、行為會變；自架模型版本固定。</li>
+          <li><b>要微調</b>（格式、術語、工具使用）：開放權重模型才能自由微調。</li>
+          <li><b>呼叫量極大、成本敏感</b>：到一定規模後自架可能較便宜，但要算上 GPU 與維運成本。</li>
+        </ul>
+      </div>
+      <div>
+        <h3>傾向用商用 API 的條件</h3>
+        <ul style="margin-top:6px">
+          <li>要最強的推理與理解能力，而且資料可以送出去。</li>
+          <li>團隊沒有 GPU 與 MLOps 能力：自架要處理部署、擴縮、監控與更新。</li>
+          <li>用量小或還在 PoC：先用 API 驗證價值最快，不必先買硬體。</li>
+          <li>需要快速上線。</li>
+        </ul>
+      </div>
+      <div>
+        <h3>兩個常見迷思</h3>
+        <ul style="margin-top:6px">
+          <li><b>開源不等於免費</b>：自架要付 GPU、電力與人力，小規模時 API 常常更便宜。</li>
+          <li><b>開源不等於開放原始碼</b>：多數是「開放權重」，授權條款各異，商用限制要逐一確認。</li>
+        </ul>
+      </div>
+      <div>
+        <h3>動手的順序</h3>
+        <ul style="margin-top:6px">
+          <li><b>先釐清限制</b>：資料能不能出去、要不要地端、預算與人力，這幾個答案幾乎直接決定方向。</li>
+          <li><b>模型做成可替換</b>：程式用統一介面呼叫，換模型只改設定。</li>
+          <li><b>用評測集決定</b>：同一組標準問答，比較開源與商用在自己資料上的表現。</li>
+          <li><b>必要時混合</b>：敏感文件走自架模型，一般文件走 API，依資料等級路由。</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note" style="margin-top:12px">以上是通用判斷，實際選擇取決於各自的資料敏感度、法規與預算。</p>
+  </section>
+
+  <section id="users">
+    <h2>一般使用者可做的優化</h2>
+    <p class="lede" style="margin-bottom:14px">如果你無法調整大模型權重，能做的通常不是嚴格意義上的 post-training，而是使用層與系統層優化。不過在實務上，這些方法往往比小規模微調更容易落地，也更快見效。</p>
+    <div class="user-opts">
+      <div>
+        <h3>1. Prompt 優化</h3>
+        <p>把任務描述得更清楚，通常是成本最低、效果最直接的做法。</p>
+        <ul style="margin-top:6px"><li>明確寫出目標、限制條件、成功標準</li><li>指定輸出格式，例如表格、JSON、固定欄位</li><li>提供 1 到 3 個高品質範例</li><li>把大任務拆成幾個步驟，降低模型跑偏機率</li></ul>
+      </div>
+      <div>
+        <h3>2. Context 優化</h3>
+        <p>模型常常不是不會，而是缺資訊。把對的資訊放進 context，通常比單純改 prompt 更重要。</p>
+        <ul style="margin-top:6px"><li>補上需求文件、規格、會議紀錄、程式碼片段</li><li>用 RAG 或文件檢索把相關資料先找出來再餵給模型</li><li>過濾不相關內容，避免 context 被雜訊塞滿</li><li>把背景資訊結構化，例如摘要、欄位化、段落標記</li></ul>
+      </div>
+      <div>
+        <h3>3. Workflow 優化</h3>
+        <p>不要把模型當成一次性問答工具，而是把它放進一個可重複的流程。</p>
+        <ul style="margin-top:6px"><li>先產生草稿，再做第二輪改寫或校對</li><li>把任務拆成「理解需求 → 產出候選 → 自我檢查 → 最終整理」</li><li>多次生成，再做人選或規則篩選</li><li>固定常用 prompt template，降低每次輸入波動</li></ul>
+      </div>
+      <div>
+        <h3>4. Tool Use 優化</h3>
+        <p>很多問題不是模型本身能力不足，而是缺少外部工具。</p>
+        <ul style="margin-top:6px"><li>接搜尋，補最新資訊</li><li>接計算器或程式執行，降低數學與程式錯誤</li><li>接資料庫或 API，讓回答依據真實資料</li><li>接格式驗證器或 schema 檢查器，提升輸出穩定性</li></ul>
+      </div>
+      <div>
+        <h3>5. Evaluation 優化</h3>
+        <p>如果沒有評測，你通常無法知道 prompt 變更到底是變好還是變差。</p>
+        <ul style="margin-top:6px"><li>建立一小組固定測題</li><li>比較不同 prompt、不同模型、不同參數設定</li><li>追蹤正確率、穩定性、格式錯誤率、人工修改量</li><li>對高價值任務做人類審核</li></ul>
+      </div>
+      <div>
+        <h3>6. 參數與模型選型</h3>
+        <p>即使不能訓練模型，選對模型與參數也能大幅影響效果。</p>
+        <ul style="margin-top:6px"><li>推理任務選 reasoning 較強的模型</li><li>長文件任務選 context window 較大的模型</li><li>創意寫作可提高 temperature</li><li>穩定格式輸出可降低 temperature，並限制輸出長度</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="summary">
+    <p><b>一句話理解</b>　不能改模型權重時，最有效的優化通常不是「訓練模型」，而是讓對的資訊，用對的流程，在對的格式下進模型。</p>
+    <p><b>一句話總結</b>　後訓練不是單一技術，而是一整套把「會預測下一個 token 的模型」，變成「能完成任務、符合偏好、可安全部署的模型」的方法組合。</p>
+  </section>
+
+  <footer>來源：AI-models repo 的 docs/Post-Training.md</footer>
+</main>

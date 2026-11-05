@@ -32,6 +32,7 @@ AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理�
 | 項目 | 說明 |
 |---|---|
 | [c-code-review/](c-code-review/SKILL.md) | C 程式碼審查用的 skill（`SKILL.md`） |
+| [tools/](tools/README.md) | 把 `docs/` 轉成網頁的建置腳本 |
 
 ---
 
@@ -47,3 +48,4 @@ AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理�
 
 - **GitHub**：直接點上方連結，GitHub 會渲染 Markdown。
 - **本機**：`git clone` 或 `git pull` 後，用 VS Code（`Ctrl/Cmd+Shift+V` 預覽）、Typora 或 Obsidian 開啟。
+- **網頁版**：`tools/build_site.py` 可把 `docs/` 轉成含首頁索引與章節目錄導覽的靜態網頁，用法見 [tools/README.md](tools/README.md)。

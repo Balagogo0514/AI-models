@@ -1,0 +1,5 @@
+# 網頁建置輸出與本機虛擬環境（見 tools/README.md）
+_site/
+.venv/
+__pycache__/
+*.pyc
