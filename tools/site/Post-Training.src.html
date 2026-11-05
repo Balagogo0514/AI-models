@@ -147,6 +147,7 @@ figure.dg figcaption { margin-top: 10px; font-size: 13.5px; color: var(--muted);
       <a href="#choose">怎麼選</a>
       <a href="#rag">RAG 夠不夠</a>
       <a href="#rag-rl">RAG 不夠的 RL</a>
+      <a href="#rag-model">要不要開源</a>
       <a href="#users">使用者可做的優化</a>
     </nav>
   </header>
@@ -557,6 +558,109 @@ figure.dg figcaption { margin-top: 10px; font-size: 13.5px; color: var(--muted);
         </ul>
       </div>
     </div>
+  </section>
+
+  <section id="rag-model">
+    <h2>只做 RAG，還需要開源模型嗎？</h2>
+    <p class="lede">RAG 一定需要一個生成答案的語言模型，但不一定要開源。商用 API 搭配 RAG 完全可行，也是很多企業的起點。</p>
+    <figure class="dg">
+      <svg viewBox="0 0 440 408" role="img" aria-label="開源或商用 API 的判斷順序：資料不能送到外部就開源自架；可以送出則看有沒有 GPU 與維運能力，沒有就用商用 API；有的話再看是否需要微調或呼叫量極大，是就開源自架並先算清楚總成本，否則先用商用 API 驗證且讓模型可替換。資料有分級時可混合路由。">
+        <defs>
+          <marker id="dgC" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker>
+        </defs>
+
+        <rect class="acc" x="0" y="4" width="220" height="50" rx="8"/>
+        <text class="b" x="110" y="34" text-anchor="middle">資料能送到外部嗎？</text>
+        <line class="ln" x1="221" y1="29" x2="268" y2="29" marker-end="url(#dgC)"/>
+        <text class="b" x="244" y="22" text-anchor="middle">不能</text>
+        <rect class="box" x="270" y="4" width="170" height="50" rx="8"/>
+        <text class="b" x="280" y="26">開源自架</text>
+        <text class="s" x="280" y="43">地端或私有雲</text>
+        <line class="ln" x1="110" y1="55" x2="110" y2="94" marker-end="url(#dgC)"/>
+        <text class="s" x="120" y="80">可以</text>
+
+        <rect class="acc" x="0" y="96" width="220" height="50" rx="8"/>
+        <text class="b" x="110" y="126" text-anchor="middle">有 GPU 與維運能力嗎？</text>
+        <line class="ln" x1="221" y1="121" x2="268" y2="121" marker-end="url(#dgC)"/>
+        <text class="b" x="244" y="114" text-anchor="middle">沒有</text>
+        <rect class="box" x="270" y="96" width="170" height="50" rx="8"/>
+        <text class="b" x="280" y="118">商用 API</text>
+        <text class="s" x="280" y="135">不必自己維運</text>
+        <line class="ln" x1="110" y1="147" x2="110" y2="186" marker-end="url(#dgC)"/>
+        <text class="s" x="120" y="172">有</text>
+
+        <rect class="acc" x="0" y="188" width="220" height="50" rx="8"/>
+        <text class="b" x="110" y="218" text-anchor="middle">需要微調，或呼叫量極大？</text>
+        <line class="ln" x1="221" y1="213" x2="268" y2="213" marker-end="url(#dgC)"/>
+        <text class="b" x="244" y="206" text-anchor="middle">是</text>
+        <rect class="box" x="270" y="188" width="170" height="50" rx="8"/>
+        <text class="b" x="280" y="210">開源自架</text>
+        <text class="s" x="280" y="227">先算清楚總成本</text>
+        <line class="ln" x1="110" y1="239" x2="110" y2="278" marker-end="url(#dgC)"/>
+        <text class="s" x="120" y="264">否</text>
+
+        <rect class="good" x="0" y="280" width="260" height="56" rx="8"/>
+        <text class="b" x="10" y="304">先用商用 API 驗證</text>
+        <text class="s" x="10" y="322">模型做成可替換，用評測集決定</text>
+
+        <rect class="box dash" x="0" y="356" width="440" height="46" rx="8"/>
+        <text class="b" x="10" y="376">資料有分級時：混合路由</text>
+        <text class="s" x="10" y="393">敏感文件走自架模型，一般文件走商用 API</text>
+      </svg>
+      <figcaption>開源或商用 API：先看資料能不能出去，再看維運能力與是否需要微調。虛線框是資料有分級時的混合做法。</figcaption>
+    </figure>
+
+    <h3 style="margin-top:24px">RAG 裡的三個模型角色</h3>
+    <div class="scroll" style="margin-top:10px">
+      <table>
+        <thead><tr><th>角色</th><th>做什麼</th><th>開源</th><th>商用 API</th></tr></thead>
+        <tbody>
+          <tr><td>Embedding 模型</td><td>把文件與問題轉成向量，決定檢索品質</td><td>可以（常見選擇）</td><td>可以</td></tr>
+          <tr><td>Reranker</td><td>對檢索結果重新排序</td><td>可以</td><td>可以</td></tr>
+          <tr><td>生成模型（LLM）</td><td>讀檢索結果、產生答案</td><td>可以</td><td>可以</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:12px">三個角色可以混搭，例如 embedding 與 reranker 用開源自架，生成用商用 API。</p>
+
+    <div class="user-opts" style="margin-top:18px">
+      <div>
+        <h3>傾向用開源（開放權重）模型的條件</h3>
+        <ul style="margin-top:6px">
+          <li><b>資料不能出公司</b>（法規、客戶合約、機密）：商用 API 要把內容送到外部；即使有「不用於訓練」的條款，部分企業仍不接受。</li>
+          <li><b>必須地端或離線運行</b>（內網、隔離環境）：商用 API 需要連網。</li>
+          <li><b>要自己控制版本</b>：商用模型可能被下架或改版、行為會變；自架模型版本固定。</li>
+          <li><b>要微調</b>（格式、術語、工具使用）：開放權重模型才能自由微調。</li>
+          <li><b>呼叫量極大、成本敏感</b>：到一定規模後自架可能較便宜，但要算上 GPU 與維運成本。</li>
+        </ul>
+      </div>
+      <div>
+        <h3>傾向用商用 API 的條件</h3>
+        <ul style="margin-top:6px">
+          <li>要最強的推理與理解能力，而且資料可以送出去。</li>
+          <li>團隊沒有 GPU 與 MLOps 能力：自架要處理部署、擴縮、監控與更新。</li>
+          <li>用量小或還在 PoC：先用 API 驗證價值最快，不必先買硬體。</li>
+          <li>需要快速上線。</li>
+        </ul>
+      </div>
+      <div>
+        <h3>兩個常見迷思</h3>
+        <ul style="margin-top:6px">
+          <li><b>開源不等於免費</b>：自架要付 GPU、電力與人力，小規模時 API 常常更便宜。</li>
+          <li><b>開源不等於開放原始碼</b>：多數是「開放權重」，授權條款各異，商用限制要逐一確認。</li>
+        </ul>
+      </div>
+      <div>
+        <h3>動手的順序</h3>
+        <ul style="margin-top:6px">
+          <li><b>先釐清限制</b>：資料能不能出去、要不要地端、預算與人力，這幾個答案幾乎直接決定方向。</li>
+          <li><b>模型做成可替換</b>：程式用統一介面呼叫，換模型只改設定。</li>
+          <li><b>用評測集決定</b>：同一組標準問答，比較開源與商用在自己資料上的表現。</li>
+          <li><b>必要時混合</b>：敏感文件走自架模型，一般文件走 API，依資料等級路由。</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note" style="margin-top:12px">以上是通用判斷，實際選擇取決於各自的資料敏感度、法規與預算。</p>
   </section>
 
   <section id="users">
