@@ -15,6 +15,7 @@
 | 「session memory」放在哪？ | **官方沒有這個詞**。⚠️ 它通常指下列幾件不同的東西：① 對話本身（只在記憶體與 context 中）；② 逐字稿 `~/.claude/projects/<project>/<session-id>.jsonl`（用來 resume）；③ 壓縮（compact）後留下的摘要。真正「跨 session 記住事情」的是 auto memory 與 CLAUDE.md。 |
 | 專案目錄的 memory 是什麼？ | 要分兩種：**你寫的** `./CLAUDE.md`、`./.claude/rules/`、`./CLAUDE.local.md`（在專案目錄裡）；以及 **Claude 自己寫的 auto memory**（在 `~/.claude/projects/<project>/memory/`，**不在**專案目錄裡）。✅ |
 | 會互相取代嗎？ | **大多不會。** CLAUDE.md 各層是疊加（concatenate）；CLAUDE.md 與 auto memory 是互補、同時載入。唯一的「取代」是：預設只在**找不到任何 CLAUDE.md** 時才改讀 AGENTS.md；以及 `/compact` 會把**對話**換成摘要（但記憶檔會從磁碟重新注入）。✅ |
+| 切換帳號會影響這些紀錄嗎？ | 本機的逐字稿與 auto memory 只依工作目錄路徑存放，不分帳號；換帳號後應該仍看得到並能 resume，但官方未明說 ⚠️，且模型、組織設定、啟動旗標不一定相同（見 §3.2）。 |
 
 ---
 
@@ -71,6 +72,55 @@ CLAUDE.md 與 auto memory 都只是「放進 context 的文字」，Claude 會�
 👁 本機觀察：本 session 的逐字稿在 `~/.claude/projects/-home-user/<session-id>.jsonl`（約 13.6 MB），旁邊有 `tool-results/` 子目錄存放大型工具輸出。`<project>` 在這裡是工作目錄路徑把非英數字元換成 `-`。
 
 **重點**：逐字稿是「紀錄」，不是「記憶」。新 session 不會自動把舊逐字稿讀進 context；只有你明確 resume，才會把那段對話還原。要讓下個 session 也知道的事，必須寫進 CLAUDE.md 或 auto memory。✅
+
+### 3.1 逐字稿多久更新、多久清理
+
+**寫入**：官方說 session 是「as you work 持續儲存」，每個訊息、工具呼叫與結果都會寫進逐字稿，沒有固定間隔。✅ 👁 本機驗證：逐字稿的修改時間與查詢當下完全相同。
+
+**清理**：檔案超過 `cleanupPeriodDays` 就會被自動刪除。✅
+
+| 項目 | 規則 |
+|------|------|
+| 期限 | 預設 30 天，最小 1，設 `0` 會驗證失敗；在 `settings.json` 調整 |
+| 同一期限也適用於 | scratchpad、貼上的圖片、孤立的 worktree |
+| 不受清理影響 | auto memory（`projects/<project>/memory/`）、`history.jsonl`（除非套用 HIPAA 設定） |
+| Claude Desktop／Cowork 的逐字稿 | 預設不限年齡；用 `desktopSessionCleanupPeriodDays` 設期限（v2.1.248 以上） |
+| 清理會被跳過 | `claude -p --bare` 那次執行；無法確定保留期限時（例如設定檔壞掉）會暫停，並在 `/status` 警告 |
+| 立即清除 | `claude purge`（不動 temp 目錄裡的 scratchpad 與圖片） |
+
+- ⚠️ 官方沒寫清理多久跑一次，也沒明說「年齡」從建立還是最後修改時間算起。
+- 👁 本機有 `~/.claude/.last-cleanup`，內容是時間戳（觀察時為 `2026-11-06T01:37:50Z`，落在 session 進行途中，不像只在啟動時跑）。官方文件沒提到這個檔案，用途與間隔是推論。
+- 逐字稿是**明文**：工具讀過的 `.env` 內容、印出的密碼都會留在裡面。介意就調小 `cleanupPeriodDays`。
+
+### 3.2 切換帳號會怎樣
+
+**不受影響（官方有明載或可由結構看出）**
+
+- `projects/<project>/` 的 `<project>` 只由工作目錄路徑算出，路徑裡沒有帳號資訊。✅ 👁
+- 登入身分存在 `~/.claude.json` 的 `oauthAccount`，不在 `projects/` 底下。👁
+- 登出只刪帳號相關的快取：`policy-limits.json`（含 `.stamp.json`）與 `remote-settings.json`。官方沒有提到逐字稿。✅
+- auto memory 與 CLAUDE.md 在磁碟上，不分帳號，新 session 照常載入。✅
+
+**同一個工作目錄換帳號後，能 resume 舊帳號的 session 嗎？**
+
+⚠️ **官方沒有明說，我也沒實測。** 依據：sessions 頁面把 resume 描述為讀取專案目錄的本機逐字稿，整頁沒有提到帳號是條件；存放路徑也沒有帳號分區。所以推論新帳號看得到、也能 resume。要確認，可在本機 `claude auth logout`，改用另一帳號登入，再 `claude --resume`。
+
+**但「完全」還原不成立**
+
+| 項目 | 換帳號後 |
+|------|----------|
+| 對話歷史 | 照舊還原；若曾壓縮，從最後一次壓縮的摘要與之後的訊息接續 ✅ |
+| 模型 | 預設沿用 session 當時的模型 ✅；新帳號若無該模型權限會如何，官方未載 ⚠️ |
+| 組織管理的設定與政策 | 換成新帳號所屬組織的 |
+| 權限模式 | 依一般 resume 規則還原，與帳號無關 ✅ |
+| 啟動旗標 | `--mcp-config`、`--settings`、`--plugin-dir`、`--fallback-model`、`--add-dir` 不會還原，要重新傳；`settings.json` 一類標準設定檔每次啟動重讀 ✅ |
+| 逐字稿既有內容 | 原樣保留，包括舊帳號環境下的工具結果 |
+
+**注意**
+
+1. **隱私**：新帳號的使用者能讀到舊帳號對話與其中的密碼（明文）。多人共用一台機器時，每個帳號用不同的 `CLAUDE_CONFIG_DIR`（例如 `CLAUDE_CONFIG_DIR=/srv/tenant-a claude`），設定、session 歷史、auto memory 與外掛都會存到那裡。✅
+2. **記憶一致性**：新帳號看到的 auto memory 是舊帳號的 Claude 累積的，之後會被新帳號的 session 繼續使用與修改。
+3. 雲端（claude.ai）session 綁帳號，不在本機 `~/.claude`，不在此討論範圍。
 
 ---
 
