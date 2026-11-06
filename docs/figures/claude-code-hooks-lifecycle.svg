@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 606" role="img" aria-labelledby="t d">
+  <title id="t">Hooks 的生命週期：事件觸發順序與哪些可以阻擋</title>
+  <desc id="d">由上而下：SessionStart、UserPromptSubmit（可阻擋），接著是每個工具呼叫的迴圈：PreToolUse（可阻擋）、PermissionRequest（可阻擋）、工具執行、PostToolUse 或 PostToolUseFailure；Claude 完成回應時觸發 Stop（可阻擋並讓 Claude 繼續下一 turn），最後是 SessionEnd。右側列出隨時可能觸發的其他事件，以及 exit code 的意義。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 12px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { stroke-dasharray: 5 4; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .chip { fill: var(--warn); fill-opacity: .16; stroke: var(--warn); stroke-width: 1; }
+    .chipg { fill: var(--muted); fill-opacity: .12; stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="604.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">Hooks 生命週期（一般順序）</text>
+  <rect class="box" x="44" y="44" width="300" height="46" rx="8"/>
+  <text class="mono" x="54" y="63">SessionStart</text>
+  <text class="s" x="54" y="80">Session 開始或恢復</text>
+  <rect class="chipg" x="280" y="52" width="56" height="20" rx="10"/>
+  <text class="s" x="308.0" y="66" text-anchor="middle">不可阻擋</text>
+  <line class="ln" x1="194" y1="91" x2="194" y2="106" marker-end="url(#a)"/>
+  <rect class="bad" x="44" y="108" width="300" height="46" rx="8"/>
+  <text class="mono" x="54" y="127">UserPromptSubmit</text>
+  <text class="s" x="54" y="144">使用者送出 prompt 時</text>
+  <rect class="chip" x="280" y="116" width="56" height="20" rx="10"/>
+  <text class="s" x="308.0" y="130" text-anchor="middle">可阻擋</text>
+  <line class="ln" x1="194" y1="155" x2="194" y2="176" marker-end="url(#a)"/>
+  <rect class="zone" x="12" y="176" width="348" height="252" rx="12"/>
+  <text class="s" x="24" y="194">每個工具呼叫（Claude 可重複多次）</text>
+  <rect class="bad" x="44" y="204" width="300" height="46" rx="8"/>
+  <text class="mono" x="54" y="223">PreToolUse</text>
+  <text class="s" x="54" y="240">工具執行前</text>
+  <rect class="chip" x="280" y="212" width="56" height="20" rx="10"/>
+  <text class="s" x="308.0" y="226" text-anchor="middle">可阻擋</text>
+  <line class="ln" x1="194" y1="251" x2="194" y2="262" marker-end="url(#a)"/>
+  <rect class="bad" x="44" y="264" width="300" height="46" rx="8"/>
+  <text class="mono" x="54" y="283">PermissionRequest</text>
+  <text class="s" x="54" y="300">請求工具權限時；可自動批准／拒絕</text>
+  <rect class="chip" x="280" y="272" width="56" height="20" rx="10"/>
+  <text class="s" x="308.0" y="286" text-anchor="middle">可阻擋</text>
+  <line class="ln" x1="194" y1="311" x2="194" y2="322" marker-end="url(#a)"/>
+  <rect class="box" x="44" y="324" width="300" height="32" rx="8"/>
+  <text class="m" x="194" y="345" text-anchor="middle">工具實際執行（不是 hook 事件）</text>
+  <line class="ln" x1="194" y1="357" x2="194" y2="366" marker-end="url(#a)"/>
+  <rect class="box" x="44" y="368" width="300" height="48" rx="8"/>
+  <text class="mono" x="54" y="387">PostToolUse</text>
+  <text class="s" x="54" y="404">與 PostToolUseFailure：工具成功後／失敗後</text>
+  <rect class="chipg" x="280" y="376" width="56" height="20" rx="10"/>
+  <text class="s" x="308.0" y="390" text-anchor="middle">不可阻擋</text>
+  <path class="ln" d="M30 392 V232 H42" marker-end="url(#a)"/>
+  <text class="s" transform="translate(24 312) rotate(-90)" text-anchor="middle">重複</text>
+  <line class="ln" x1="194" y1="430" x2="194" y2="446" marker-end="url(#a)"/>
+  <rect class="bad" x="44" y="448" width="300" height="48" rx="8"/>
+  <text class="mono" x="54" y="467">Stop</text>
+  <text class="s" x="54" y="484">Claude 完成回應時；可阻擋並讓它繼續下一 turn</text>
+  <rect class="chip" x="280" y="456" width="56" height="20" rx="10"/>
+  <text class="s" x="308.0" y="470" text-anchor="middle">可阻擋</text>
+  <line class="ln" x1="194" y1="497" x2="194" y2="512" marker-end="url(#a)"/>
+  <rect class="box" x="44" y="514" width="300" height="44" rx="8"/>
+  <text class="mono" x="54" y="533">SessionEnd</text>
+  <text class="s" x="54" y="550">Session 結束</text>
+  <rect class="chipg" x="280" y="522" width="56" height="20" rx="10"/>
+  <text class="s" x="308.0" y="536" text-anchor="middle">不可阻擋</text>
+  <rect class="box" x="380" y="44" width="248" height="150" rx="8"/>
+  <text class="b" x="392" y="66">隨時可能觸發的其他事件（節錄）</text>
+  <text x="392" y="90">Notification（通知，唯讀）</text>
+  <text x="392" y="108">SubagentStart／SubagentStop</text>
+  <text x="392" y="126">PreCompact／PostCompact</text>
+  <text x="392" y="144">StopFailure：API 錯誤結束時</text>
+  <text x="392" y="162">　取代 Stop，輸出被忽略</text>
+  <text class="s" x="392" y="184">完整 33 個事件見下表</text>
+  <rect class="box" x="380" y="210" width="248" height="124" rx="8"/>
+  <text class="b" x="392" y="232">Exit code</text>
+  <text x="392" y="254">0：成功，解析 stdout 的 JSON</text>
+  <text x="392" y="272">2：阻擋錯誤，stderr 作為</text>
+  <text x="392" y="290">　　錯誤訊息顯示</text>
+  <text x="392" y="308">其他：非阻擋錯誤，繼續執行</text>
+  <rect class="box" x="380" y="350" width="248" height="78" rx="8"/>
+  <text class="b" x="392" y="372">Hook 類型</text>
+  <text x="392" y="392">command、http、mcp_tool、</text>
+  <text x="392" y="410">prompt、agent</text>
+  <text class="s" x="320" y="582" text-anchor="middle">示意：實際觸發順序與是否觸發，取決於設定與權限模式</text>
+  <text class="s" x="320" y="598" text-anchor="middle">依本文〈Hooks〉整理</text>
+</svg>

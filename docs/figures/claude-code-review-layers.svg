@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 330" role="img" aria-labelledby="t d">
+  <title id="t">三層程式碼審查：本機、/code-review ultra、GitHub App</title>
+  <desc id="d">由淺到深、由手動到自動：本機 /code-review 在本地 session 單次審查、計入一般用量；/code-review ultra 在雲端沙箱以多個 agent 並獨立驗證，免費三次之後每次約五到二十美元；Code Review GitHub App 由 Anthropic 雲端多 agent 在 PR 上自動審查，需要 Team 或 Enterprise。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 12px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { stroke-dasharray: 5 4; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .chip { fill: var(--warn); fill-opacity: .16; stroke: var(--warn); stroke-width: 1; }
+    .chipg { fill: var(--muted); fill-opacity: .12; stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="328.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">三層程式碼審查：由淺到深、由手動到自動</text>
+  <line class="ln" x1="24" y1="50" x2="616" y2="50" marker-end="url(#a)"/>
+  <text class="s" x="24" y="44">快、淺、本機</text>
+  <text class="s" x="616" y="44" text-anchor="end">深、雲端、自動</text>
+  <rect class="box" x="12" y="64" width="200" height="232" rx="8"/>
+  <text class="mono at" x="24" y="90">/code-review</text>
+  <text class="s" x="24" y="108">本機</text>
+  <text class="s" x="24" y="138">位置</text>
+  <text x="24" y="154">本地 session</text>
+  <text class="s" x="24" y="174">深度</text>
+  <text x="24" y="190">單次，可調 effort</text>
+  <text class="s" x="24" y="210">費用</text>
+  <text x="24" y="226">計入一般用量</text>
+  <text class="s" x="24" y="246">適合</text>
+  <text x="24" y="262">開發途中快速審查</text>
+  <rect class="acc" x="224" y="64" width="200" height="232" rx="8"/>
+  <text class="mono at" x="236" y="90">/code-review ultra</text>
+  <text class="s" x="236" y="108">雲端</text>
+  <text class="s" x="236" y="138">位置</text>
+  <text x="236" y="154">雲端沙箱</text>
+  <text class="s" x="236" y="174">深度</text>
+  <text x="236" y="190">多 agent＋獨立驗證</text>
+  <text class="s" x="236" y="210">費用</text>
+  <text x="236" y="226">免費 3 次，之後 $5–$20</text>
+  <text class="s" x="236" y="246">適合</text>
+  <text x="236" y="262">合併前深度把關</text>
+  <rect class="box" x="436" y="64" width="200" height="232" rx="8"/>
+  <text class="mono at" x="448" y="90">GitHub App</text>
+  <text class="s" x="448" y="108">PR 自動化</text>
+  <text class="s" x="448" y="138">位置</text>
+  <text x="448" y="154">Anthropic 雲端</text>
+  <text class="s" x="448" y="174">深度</text>
+  <text x="448" y="190">多 agent fleet</text>
+  <text class="s" x="448" y="210">費用</text>
+  <text x="448" y="226">$15–$25 ／次</text>
+  <text class="s" x="448" y="246">適合</text>
+  <text x="448" y="262">PR 自動審查</text>
+  <text x="448" y="277">（Team／Enterprise）</text>
+  <text class="s" x="320" y="318" text-anchor="middle">依本文〈/code-review〉整理；費用與額度以官方最新公告為準</text>
+</svg>

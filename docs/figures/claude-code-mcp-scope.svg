@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 376" role="img" aria-labelledby="t d">
+  <title id="t">MCP server 的安裝範圍與同名時的優先順序</title>
+  <desc id="d">同名 MCP server 出現在多個位置時，由高到低依序採用：local、project、user、plugin 提供的 server、claude.ai connectors。local 與 user 存在 ~/.claude.json，project 存在專案根目錄的 .mcp.json 並可 commit 共享。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 12px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { stroke-dasharray: 5 4; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .chip { fill: var(--warn); fill-opacity: .16; stroke: var(--warn); stroke-width: 1; }
+    .chipg { fill: var(--muted); fill-opacity: .12; stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="374.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">MCP server 的安裝範圍與優先順序</text>
+  <text class="s" x="24" y="52">優先順序（高 → 低）</text>
+  <text class="s" x="620" y="52" text-anchor="end">同名 server 取優先順序較高者</text>
+  <rect class="acc" x="20" y="64" width="600" height="42" rx="8"/>
+  <circle class="ar" cx="42" cy="85" r="11"/>
+  <text x="42" y="90" text-anchor="middle" style="fill:var(--bg);font-weight:700">1</text>
+  <text class="mono" x="64" y="82">local</text>
+  <text class="s" x="64" y="98">預設</text>
+  <text x="250" y="82">僅目前專案　·　不共享</text>
+  <text class="s" x="250" y="98">~/.claude.json</text>
+  <rect class="box" x="20" y="114" width="600" height="42" rx="8"/>
+  <circle class="ar" cx="42" cy="135" r="11"/>
+  <text x="42" y="140" text-anchor="middle" style="fill:var(--bg);font-weight:700">2</text>
+  <text class="mono" x="64" y="132">project</text>
+  <text class="s" x="64" y="148">--scope project</text>
+  <text x="250" y="132">僅目前專案　·　commit 共享</text>
+  <text class="s" x="250" y="148">.mcp.json（專案根目錄）</text>
+  <rect class="box" x="20" y="164" width="600" height="42" rx="8"/>
+  <circle class="ar" cx="42" cy="185" r="11"/>
+  <text x="42" y="190" text-anchor="middle" style="fill:var(--bg);font-weight:700">3</text>
+  <text class="mono" x="64" y="182">user</text>
+  <text class="s" x="64" y="198">--scope user</text>
+  <text x="250" y="182">所有專案　·　不共享</text>
+  <text class="s" x="250" y="198">~/.claude.json（global）</text>
+  <rect class="box" x="20" y="214" width="600" height="42" rx="8"/>
+  <circle class="ar" cx="42" cy="235" r="11"/>
+  <text x="42" y="240" text-anchor="middle" style="fill:var(--bg);font-weight:700">4</text>
+  <text class="b" x="64" y="240">Plugin 提供的 server</text>
+  <text x="250" y="240">隨 plugin 啟用範圍載入</text>
+  <rect class="box" x="20" y="264" width="600" height="42" rx="8"/>
+  <circle class="ar" cx="42" cy="285" r="11"/>
+  <text x="42" y="290" text-anchor="middle" style="fill:var(--bg);font-weight:700">5</text>
+  <text class="b" x="64" y="290">claude.ai connectors</text>
+  <text x="250" y="290">訂閱帳號登入時載入</text>
+  <rect class="box" x="20" y="322" width="600" height="34" rx="8"/>
+  <text x="32" y="343">傳輸（--transport）：stdio（預設）、http、sse；ws 需用 claude mcp add-json</text>
+  <text class="s" x="620" y="370" text-anchor="end">依本文〈MCP 使用方法〉整理</text>
+</svg>
