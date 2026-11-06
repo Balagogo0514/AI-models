@@ -149,6 +149,38 @@ CLAUDE.md 與 auto memory 都只是「放進 context 的文字」，Claude 會�
 - 其他可選值：`claude-md`（只讀 CLAUDE.md）、`managed-only`（只讀組織管理的 CLAUDE.md 與 auto memory）。
 - 需要 Claude Code v2.1.277 以上。
 
+#### 子目錄的 AGENTS.md：載入時機與優先權
+
+✅ 只有「沒有任何 CLAUDE.md」時（預設），AGENTS.md 才會被讀，載入分兩段：
+
+| 位置 | 何時載入 |
+|------|----------|
+| 工作目錄**及以上各層**的 `AGENTS.md`、`.claude/AGENTS.md` | 啟動時全部載入 |
+| 工作目錄**底下子目錄**的 `AGENTS.md` | Claude 用 **Read 工具**打開該子目錄的檔案時才載入 |
+
+**優先權：沒有覆寫機制，只有串接。**
+
+- 根目錄與子目錄的 AGENTS.md 同時存在於 context，沒有誰蓋掉誰。
+- CLAUDE.md 的官方排序是「從檔案系統根目錄排到工作目錄，越靠近工作目錄越後面讀到」。⚠️ 官方沒有逐字說 AGENTS.md 也同樣排序，這是推論。
+- 兩層互相矛盾時，官方只說 Claude 可能照任一邊做，**不保證後讀到的勝出**。要避免衝突，就別在兩層寫相反的規則。
+
+與子目錄 CLAUDE.md 的差異 ✅：
+
+| | 子目錄 `CLAUDE.md` | 子目錄 `AGENTS.md`（經 Project instructions 設定讀入） |
+|--|--------------------|------------------------------------------------------|
+| 觸發 | 讀、寫或編輯該目錄的檔案 | 只有 **Read** 該目錄的檔案 |
+| 該子目錄另有 CLAUDE.md | 載入該 CLAUDE.md | **不讀**該目錄的 AGENTS.md（條件是子目錄沒有自己的三種 CLAUDE.md） |
+| `InstructionsLoaded` hook | 會觸發 | 不觸發（被 CLAUDE.md 匯入或 symlink 的 AGENTS.md 則照常觸發） |
+
+- ⚠️ `/compact` 後：官方對子目錄 CLAUDE.md 明說會被摘要掉、用到才重載；子目錄 AGENTS.md 同樣是按需載入進對話，推論行為相同。
+- 確認有沒有讀到：在 session 裡用 `/memory` 找該路徑（v2.1.280 之前不會列出直接讀入的 AGENTS.md）。
+
+實務建議：
+
+1. 要讓子目錄規則可靠載入：在該子目錄放自己的 `CLAUDE.md`，內容寫 `@AGENTS.md`，觸發條件與 hook 就和 CLAUDE.md 一致。
+2. 要根目錄與子目錄都吃到：把 **Project instructions** 設為 `claude-md-and-agents-md`。
+3. 子目錄 AGENTS.md 不要放「必須全程遵守」的全域規則。
+
 ### 5.4 對話與記憶：`/compact` 與 `/clear`
 
 | 操作 | 對話歷史 | 磁碟上的記憶（CLAUDE.md、auto memory） |
