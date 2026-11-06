@@ -160,6 +160,8 @@ class Site:
             esc = html.escape(tex.strip(), quote=True)
             body = body.replace(f"<p>MATHPH{k}</p>", f'<div class="math" data-tex="{esc}"><pre>{esc}</pre></div>')
         body = body.replace("", "<strong>").replace("", "</strong>")
+        # 單獨一行的圖片包進可捲動容器：手機上圖保持可讀的最小寬度，超出時只在圖片區塊內捲動
+        body = re.sub(r"<p>(<img [^>]*>)</p>", r'<div class="figwrap">\1</div>', body)
 
         def fix_link(m):
             name, frag = m.group(1), m.group(2) or ""
@@ -262,6 +264,9 @@ class Site:
     def build(self):
         self.out.mkdir(parents=True, exist_ok=True)
         shutil.copy(ASSETS / "style.css", self.out / "style.css")
+        figures = SRC / "figures"  # 筆記內以相對路徑 figures/xxx.svg 引用的圖片
+        if figures.is_dir():
+            shutil.copytree(figures, self.out / "figures", dirs_exist_ok=True)
         for slug in self.order:
             if slug in CUSTOM_PAGES and (ASSETS / f"{slug}.src.html").exists():
                 title, toc, _, _, lines = self.render(slug)
