@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 572" role="img" aria-labelledby="t d">
+  <title id="t">Claude Code 每次請求送出的 context：由上而下依變動頻率排列</title>
+  <desc id="d">每次送出訊息都會重送完整 context，依序是：第一層 system prompt（核心指示與工具定義）、第二層 project context（CLAUDE.md、auto memory 索引、無條件的 rules），中間還有官方未標明所屬層級的 skill 描述、MCP 工具名稱、環境資訊與 git 狀態快照，最後是第三層對話（訊息、工具結果，以及按需載入的子目錄 CLAUDE.md、有 paths 的 rules、skill 內容）。上層一變，下層的快取全部失效。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="570.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">一次請求送出的 context（由上而下，越上面越少變動）</text>
+  <rect class="acc" x="16" y="46" width="408" height="84" rx="8"/>
+  <text class="b at" x="30" y="70">① System prompt</text>
+  <text x="30" y="90">核心指示、工具定義</text>
+  <text class="s" x="30" y="108">Output style、--append-system-prompt（有設定才有）</text>
+  <text class="s wt" x="30" y="124">改變 → 其後所有內容的快取都失效</text>
+  <line class="ln" x1="220" y1="131" x2="220" y2="146" marker-end="url(#a)"/>
+  <rect class="box" x="16" y="148" width="408" height="138" rx="8"/>
+  <text class="b at" x="30" y="172">② Project context（啟動時載入，壓縮後重載）</text>
+  <text x="30" y="196">・CLAUDE.md（各層疊加）；沒有時改讀 AGENTS.md</text>
+  <text x="30" y="216">・Auto memory：MEMORY.md 的前 200 行或 25KB</text>
+  <text x="30" y="236">・沒有 paths: 條件的 .claude/rules/*.md</text>
+  <text class="s" x="30" y="270">Claude 把它們當作 context，不是強制設定</text>
+  <rect class="dash" x="16" y="298" width="408" height="62" rx="8"/>
+  <text class="b m" x="28" y="318">也在啟動時載入（官方未標明屬於哪一層）</text>
+  <text x="28" y="338">Skill 的名稱與描述、MCP 工具名稱、環境資訊、git 狀態快照</text>
+  <text class="s" x="28" y="354">git 快照可用 includeGitInstructions 設定關閉</text>
+  <line class="ln" x1="220" y1="361" x2="220" y2="376" marker-end="url(#a)"/>
+  <rect class="good" x="16" y="378" width="408" height="158" rx="8"/>
+  <text class="b gt" x="30" y="402">③ Conversation（每輪追加在最後）</text>
+  <text x="30" y="426">・你的訊息、Claude 的回應、工具結果、讀入的檔案</text>
+  <text x="30" y="446">・按需載入：子目錄的 CLAUDE.md、有 paths: 的 rules、</text>
+  <text x="30" y="466">　被呼叫的 skill 內容、Claude 讀取的 memory 主題檔</text>
+  <text x="30" y="486">・hook 加入的 context；subagent 回傳的摘要</text>
+  <text class="s" x="30" y="516">改變這一層，上面兩層仍可從快取讀取</text>
+  <rect class="box" x="440" y="46" width="184" height="490" rx="8"/>
+  <text class="b" x="452" y="70">怎麼運作</text>
+  <text x="452" y="94">每次送訊息都是一次</text>
+  <text x="452" y="112">新的 API 請求。模型</text>
+  <text x="452" y="130">在兩次請求之間不記得</text>
+  <text x="452" y="148">任何事，所以整份</text>
+  <text x="452" y="166">context 都會重送。</text>
+  <text x="452" y="202">快取用「前綴」比對：</text>
+  <text x="452" y="220">越上面的內容越少變，</text>
+  <text x="452" y="238">上層一變，下層的快取</text>
+  <text x="452" y="256">全部失效。</text>
+  <text x="452" y="292">Subagent 有自己獨立</text>
+  <text x="452" y="310">的 context，只把摘要</text>
+  <text x="452" y="328">回傳給主對話。</text>
+  <text x="452" y="364">按需載入的內容進入</text>
+  <text x="452" y="382">對話歷史，/compact</text>
+  <text x="452" y="400">時會被一起摘要掉。</text>
+  <text class="s" x="320" y="558" text-anchor="middle">依官方〈Prompt caching〉〈Explore the context window〉整理</text>
+</svg>
