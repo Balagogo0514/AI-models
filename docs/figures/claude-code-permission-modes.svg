@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 410" role="img" aria-labelledby="t d">
+  <title id="t">Permission Modes 的切換循環與各模式自動放行的範圍</title>
+  <desc id="d">互動模式按 Shift+Tab 依序循環：default、acceptEdits、plan，接著是需要旗標才會出現的 bypassPermissions 與帳號符合資格才會出現的 auto，再回到 default。dontAsk 不在循環中，只能用旗標設定。除 bypassPermissions 外，所有模式都保護特定路徑。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 12px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { stroke-dasharray: 5 4; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .chip { fill: var(--warn); fill-opacity: .16; stroke: var(--warn); stroke-width: 1; }
+    .chipg { fill: var(--muted); fill-opacity: .12; stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="408.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">Permission Modes：按 Shift+Tab 循環切換</text>
+  <rect class="box" x="12" y="46" width="114" height="148" rx="8"/>
+  <text class="mono at" x="20" y="68">default</text>
+  <text class="s" x="20" y="85">（旗標值 manual）</text>
+  <text x="20" y="130">唯讀操作</text>
+  <text x="20" y="147">其餘都先詢問</text>
+  <line class="ln" x1="127" y1="120" x2="137" y2="120" marker-end="url(#a)"/>
+  <rect class="box" x="138" y="46" width="114" height="148" rx="8"/>
+  <text class="mono at" x="146" y="68">acceptEdits</text>
+  <text x="146" y="130">讀取、檔案編輯</text>
+  <text x="146" y="147">常見 fs 指令</text>
+  <text x="146" y="164">（mkdir、mv、cp）</text>
+  <line class="ln" x1="253" y1="120" x2="263" y2="120" marker-end="url(#a)"/>
+  <rect class="box" x="264" y="46" width="114" height="148" rx="8"/>
+  <text class="mono at" x="272" y="68">plan</text>
+  <text x="272" y="130">只讀取、研究</text>
+  <text x="272" y="147">撰寫計畫</text>
+  <text x="272" y="164">不做任何寫入</text>
+  <line class="ln" x1="379" y1="120" x2="389" y2="120" marker-end="url(#a)"/>
+  <rect class="box dash" x="390" y="46" width="114" height="148" rx="8"/>
+  <text class="mono wt" x="398" y="68">(bypass</text>
+  <text class="mono wt" x="398" y="83">Permissions)</text>
+  <text class="s" x="398" y="100">需啟動時帶旗標</text>
+  <text x="398" y="130">全部，無任何檢查</text>
+  <text x="398" y="147">rm -rf / ~ 仍提示</text>
+  <line class="ln" x1="505" y1="120" x2="515" y2="120" marker-end="url(#a)"/>
+  <rect class="box dash" x="516" y="46" width="114" height="148" rx="8"/>
+  <text class="mono wt" x="524" y="68">(auto)</text>
+  <text class="s" x="524" y="85">帳號需符合資格</text>
+  <text x="524" y="130">幾乎全部</text>
+  <text x="524" y="147">背景分類器</text>
+  <text x="524" y="164">監控每個動作</text>
+  <path class="ln" d="M573 196 V220 H69 V198" marker-end="url(#a)"/>
+  <text class="s" x="321" y="238" text-anchor="middle">再按一次回到 default（括號表示條件式出現）</text>
+  <rect class="bad" x="12" y="258" width="304" height="92" rx="8"/>
+  <text class="b wt" x="24" y="280">dontAsk：不在循環中，只能用旗標</text>
+  <text x="24" y="302">只放行 permissions.allow 規則內的工具，</text>
+  <text x="24" y="319">其餘一律拒絕、不詢問；</text>
+  <text x="24" y="336">適合預先定義白名單的 CI。</text>
+  <rect class="box" x="326" y="258" width="302" height="92" rx="8"/>
+  <text class="b" x="338" y="280">受保護路徑（bypassPermissions 除外）</text>
+  <text x="338" y="302">所有模式都不自動修改：.git、.claude</text>
+  <text x="338" y="319">（部分子資料夾除外）、shell 設定檔、</text>
+  <text x="338" y="336">套件管理設定（.npmrc 等）。</text>
+  <text class="s" x="320" y="376" text-anchor="middle">啟動時指定：claude --permission-mode &lt;模式&gt;；bypass 另有 --dangerously-skip-permissions</text>
+  <text class="s" x="320" y="394" text-anchor="middle">依本文〈Permission Modes〉整理</text>
+</svg>
