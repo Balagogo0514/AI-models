@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 468" role="img" aria-labelledby="t d">
+  <title id="t">/compact 與 /clear 之後，各種 context 來源會怎麼樣</title>
+  <desc id="d">壓縮後：system prompt 與 output style 仍有效；專案根 CLAUDE.md、無條件 rules 與 auto memory 從磁碟重新注入；skill 描述重建；子目錄 CLAUDE.md 與有 paths 的 rules 被摘要掉、用到時再載入；讀過的檔案最多重讀五個；已呼叫的 skill 內容重新注入但有大小上限；對話歷史換成結構化摘要。清除後：專案 context 會重新載入，對話清空但逐字稿仍可 resume。官方未明載的格子以破折號表示。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="466.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">/compact 與 /clear 之後，各來源的下場</text>
+  <rect class="hd" x="12" y="44" width="616" height="28" rx="6"/>
+  <text class="b" x="16" y="63">來源</text>
+  <text class="b" x="222" y="63">/compact（壓縮）</text>
+  <text class="b" x="462" y="63">/clear（清除）</text>
+  <text x="16" y="98">系統提示、output style</text>
+  <text x="222" y="98">仍然有效</text>
+  <text class="m" x="462" y="98">—</text>
+  <line class="rule" x1="12" y1="109" x2="628" y2="109"/>
+  <rect class="good" x="12" y="110" width="616" height="32" rx="4"/>
+  <text x="16" y="132">專案根 CLAUDE.md、無條件 rules</text>
+  <text x="222" y="132">從磁碟重新注入</text>
+  <text x="462" y="132">重新載入</text>
+  <line class="rule" x1="12" y1="143" x2="628" y2="143"/>
+  <rect class="good" x="12" y="144" width="616" height="32" rx="4"/>
+  <text x="16" y="166">Auto memory</text>
+  <text x="222" y="166">從磁碟重新注入</text>
+  <text x="462" y="166">重新載入</text>
+  <line class="rule" x1="12" y1="177" x2="628" y2="177"/>
+  <text x="16" y="200">Skill 的名稱與描述</text>
+  <text x="222" y="200">重建後注入（v2.1.304+）</text>
+  <text class="m" x="462" y="200">—</text>
+  <line class="rule" x1="12" y1="211" x2="628" y2="211"/>
+  <text x="16" y="234">子目錄 CLAUDE.md、條件式 rules</text>
+  <text x="222" y="234">被摘要掉，用到時再載入</text>
+  <text class="m" x="462" y="234">—</text>
+  <line class="rule" x1="12" y1="245" x2="628" y2="245"/>
+  <text x="16" y="268">讀過或編輯過的檔案</text>
+  <text x="222" y="268">最多重讀 5 個；&gt;5K tokens 只留路徑</text>
+  <text class="m" x="462" y="268">—</text>
+  <line class="rule" x1="12" y1="279" x2="628" y2="279"/>
+  <text x="16" y="302">已呼叫的 skill 內容</text>
+  <text x="222" y="302">重新注入（單個≤5K、合計≤25K）</text>
+  <text class="m" x="462" y="302">—</text>
+  <line class="rule" x1="12" y1="313" x2="628" y2="313"/>
+  <text x="16" y="336">Hook 先前加入的 context</text>
+  <text x="222" y="336">與對話一起被摘要</text>
+  <text class="m" x="462" y="336">—</text>
+  <line class="rule" x1="12" y1="347" x2="628" y2="347"/>
+  <rect class="bad" x="12" y="348" width="616" height="32" rx="4"/>
+  <text x="16" y="370">對話歷史</text>
+  <text x="222" y="370">換成結構化摘要</text>
+  <text x="462" y="370">清空（可 resume）</text>
+  <line class="rule" x1="12" y1="381" x2="628" y2="381"/>
+  <text x="16" y="404">背景指令與背景 subagent</text>
+  <text x="222" y="404">繼續執行，並提醒 Claude</text>
+  <text class="m" x="462" y="404">—</text>
+  <line class="rule" x1="12" y1="415" x2="628" y2="415"/>
+  <text class="s" x="320" y="438" text-anchor="middle">「—」：官方文件未明載；進入對話歷史的內容（如按需載入的規則）會隨壓縮被摘要</text>
+  <text class="s" x="320" y="456" text-anchor="middle">依官方〈Explore the context window〉〈Prompt caching〉〈Manage sessions〉整理</text>
+</svg>

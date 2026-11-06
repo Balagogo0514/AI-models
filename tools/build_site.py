@@ -38,6 +38,7 @@ CATS = [
     ("Agent 與開發工具", [
         ("Agentic-Engineering", "Graph Engineering：把 Agent 執行流程建模為節點、狀態與轉移"),
         ("Claude-Code-CLI", "Claude Code 指令、旗標、斜線指令、Hooks、MCP、Plugin 的完整參考"),
+        ("Claude-Context", "Claude Code 送給 LLM 的 context 如何組成、記憶放在哪、彼此是否取代"),
         ("Claude-Agent", "平行工作方式選型、多 Agent code review、追蹤彙整，含 fastpath refcount 實戰範例"),
         ("Claude-Code-Skills", "superpowers 與 planning-with-files 的 Skill／Plugin 比較"),
         ("CodeX-CLI", "OpenAI Codex CLI 的指令、sandbox、approval、設定的完整參考"),

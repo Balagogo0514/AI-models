@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 560" role="img" aria-labelledby="t d">
+  <title id="t">Claude Code 的記憶與 session 資料放在哪裡</title>
+  <desc id="d">專案目錄裡是你寫的指示檔：CLAUDE.md、.claude/rules、CLAUDE.local.md、子目錄的 CLAUDE.md，以及沒有 CLAUDE.md 時才會讀的 AGENTS.md。家目錄 ~/.claude 裡有個人的 CLAUDE.md 與 rules、Claude 自己寫的 auto memory，以及 session 逐字稿。系統層有組織管理的 CLAUDE.md，暫存目錄有 session 的 scratchpad。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="558.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">記憶與 session 資料放在哪裡</text>
+  <rect class="zone" x="12" y="44" width="306" height="316" rx="12"/>
+  <text class="b at" x="24" y="66">專案目錄（你寫的，可隨 git 共享）</text>
+  <rect class="box" x="24" y="78" width="282" height="50" rx="8"/>
+  <text class="monob" x="34" y="98">./CLAUDE.md 或 ./.claude/CLAUDE.md</text>
+  <text class="s" x="34" y="116">啟動載入　·　團隊共享</text>
+  <rect class="box" x="24" y="134" width="282" height="50" rx="8"/>
+  <text class="monob" x="34" y="154">./.claude/rules/*.md</text>
+  <text class="s" x="34" y="172">無 paths: 啟動載入；有 paths: 則按需載入</text>
+  <rect class="box" x="24" y="190" width="282" height="50" rx="8"/>
+  <text class="monob" x="34" y="210">./CLAUDE.local.md</text>
+  <text class="s" x="34" y="228">啟動載入　·　個人，不提交（加進 .gitignore）</text>
+  <rect class="box" x="24" y="246" width="282" height="50" rx="8"/>
+  <text class="monob" x="34" y="266">子目錄的 CLAUDE.md</text>
+  <text class="s" x="34" y="284">讀、寫或編輯該目錄的檔案時才載入</text>
+  <rect class="box" x="24" y="302" width="282" height="50" rx="8"/>
+  <text class="monob" x="34" y="322">./AGENTS.md</text>
+  <text class="s" x="34" y="340">預設只在找不到任何 CLAUDE.md 時才讀</text>
+  <rect class="zone" x="328" y="44" width="300" height="316" rx="12"/>
+  <text class="b at" x="340" y="66">~/.claude/（個人，本機專用）</text>
+  <rect class="box" x="340" y="78" width="276" height="50" rx="8"/>
+  <text class="monob" x="350" y="98">CLAUDE.md、rules/</text>
+  <rect class="good" x="340" y="134" width="276" height="100" rx="8"/>
+  <text class="monob" x="350" y="154">projects/&lt;project&gt;/memory/</text>
+  <rect class="acc" x="340" y="244" width="276" height="100" rx="8"/>
+  <text class="monob" x="350" y="264">projects/&lt;project&gt;/&lt;session-id&gt;.jsonl</text>
+  <text class="s" x="350" y="116">你寫的　·　所有專案都載入</text>
+  <text class="s" x="350" y="172">Auto memory：Claude 自己寫</text>
+  <text class="s" x="350" y="190">MEMORY.md 前 200 行或 25KB 啟動載入</text>
+  <text class="s" x="350" y="208">主題檔按需讀取；&lt;project&gt; 取自 git repo</text>
+  <text class="s" x="350" y="226">同 repo 的 worktree 共用</text>
+  <text class="s" x="350" y="282">Session 逐字稿，resume 時還原對話</text>
+  <text class="s" x="350" y="300">&lt;project&gt; 取自工作目錄路徑</text>
+  <text class="s" x="350" y="318">預設保留 30 天後清除</text>
+  <text class="s" x="350" y="336">Auto memory 不在這個清除範圍內</text>
+  <rect class="box" x="12" y="372" width="616" height="70" rx="8"/>
+  <text class="b" x="24" y="394">系統層（組織管理）</text>
+  <text class="mono" x="24" y="413">Linux/WSL：/etc/claude-code/CLAUDE.md</text>
+  <text class="mono" x="24" y="431">macOS：/Library/Application Support/ClaudeCode/CLAUDE.md　·　所有使用者啟動載入</text>
+  <rect class="box" x="12" y="452" width="616" height="70" rx="8"/>
+  <text class="b" x="24" y="474">Session 暫存目錄（scratchpad）　·　Claude 放暫存檔，不用授權</text>
+  <text class="mono" x="24" y="493">/tmp/claude-&lt;uid&gt;/&lt;project&gt;/&lt;session-id&gt;/scratchpad/</text>
+  <text class="s" x="24" y="511">與逐字稿同壽命（一起被清除）；位於系統暫存目錄，作業系統也可能清掉</text>
+  <text class="s" x="320" y="546" text-anchor="middle">依官方〈How Claude remembers your project〉〈Explore the .claude directory〉整理</text>
+</svg>
