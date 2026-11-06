@@ -1,0 +1,2 @@
+# GitHub 語言統計：tools/ 是附屬的建置工具，不計入 repo 的語言列（見 tools/README.md）
+tools/** linguist-documentation
