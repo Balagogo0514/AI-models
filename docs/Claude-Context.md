@@ -226,7 +226,7 @@ Subagent 以全新、隔離的 context 開始 ✅：
 
 ## 附錄：與本庫其他文件的出入
 
-⚠️ 〈[Agentic-Engineering](Agentic-Engineering.md)〉某處寫「Auto memory 系統依 `description` 欄位判斷某條記憶是否相關才載入，而非把整個 `MEMORY.md` 全部塞進每次對話」。這與官方文件不一致：官方說 `MEMORY.md` 的**前 200 行或 25KB 每次啟動都會載入**，主題檔才是按需讀取。同一份文件前面的載入表格寫的是官方版本，兩處互相矛盾；以本文為準，該句待另行修正。
+〈[Agentic-Engineering](Agentic-Engineering.md)〉曾寫「Auto memory 系統依 `description` 欄位判斷某條記憶是否相關才載入，而非把整個 `MEMORY.md` 全部塞進每次對話」，與官方不一致（官方：`MEMORY.md` 前 200 行或 25KB 每次啟動都載入，主題檔才按需讀取）。該句已改為與官方一致的說法。
 
 ## 官方來源
 
