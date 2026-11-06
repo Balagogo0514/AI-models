@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 388" role="img" aria-labelledby="t d">
+  <title id="t">/goal、/loop、Stop hook 與 /schedule：各自跑在哪裡、何時觸發、何時停止</title>
+  <desc id="d">左側是需要保持 session 開啟的本機方式：/goal 在每個 turn 結束後由小模型判斷條件是否達成；/loop 以固定或自選間隔重複執行，可手動停止或 7 天後過期；Stop hook 在每個 turn 結束後由自訂 script 或 prompt 判斷。右側 /schedule 跑在 Anthropic 雲端，電腦關機也會執行，最小間隔 1 小時。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 12px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { stroke-dasharray: 5 4; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .chip { fill: var(--warn); fill-opacity: .16; stroke: var(--warn); stroke-width: 1; }
+    .chipg { fill: var(--muted); fill-opacity: .12; stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="386.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">持續執行的方式：跑在哪裡、何時觸發、何時停止</text>
+  <rect class="zone" x="12" y="44" width="410" height="316" rx="12"/>
+  <text class="b at" x="24" y="64">本機 session 內（session 要保持開啟）</text>
+  <rect class="zone" x="434" y="44" width="194" height="316" rx="12"/>
+  <text class="b at" x="446" y="64">Anthropic 雲端</text>
+  <rect class="box" x="24" y="76" width="386" height="82" rx="8"/>
+  <text class="mono at" x="34" y="96">/goal</text>
+  <text class="s" x="34" y="116">觸發</text>
+  <text x="76" y="116">每個 turn 結束後</text>
+  <text class="s" x="34" y="134">停止</text>
+  <text x="76" y="134">小模型確認完成條件已達成</text>
+  <text class="s" x="34" y="152">備註</text>
+  <text x="76" y="152">評估器只看對話內容，不執行指令</text>
+  <rect class="box" x="24" y="168" width="386" height="100" rx="8"/>
+  <text class="mono at" x="34" y="188">/loop</text>
+  <text class="s" x="34" y="208">觸發</text>
+  <text x="76" y="208">固定間隔，或 Claude 自選（1 分鐘～1 小時）</text>
+  <text class="s" x="34" y="226">停止</text>
+  <text x="76" y="226">按 Esc；Claude 判斷完成；7 天後過期</text>
+  <text class="s" x="34" y="244">備註</text>
+  <text x="76" y="244">關閉終端機即停止；錯過的觸發只在閒置後補一次</text>
+  <rect class="box" x="24" y="278" width="386" height="70" rx="8"/>
+  <text class="mono at" x="34" y="298">Stop hook（自訂）</text>
+  <text class="s" x="34" y="318">觸發</text>
+  <text x="76" y="318">每個 turn 結束後</text>
+  <text class="s" x="34" y="336">停止</text>
+  <text x="76" y="336">自訂 script 或 prompt 判斷</text>
+  <rect class="box" x="446" y="76" width="170" height="272" rx="8"/>
+  <text class="mono at" x="456" y="96">/schedule（Routines）</text>
+  <text x="456" y="120">觸發：排程、API、</text>
+  <text x="456" y="138">　　　GitHub 事件</text>
+  <text x="456" y="174">電腦關機也會跑</text>
+  <text x="456" y="210">最小間隔 1 小時</text>
+  <text x="456" y="246">每次建立新的雲端</text>
+  <text x="456" y="264">session，用 fresh</text>
+  <text x="456" y="282">clone，讀不到本地</text>
+  <text x="456" y="300">檔案</text>
+  <text class="s" x="320" y="378" text-anchor="middle">依本文〈/goal〉〈/loop〉〈/schedule〉整理</text>
+</svg>
