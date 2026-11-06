@@ -136,7 +136,7 @@ CLAUDE.md 與 auto memory 都只是「放進 context 的文字」，Claude 會�
 
 ### 5.3 唯一的「取代」：AGENTS.md
 
-✅ 預設值 `claude-md-or-agents-md`：
+✅ **兩種檔案 Claude Code 都接受**（可直接讀 `AGENTS.md` 當專案指示，不必先用 CLAUDE.md 匯入）。差別只在預設是否**同時**載入：預設值 `claude-md-or-agents-md` 一次只選一組。
 
 | 你的 repo 有 | Claude 預設讀 |
 |-------------|---------------|
@@ -145,7 +145,8 @@ CLAUDE.md 與 auto memory 都只是「放進 context 的文字」，Claude 會�
 | CLAUDE.md 內 `@AGENTS.md` 匯入 | CLAUDE.md，AGENTS.md 經由匯入進來 |
 
 - 注意：`CLAUDE.local.md` 也算「有 CLAUDE.md」。所以專案只靠 `AGENTS.md`、你再自己加一個 `CLAUDE.local.md`，反而會讓 AGENTS.md 不再被讀。
-- 要兩個都讀：`/config` 把 **Project instructions** 改成 `claude-md-and-agents-md`。
+- 要兩個都讀：`/config` 把 **Project instructions** 改成 `claude-md-and-agents-md`（同目錄 `CLAUDE.md` 先載入、`AGENTS.md` 在後；已匯入或 symlink 的不會重複載入），或在 CLAUDE.md 裡寫 `@AGENTS.md`。
+- 其他可選值：`claude-md`（只讀 CLAUDE.md）、`managed-only`（只讀組織管理的 CLAUDE.md 與 auto memory）。
 - 需要 Claude Code v2.1.277 以上。
 
 ### 5.4 對話與記憶：`/compact` 與 `/clear`
