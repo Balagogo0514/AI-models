@@ -192,7 +192,7 @@ Claude Code 的 context window 並非單一來源，而是多個獨立機制在�
 
 **3. Memory 管理：只帶入跟當前任務相關的記憶**
 
-Auto memory 系統依 `description` 欄位判斷某條記憶跟當前任務是否相關才載入，而非把整個 `MEMORY.md` 全部塞進每次對話。例如使用者是資料科學家在查 logging，只帶入相關的 user/feedback 記憶，不帶入跟前端偏好無關的舊記錄——這避免 context 被不相關的歷史資訊稀釋。
+Auto memory 分兩層：`MEMORY.md` 索引的前 200 行或 25KB **每次啟動都會載入**；詳細的主題檔（如 `user_role.md`、`feedback_testing.md`）不在啟動時載入，Claude 判斷需要時才用一般檔案工具讀取。例如使用者是資料科學家在查 logging，Claude 只需去讀相關的 user／feedback 主題檔，不必讀跟前端偏好無關的舊記錄。因此索引要保持精簡，細節放進主題檔——這避免 context 被不相關的歷史資訊稀釋。完整載入規則見〈[Claude-Context](Claude-Context.md)〉。
 
 **4. Token 預算：Subagent 摘要回傳而非原始輸出直通主對話**
 
