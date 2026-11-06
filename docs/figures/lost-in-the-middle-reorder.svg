@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" role="img" aria-labelledby="t d">
+  <title id="t">文件重排：把最相關的放兩端</title>
+  <desc id="d">上方是依相關度由高到低排列的八份文件，最不相關的落在結尾。下方重排後，排名第 1 與第 2 的文件分別放在開頭與結尾，排名最後的放在中段。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 13px; }
+    .m { fill: var(--muted); font-size: 12px; }
+    .b { font-weight: 700; }
+    .n { font-size: 14px; font-weight: 700; text-anchor: middle; }
+    .w { fill: var(--bg); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--accent); stroke: var(--accent); stroke-width: 1.2; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .wt { fill: var(--warn); }
+    .at { fill: var(--accent); }
+  </style>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="298.8" rx="12"/>
+
+  <text class="b" x="20" y="28">預設：依相關度由高到低排列</text>
+  <text class="m" x="620" y="28" text-anchor="end">數字 = 相關度排名（1 最相關）</text>
+  <rect class="box" style="fill-opacity:1" x="30" y="40" width="62" height="44" rx="7"/><text class="n w" x="61" y="68">1</text>
+  <rect class="box" style="fill-opacity:.89" x="104" y="40" width="62" height="44" rx="7"/><text class="n w" x="135" y="68">2</text>
+  <rect class="box" style="fill-opacity:.78" x="178" y="40" width="62" height="44" rx="7"/><text class="n w" x="209" y="68">3</text>
+  <rect class="box" style="fill-opacity:.67" x="252" y="40" width="62" height="44" rx="7"/><text class="n" x="283" y="68">4</text>
+  <rect class="box" style="fill-opacity:.56" x="326" y="40" width="62" height="44" rx="7"/><text class="n" x="357" y="68">5</text>
+  <rect class="box" style="fill-opacity:.45" x="400" y="40" width="62" height="44" rx="7"/><text class="n" x="431" y="68">6</text>
+  <rect class="box" style="fill-opacity:.34" x="474" y="40" width="62" height="44" rx="7"/><text class="n" x="505" y="68">7</text>
+  <rect class="box" style="fill-opacity:.23" x="548" y="40" width="62" height="44" rx="7"/><text class="n" x="579" y="68">8</text>
+  <text class="m" x="320" y="104" text-anchor="middle">最不相關的恰好落在「結尾」這個較強的位置</text>
+
+  <path class="ln" d="M320 114 V146"/>
+  <path class="ar" d="M314 140 L320 150 L326 140 Z"/>
+  <text class="b at" x="334" y="136">重排</text>
+
+  <text class="b" x="20" y="176">重排：最相關的放兩端，最不相關的放中段</text>
+  <rect class="box" style="fill-opacity:1" x="30" y="188" width="62" height="44" rx="7"/><text class="n w" x="61" y="216">1</text>
+  <rect class="box" style="fill-opacity:.78" x="104" y="188" width="62" height="44" rx="7"/><text class="n w" x="135" y="216">3</text>
+  <rect class="box" style="fill-opacity:.56" x="178" y="188" width="62" height="44" rx="7"/><text class="n" x="209" y="216">5</text>
+  <rect class="box" style="fill-opacity:.34" x="252" y="188" width="62" height="44" rx="7"/><text class="n" x="283" y="216">7</text>
+  <rect class="box" style="fill-opacity:.23" x="326" y="188" width="62" height="44" rx="7"/><text class="n" x="357" y="216">8</text>
+  <rect class="box" style="fill-opacity:.45" x="400" y="188" width="62" height="44" rx="7"/><text class="n" x="431" y="216">6</text>
+  <rect class="box" style="fill-opacity:.67" x="474" y="188" width="62" height="44" rx="7"/><text class="n" x="505" y="216">4</text>
+  <rect class="box" style="fill-opacity:.89" x="548" y="188" width="62" height="44" rx="7"/><text class="n w" x="579" y="216">2</text>
+  <text class="m" x="320" y="252" text-anchor="middle">排名 1、2 分別在開頭與結尾；排名最後的 7、8 放在中段</text>
+  <text class="m" x="620" y="288" text-anchor="end">重排是啟發式做法，不保證有效，需用自己的評測驗證</text>
+</svg>

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 330" role="img" aria-labelledby="t d">
+  <title id="t">關鍵資訊的位置與模型正確率（示意）</title>
+  <desc id="d">橫軸是關鍵資訊在輸入中的位置，從開頭、中間到結尾；縱軸是正確率。曲線呈 U 型：開頭與結尾較高，中段較低。此為示意圖，不是實測數據。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 13px; }
+    .m { fill: var(--muted); font-size: 12px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .axis { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .zl { fill: var(--accent); fill-opacity: .10; }
+    .zm { fill: var(--warn); fill-opacity: .09; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 3.2; stroke-linecap: round; }
+    .pt { fill: var(--accent); }
+    .ptw { fill: var(--warn); }
+    .wt { fill: var(--warn); }
+    .at { fill: var(--accent); }
+  </style>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="328.8" rx="12"/>
+  <text class="t" x="320" y="30" text-anchor="middle">關鍵資訊的位置 vs 模型正確率</text>
+
+  <rect class="zl" x="70" y="50" width="140" height="210"/>
+  <rect class="zm" x="210" y="50" width="250" height="210"/>
+  <rect class="zl" x="460" y="50" width="140" height="210"/>
+
+  <path class="axis" d="M70 50 V260 H600"/>
+  <path class="axis" d="M70 50 l-4 8 M70 50 l4 8 M600 260 l-8 -4 M600 260 l-8 4"/>
+
+  <text class="m" x="62" y="62" text-anchor="end">高</text>
+  <text class="m" x="62" y="258" text-anchor="end">低</text>
+  <text class="m" transform="translate(26 155) rotate(-90)" text-anchor="middle">正確率</text>
+
+  <path class="curve" d="M100 80 C160 82 210 202 335 214 C460 202 510 98 570 92"/>
+  <circle class="pt" cx="100" cy="80" r="5.5"/>
+  <circle class="ptw" cx="335" cy="214" r="5.5"/>
+  <circle class="pt" cx="570" cy="92" r="5.5"/>
+
+  <text class="b at" x="140" y="150" text-anchor="middle">開頭較強</text>
+  <text class="m" x="140" y="168" text-anchor="middle">primacy</text>
+  <text class="b at" x="530" y="150" text-anchor="middle">結尾較強</text>
+  <text class="m" x="530" y="168" text-anchor="middle">recency</text>
+  <text class="b wt" x="335" y="246" text-anchor="middle">中段較弱（lost in the middle）</text>
+
+  <text class="m" x="110" y="282" text-anchor="middle">開頭</text>
+  <text class="m" x="335" y="282" text-anchor="middle">中間</text>
+  <text class="m" x="570" y="282" text-anchor="middle">結尾</text>
+  <text class="m" x="335" y="300" text-anchor="middle">關鍵資訊在輸入中的位置</text>
+  <text class="m" x="620" y="320" text-anchor="end">示意圖：呈現趨勢，非實測數據</text>
+</svg>

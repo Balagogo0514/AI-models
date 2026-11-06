@@ -34,6 +34,7 @@ python3 -m venv .venv
 - 單獨一行的 `$$ … $$` 公式以 KaTeX 的 MathML 輸出渲染（載入 cdnjs 上的 KaTeX 0.16.9）；載入失敗時顯示原始 LaTeX。其他地方的 `$` 不當作公式。
 - 「粗體結尾為標點、後面緊接中文字」時，CommonMark（含 GitHub）不認結尾的 `**`，會把星號原樣露出來；本腳本在轉換前處理這種情況，頁面上會顯示成正確的粗體。
 - 文件之間的相對連結（`X.md`）會轉成 `X.html`。
+- 圖片放在 `docs/figures/`，筆記內以 `figures/xxx.svg` 相對路徑引用；建置時整個資料夾會複製到輸出的 `figures/`。SVG 內可用 `prefers-color-scheme` 讓圖跟著深淺色切換。
 
 ## 注意事項
 
