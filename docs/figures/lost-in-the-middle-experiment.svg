@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 330" role="img" aria-labelledby="t d">
+  <title id="t">Lost in the Middle 的控制實驗設計（示意）</title>
+  <desc id="d">固定同一個問題與同一組 k 份文件，只改變含有答案的那一份文件排在第幾位。答案文件在開頭或結尾時，模型的正確率較高；在中間時較低。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 13px; }
+    .m { fill: var(--muted); font-size: 12px; }
+    .b { font-weight: 700; }
+    .t { font-size: 14px; font-weight: 700; }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .doc { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .gold { fill: var(--accent); stroke: var(--accent); stroke-width: 1.2; }
+    .goldt { fill: var(--bg); font-weight: 700; }
+    .hi { fill: var(--accent); fill-opacity: .14; stroke: var(--accent); stroke-width: 1.2; }
+    .lo { fill: var(--warn); fill-opacity: .14; stroke: var(--warn); stroke-width: 1.2; }
+    .hit { fill: var(--accent); font-weight: 700; font-size: 15px; }
+    .lot { fill: var(--warn); font-weight: 700; font-size: 15px; }
+  </style>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="328.8" rx="12"/>
+  <text class="t" x="320" y="30" text-anchor="middle">同一題、同一組 k 份文件，只改變「含答案的那份」排第幾位</text>
+  <text class="m" x="601" y="54" text-anchor="middle">正確率</text>
+
+  <!-- 情境 A：答案在開頭 -->
+  <text class="b" x="14" y="88">答案在開頭</text>
+  <rect class="gold" x="130" y="64" width="46" height="40" rx="6"/><text class="goldt" x="153" y="89" text-anchor="middle">1</text>
+  <rect class="doc" x="184" y="64" width="46" height="40" rx="6"/><text class="m" x="207" y="89" text-anchor="middle">2</text>
+  <rect class="doc" x="238" y="64" width="46" height="40" rx="6"/><text class="m" x="261" y="89" text-anchor="middle">3</text>
+  <rect class="doc" x="292" y="64" width="46" height="40" rx="6"/><text class="m" x="315" y="89" text-anchor="middle">4</text>
+  <rect class="doc" x="346" y="64" width="46" height="40" rx="6"/><text class="m" x="369" y="89" text-anchor="middle">5</text>
+  <rect class="doc" x="400" y="64" width="46" height="40" rx="6"/><text class="m" x="423" y="89" text-anchor="middle">6</text>
+  <rect class="doc" x="454" y="64" width="46" height="40" rx="6"/><text class="m" x="477" y="89" text-anchor="middle">7</text>
+  <rect class="doc" x="508" y="64" width="46" height="40" rx="6"/><text class="m" x="531" y="89" text-anchor="middle">k</text>
+  <rect class="hi" x="570" y="64" width="62" height="40" rx="6"/><text class="hit" x="601" y="90" text-anchor="middle">高</text>
+
+  <!-- 情境 B：答案在中間 -->
+  <text class="b" x="14" y="158">答案在中間</text>
+  <rect class="doc" x="130" y="134" width="46" height="40" rx="6"/><text class="m" x="153" y="159" text-anchor="middle">1</text>
+  <rect class="doc" x="184" y="134" width="46" height="40" rx="6"/><text class="m" x="207" y="159" text-anchor="middle">2</text>
+  <rect class="doc" x="238" y="134" width="46" height="40" rx="6"/><text class="m" x="261" y="159" text-anchor="middle">3</text>
+  <rect class="gold" x="292" y="134" width="46" height="40" rx="6"/><text class="goldt" x="315" y="159" text-anchor="middle">4</text>
+  <rect class="doc" x="346" y="134" width="46" height="40" rx="6"/><text class="m" x="369" y="159" text-anchor="middle">5</text>
+  <rect class="doc" x="400" y="134" width="46" height="40" rx="6"/><text class="m" x="423" y="159" text-anchor="middle">6</text>
+  <rect class="doc" x="454" y="134" width="46" height="40" rx="6"/><text class="m" x="477" y="159" text-anchor="middle">7</text>
+  <rect class="doc" x="508" y="134" width="46" height="40" rx="6"/><text class="m" x="531" y="159" text-anchor="middle">k</text>
+  <rect class="lo" x="570" y="134" width="62" height="40" rx="6"/><text class="lot" x="601" y="160" text-anchor="middle">低</text>
+
+  <!-- 情境 C：答案在結尾 -->
+  <text class="b" x="14" y="228">答案在結尾</text>
+  <rect class="doc" x="130" y="204" width="46" height="40" rx="6"/><text class="m" x="153" y="229" text-anchor="middle">1</text>
+  <rect class="doc" x="184" y="204" width="46" height="40" rx="6"/><text class="m" x="207" y="229" text-anchor="middle">2</text>
+  <rect class="doc" x="238" y="204" width="46" height="40" rx="6"/><text class="m" x="261" y="229" text-anchor="middle">3</text>
+  <rect class="doc" x="292" y="204" width="46" height="40" rx="6"/><text class="m" x="315" y="229" text-anchor="middle">4</text>
+  <rect class="doc" x="346" y="204" width="46" height="40" rx="6"/><text class="m" x="369" y="229" text-anchor="middle">5</text>
+  <rect class="doc" x="400" y="204" width="46" height="40" rx="6"/><text class="m" x="423" y="229" text-anchor="middle">6</text>
+  <rect class="doc" x="454" y="204" width="46" height="40" rx="6"/><text class="m" x="477" y="229" text-anchor="middle">7</text>
+  <rect class="gold" x="508" y="204" width="46" height="40" rx="6"/><text class="goldt" x="531" y="229" text-anchor="middle">k</text>
+  <rect class="hi" x="570" y="204" width="62" height="40" rx="6"/><text class="hit" x="601" y="230" text-anchor="middle">高</text>
+
+  <!-- 圖例 -->
+  <rect class="gold" x="130" y="266" width="16" height="16" rx="3"/>
+  <text class="m" x="154" y="279">含答案的文件</text>
+  <rect class="doc" x="260" y="266" width="16" height="16" rx="3"/>
+  <text class="m" x="284" y="279">干擾文件</text>
+  <text class="m" x="620" y="318" text-anchor="end">依 Liu et al. 的控制實驗設計示意；高／低為趨勢示意，非實測數據</text>
+</svg>
