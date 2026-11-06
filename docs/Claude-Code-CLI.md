@@ -333,6 +333,10 @@ claude -p "/goal CHANGELOG.md has an entry for every PR merged this week"
 | `/loop` | 固定時間間隔 | 手動停止或 Claude 判斷完成 |
 | Stop hook | 前一 turn 結束後 | 自訂 script 或 prompt 判斷 |
 
+下圖把本機的 `/goal`、`/loop`、Stop hook，與跑在雲端的 `/schedule`（見第十一章）放在一起比較：
+
+![持續執行方式的比較：本機 session 內的 /goal（每個 turn 結束後由小模型判斷停止）、/loop（固定或自選間隔，可手動停止或 7 天後過期）、Stop hook（自訂 script 或 prompt 判斷），以及跑在 Anthropic 雲端的 /schedule（電腦關機也會執行，最小間隔 1 小時）](figures/claude-code-keep-running.svg)
+
 > 搭配 `--permission-mode auto` 效果最佳：auto mode 省去 tool 確認提示，`/goal` 省去 turn 確認提示，兩者合用可完全無人看管執行。
 
 ### 注意事項
@@ -688,6 +692,8 @@ Run a workflow to audit every API endpoint under src/routes/ for missing auth ch
 ### 核心概念
 
 一個 git worktree 是共用同一份 repo 歷史與 remote 的獨立工作目錄，有自己的檔案狀態與 branch。用來讓不同 Claude session 同時修改不同功能，而不會互相衝突。
+
+![Worktree：主 checkout 與多個 worktree 共用同一份 .git；claude --worktree 在 .claude/worktrees/名稱/ 建立獨立工作目錄與 worktree-名稱 分支；離開時沒有變更就自動刪除，有變更或新 commit 則詢問是否保留，非互動模式不會自動清理](figures/claude-code-worktree.svg)
 
 ### 啟動 worktree session
 
@@ -1404,6 +1410,8 @@ Claude Code 提供三層程式碼審查，適用不同情境：
 | `/code-review ultra` | 雲端沙箱 | 多 agent + 獨立驗證 | 免費 3 次，之後 $5–$20 | 合併前深度把關 |
 | Code Review（GitHub App）| Anthropic 雲端 | 多 agent fleet | $15–$25 / 次 | PR 自動化審查（Team/Enterprise）|
 
+![三層程式碼審查：本機 /code-review 在本地 session 單次審查；/code-review ultra 在雲端沙箱以多 agent 並獨立驗證，免費 3 次之後每次約 $5–$20；GitHub App 由 Anthropic 雲端多 agent 在 PR 上自動審查，需要 Team 或 Enterprise](figures/claude-code-review-layers.svg)
+
 ---
 
 ### A. `/code-review`（本地審查，Skill）
@@ -1581,6 +1589,8 @@ Report at most five Nits per review. Say "plus N similar items" for the rest.
 
 除 `bypassPermissions` 外，所有模式都保護特定路徑（`.git`、`.claude` 設定等）不被自動修改。
 
+![Permission Modes 的切換循環：按 Shift+Tab 依序為 default、acceptEdits、plan，接著是需要旗標才出現的 bypassPermissions 與帳號符合資格才出現的 auto，再回到 default；dontAsk 不在循環中，只能用旗標設定；除 bypassPermissions 外所有模式都保護特定路徑](figures/claude-code-permission-modes.svg)
+
 ### 切換方式
 
 **互動模式 — `Shift+Tab` 循環：**
@@ -1720,6 +1730,8 @@ claude --dangerously-skip-permissions
 Hooks 讓你在 Claude Code 生命週期的特定時間點自動執行 shell 指令、HTTP 請求、MCP 工具或 LLM prompt。用於自動化、驗證、控制 Claude 的行為。
 
 ### Hook 觸發時機
+
+![Hooks 生命週期：SessionStart、UserPromptSubmit（可阻擋）、每個工具呼叫迴圈（PreToolUse 可阻擋、PermissionRequest 可阻擋、工具執行、PostToolUse 或 PostToolUseFailure）、Stop（可阻擋並讓 Claude 繼續下一 turn）、SessionEnd；右側為其他事件、exit code 與 hook 類型](figures/claude-code-hooks-lifecycle.svg)
 
 | Event | 觸發時機 | 可阻擋？ |
 |-------|------|------|
@@ -2093,6 +2105,8 @@ claude mcp add --transport http hubspot --scope user https://mcp.hubspot.com/ant
 3. User scope
 4. Plugin 提供的 server
 5. claude.ai connectors
+
+![MCP server 的安裝範圍與優先順序：同名時由高到低依序採用 local、project、user、plugin 提供的 server、claude.ai connectors；local 與 user 存在 ~/.claude.json，project 存在專案根目錄的 .mcp.json 並可 commit 共享](figures/claude-code-mcp-scope.svg)
 
 #### `.mcp.json` 環境變數展開
 
