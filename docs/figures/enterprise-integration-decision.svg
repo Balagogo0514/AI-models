@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 540" role="img" aria-labelledby="t d">
+  <title id="t">商用 API、自架模型、微調的判斷流程</title>
+  <desc id="d">先問資料能否送出企業邊界：不能就走自架或私有部署。能的話先用商用 API 加 RAG 與工具做 POC。達標就維持 API 並用快取、批次與模型分級降低成本；不達標則看瓶頸：檢索或資料問題先修資料與檢索，行為格式術語問題考慮微調，規模化後成本或延遲問題評估較小模型或自架。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="538.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">怎麼選：API、自架、還是微調？</text>
+  <rect class="acc" x="180" y="44" width="280" height="50" rx="10"/>
+  <text class="b" x="320.0" y="67.0" text-anchor="middle">資料能送出企業邊界嗎？</text>
+  <text class="s" x="320.0" y="85.0" text-anchor="middle">依分級、合規與合約判斷</text>
+  <rect class="bad" x="12" y="120" width="196" height="80" rx="10"/>
+  <text class="b" x="24" y="142">不能 → 自架／私有部署</text>
+  <text class="s" x="24" y="162">專屬雲或機房</text>
+  <text class="s" x="24" y="179">要有維運能力</text>
+  <line class="ln" x1="190" y1="94" x2="110" y2="118" marker-end="url(#a)"/>
+  <text class="s" x="120" y="106">不能</text>
+  <rect class="acc" x="236" y="130" width="250" height="50" rx="10"/>
+  <text class="b" x="361.0" y="153.0" text-anchor="middle">商用 API + RAG + 工具</text>
+  <text class="s" x="361.0" y="171.0" text-anchor="middle">先做 POC：達評估門檻了嗎？</text>
+  <line class="ln" x1="340" y1="95" x2="340" y2="128" marker-end="url(#a)"/>
+  <text class="s" x="350" y="116">能</text>
+  <rect class="good" x="444" y="200" width="184" height="76" rx="10"/>
+  <text class="b" x="456" y="222">達標 → 維持 API</text>
+  <text class="s" x="456" y="242">快取、批次、模型分級</text>
+  <text class="s" x="456" y="259">固定版本、追蹤棄用</text>
+  <line class="ln" x1="430" y1="181" x2="520" y2="198" marker-end="url(#a)"/>
+  <text class="s" x="486" y="186">達標</text>
+  <rect class="acc" x="12" y="232" width="400" height="50" rx="10"/>
+  <text class="b" x="212.0" y="255.0" text-anchor="middle">沒達標：瓶頸在哪裡？</text>
+  <text class="s" x="212.0" y="273.0" text-anchor="middle">先看錯誤樣本，再決定下一步</text>
+  <line class="ln" x1="300" y1="181" x2="212" y2="230" marker-end="url(#a)"/>
+  <text class="s" x="206" y="200">沒達標</text>
+  <rect class="box" x="12" y="322" width="200" height="96" rx="10"/>
+  <text class="b" x="24" y="344">檢索或資料問題</text>
+  <text class="s" x="24" y="364">修切塊、hybrid、重排</text>
+  <text class="s" x="24" y="381">資料品質與新鮮度</text>
+  <rect class="box" x="220" y="322" width="200" height="96" rx="10"/>
+  <text class="b" x="232" y="344">行為、格式、術語</text>
+  <text class="s" x="232" y="364">考慮微調（SFT／LoRA）</text>
+  <text class="s" x="232" y="381">RAG 仍管事實</text>
+  <rect class="box" x="428" y="322" width="200" height="96" rx="10"/>
+  <text class="b" x="440" y="344">規模化後成本或延遲</text>
+  <text class="s" x="440" y="364">評估較小模型或蒸餾</text>
+  <text class="s" x="440" y="381">或自架；算交叉點</text>
+  <line class="ln" x1="112" y1="283" x2="112" y2="320" marker-end="url(#a)"/>
+  <line class="ln" x1="220" y1="283" x2="320" y2="320" marker-end="url(#a)"/>
+  <line class="ln" x1="330" y1="283" x2="528" y2="320" marker-end="url(#a)"/>
+  <rect class="dash" x="12" y="432" width="616" height="96" rx="8"/>
+  <text class="b" x="24" y="454">判斷時一起看的五件事</text>
+  <text x="24" y="476">資料敏感度與合規　·　請求量與是否穩定　·　延遲要求</text>
+  <text x="24" y="496">客製化程度（行為、格式、術語）　·　自己能不能維運模型服務</text>
+  <text x="24" y="516">成本交叉點：API 月費 vs 自架的硬體、人力與稼動率</text>
+</svg>

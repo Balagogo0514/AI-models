@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 470" role="img" aria-labelledby="t d">
+  <title id="t">企業整合模型的參考架構：閘道層、編排層、工具介面與內部系統</title>
+  <desc id="d">使用者與內部應用的請求先經過 AI 閘道層，負責身分、金鑰、配額、日誌、敏感資料遮罩與模型路由。閘道層後面是模型（商用 API 或自架）與編排層（工作流、Agent 與 RAG）。編排層經由工具介面（MCP、function calling、內部 API）存取內部系統，包含資料庫、業務系統、工單與程式碼庫。可觀測性橫跨所有層。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="468.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">參考架構（由上而下）</text>
+  <rect class="box" x="12" y="44" width="616" height="50" rx="8"/>
+  <text class="b" x="24" y="66">使用者與內部應用</text>
+  <text class="s" x="24" y="84">聊天介面、內部系統內嵌、排程與批次工作</text>
+  <line class="ln" x1="320" y1="95" x2="320" y2="110" marker-end="url(#a)"/>
+  <rect class="acc" x="12" y="112" width="616" height="72" rx="8"/>
+  <text class="b at" x="24" y="134">AI 閘道層（統一入口）</text>
+  <text x="24" y="154">身分驗證　·　金鑰管理　·　配額與限流　·　日誌與稽核</text>
+  <text x="24" y="172">敏感資料遮罩　·　模型路由與備援　·　快取</text>
+  <line class="ln" x1="200" y1="185" x2="200" y2="202" marker-end="url(#a)"/>
+  <line class="ln" x1="440" y1="185" x2="440" y2="202" marker-end="url(#a)"/>
+  <rect class="good" x="12" y="204" width="300" height="88" rx="8"/>
+  <text class="b gt" x="24" y="226">編排層</text>
+  <text x="24" y="246">工作流、Agent、RAG 檢索</text>
+  <text class="s" x="24" y="266">決定何時查文件、何時呼叫工具</text>
+  <rect class="box" x="328" y="204" width="300" height="88" rx="8"/>
+  <text class="b" x="340" y="226">模型</text>
+  <text x="340" y="246">商用 API 或自架模型</text>
+  <text class="s" x="340" y="266">固定版本；換版前先跑評估</text>
+  <line class="ln" x1="312" y1="248" x2="328" y2="248" marker-end="url(#a)"/>
+  <line class="ln" x1="162" y1="293" x2="162" y2="310" marker-end="url(#a)"/>
+  <rect class="box" x="12" y="312" width="300" height="60" rx="8"/>
+  <text class="b" x="24" y="334">工具介面</text>
+  <text class="s" x="24" y="354">MCP、function calling、內部 API</text>
+  <line class="ln" x1="162" y1="373" x2="162" y2="388" marker-end="url(#a)"/>
+  <rect class="bad" x="12" y="390" width="616" height="52" rx="8"/>
+  <text class="b wt" x="24" y="412">內部系統</text>
+  <text class="s" x="24" y="430">資料庫　·　業務系統（ERP/CRM）　·　工單　·　程式碼庫</text>
+  <rect class="dash" x="328" y="312" width="300" height="60" rx="8"/>
+  <text class="b m" x="340" y="334">可觀測性（橫跨所有層）</text>
+  <text class="s" x="340" y="354">追蹤、token 用量、評估分數、成本</text>
+  <text class="s" x="320" y="460" text-anchor="middle">每一條向下的連線都要：最小權限、帶使用者身分、留紀錄</text>
+</svg>

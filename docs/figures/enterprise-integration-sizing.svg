@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440" role="img" aria-labelledby="t d">
+  <title id="t">自架模型的 GPU 記憶體估算：權重加 KV cache</title>
+  <desc id="d">權重記憶體約等於參數量乘以每個參數的位元組數。70B 模型在 FP16 約 140 GB、INT8 約 70 GB、4 位元約 35 GB；7B 在 FP16 約 14 GB。KV cache 另外計算，用一個類似 70B GQA 的配置示意：每 token 約 0.31 MB，8K 長度、16 個並發約 40 GiB。另需預留執行時與其他開銷。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="438.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">自架要多少 GPU 記憶體？先算權重，再算 KV cache</text>
+  <text class="b at" x="24" y="60">① 權重 ≈ 參數量 × 每個參數的位元組數</text>
+  <text x="24" y="98">7B · FP16</text>
+  <rect class="acc" x="150" y="80" width="36.4" height="26" rx="4"/>
+  <text x="194.4" y="98">約 14 GB</text>
+  <text x="24" y="138">70B · 4 位元</text>
+  <rect class="acc" x="150" y="120" width="91.0" height="26" rx="4"/>
+  <text x="249.0" y="138">約 35 GB</text>
+  <text x="24" y="178">70B · INT8</text>
+  <rect class="acc" x="150" y="160" width="182.0" height="26" rx="4"/>
+  <text x="340.0" y="178">約 70 GB</text>
+  <text x="24" y="218">70B · FP16</text>
+  <rect class="acc" x="150" y="200" width="364.0" height="26" rx="4"/>
+  <text x="522.0" y="218">約 140 GB</text>
+  <text class="b at" x="24" y="258">② KV cache ≈ 2 × 層數 × KV heads × head_dim × 位元組 × token 數 × 並發數</text>
+  <rect class="box" x="24" y="272" width="592" height="74" rx="8"/>
+  <text x="36" y="294">示意配置（類似 70B 的 GQA 模型）：80 層、8 個 KV heads、head_dim 128、FP16</text>
+  <text x="36" y="314">每個 token ≈ 2×80×8×128×2 位元組 ≈ 0.31 MB</text>
+  <text class="b" x="36" y="334">8K 長度 × 16 並發 = 131,072 tokens ≈ 40 GiB（約 43 GB）</text>
+  <rect class="dash" x="24" y="358" width="592" height="66" rx="8"/>
+  <text x="36" y="380">總需求 ≈ 權重 + KV cache + 執行時開銷；再除以單卡記憶體與切分方式</text>
+  <text class="s" x="36" y="400">實際數字依模型 config、量化方式與 serving 框架而異，上線前要實測</text>
+</svg>
