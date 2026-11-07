@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 560" role="img" aria-labelledby="t d">
+  <title id="t">企業 RAG 的離線建索引與線上查詢流程</title>
+  <desc id="d">左邊是離線建索引：資料來源經清洗去重、切塊並附上來源與權限 metadata、向量化，寫入向量加關鍵字索引。右邊是線上查詢：使用者提問並帶身分，依權限過濾檢索，重排後組成 prompt，由語言模型生成附引用的答案。底部是橫跨兩邊的評估、稽核與同步。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="558.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">企業 RAG：離線建索引，線上查詢</text>
+  <rect class="zone" x="12" y="44" width="300" height="408" rx="12"/>
+  <text class="b at" x="24" y="66">離線：建索引（資料變動時重跑）</text>
+  <rect class="box" x="26" y="78" width="272" height="56" rx="8"/>
+  <text class="b" x="38" y="100">資料來源</text>
+  <text class="s" x="38" y="120">文件、wiki、工單、程式碼、資料庫匯出</text>
+  <line class="ln" x1="162" y1="135" x2="162" y2="150" marker-end="url(#a)"/>
+  <rect class="box" x="26" y="152" width="272" height="56" rx="8"/>
+  <text class="b" x="38" y="174">清洗與去重</text>
+  <text class="s" x="38" y="194">移除過期版本、重複與雜訊</text>
+  <line class="ln" x1="162" y1="209" x2="162" y2="224" marker-end="url(#a)"/>
+  <rect class="acc" x="26" y="226" width="272" height="56" rx="8"/>
+  <text class="b" x="38" y="248">切塊 + metadata</text>
+  <text class="s" x="38" y="268">依章節切；附來源、版本、部門、權限</text>
+  <line class="ln" x1="162" y1="283" x2="162" y2="298" marker-end="url(#a)"/>
+  <rect class="box" x="26" y="300" width="272" height="56" rx="8"/>
+  <text class="b" x="38" y="322">向量化</text>
+  <text class="s" x="38" y="342">embedding 模型把片段轉成向量</text>
+  <line class="ln" x1="162" y1="357" x2="162" y2="372" marker-end="url(#a)"/>
+  <rect class="box" x="26" y="374" width="272" height="56" rx="8"/>
+  <text class="b" x="38" y="396">索引</text>
+  <text class="s" x="38" y="416">向量索引 + 關鍵字索引（hybrid）</text>
+  <rect class="zone" x="328" y="44" width="300" height="408" rx="12"/>
+  <text class="b at" x="340" y="66">線上：回答問題（每次提問）</text>
+  <rect class="box" x="342" y="78" width="272" height="56" rx="8"/>
+  <text class="b" x="354" y="100">提問 + 使用者身分</text>
+  <text class="s" x="354" y="120">身分用來決定能看哪些文件</text>
+  <line class="ln" x1="478" y1="135" x2="478" y2="150" marker-end="url(#a)"/>
+  <rect class="acc" x="342" y="152" width="272" height="56" rx="8"/>
+  <text class="b" x="354" y="174">檢索（依權限過濾）</text>
+  <text class="s" x="354" y="194">hybrid 取 top-k；先過濾再取</text>
+  <line class="ln" x1="478" y1="209" x2="478" y2="224" marker-end="url(#a)"/>
+  <rect class="box" x="342" y="226" width="272" height="56" rx="8"/>
+  <text class="b" x="354" y="248">重排（rerank）</text>
+  <text class="s" x="354" y="268">從候選精選最相關的幾段</text>
+  <line class="ln" x1="478" y1="283" x2="478" y2="298" marker-end="url(#a)"/>
+  <rect class="box" x="342" y="300" width="272" height="56" rx="8"/>
+  <text class="b" x="354" y="322">組 prompt</text>
+  <text class="s" x="354" y="342">只依據片段回答；找不到就說不知道</text>
+  <line class="ln" x1="478" y1="357" x2="478" y2="372" marker-end="url(#a)"/>
+  <rect class="good" x="342" y="374" width="272" height="56" rx="8"/>
+  <text class="b" x="354" y="396">語言模型生成</text>
+  <text class="s" x="354" y="416">答案附引用來源，可回到原文</text>
+  <line class="ln" x1="298" y1="406" x2="342" y2="184" marker-end="url(#a)"/>
+  <rect class="box" x="12" y="464" width="616" height="76" rx="8"/>
+  <text class="b" x="24" y="486">橫跨兩邊：評估、稽核、同步</text>
+  <text x="24" y="506">評估集量測檢索命中率與答案正確率；記錄誰問了什麼、用了哪些文件</text>
+  <text x="24" y="526">增量同步：新增、修訂、刪除的文件都要反映到索引</text>
+</svg>
