@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">企業整合模型的八個階段與各階段的過關條件</title>
+  <desc id="d">八個階段依序是：定義問題與指標、盤點系統與資料、建評估集與基線、用商用 API 做 POC、整合設計、試點上線、規模化與治理、持續營運。每個階段有產出與過關條件；模型或資料更換時，從建評估集與 POC 回頭再跑。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">整合流程：每一階段都有「過關條件」</text>
+  <rect class="hd" x="12" y="44" width="616" height="28" rx="6"/>
+  <text class="b" x="16" y="63">階段</text>
+  <text class="b" x="252" y="63">主要產出</text>
+  <text class="b" x="462" y="63">過關條件（沒過就別往下）</text>
+  <rect class="box" x="12" y="78" width="616" height="46" rx="6"/>
+  <text class="b" x="16" y="106">0  定義問題與指標</text>
+  <text x="252" y="106">使用情境、成功指標</text>
+  <text x="462" y="106">目標可量測</text>
+  <line class="ln" x1="30" y1="124" x2="30" y2="130"/>
+  <rect class="box" x="12" y="130" width="616" height="46" rx="6"/>
+  <text class="b" x="16" y="158">1  盤點系統與資料</text>
+  <text x="252" y="158">系統與資料清單、分級</text>
+  <text x="462" y="158">資料可合法使用</text>
+  <line class="ln" x1="30" y1="176" x2="30" y2="182"/>
+  <rect class="acc" x="12" y="182" width="616" height="46" rx="6"/>
+  <text class="b" x="16" y="210">2  建評估集與基線</text>
+  <text x="252" y="210">評估題集、現況基線</text>
+  <text x="462" y="210">題集具代表性</text>
+  <line class="ln" x1="30" y1="228" x2="30" y2="234"/>
+  <rect class="acc" x="12" y="234" width="616" height="46" rx="6"/>
+  <text class="b" x="16" y="262">3  POC（商用 API）</text>
+  <text x="252" y="262">RAG + 工具的最小原型</text>
+  <text x="462" y="262">達評估門檻、成本可估</text>
+  <line class="ln" x1="30" y1="280" x2="30" y2="286"/>
+  <rect class="box" x="12" y="286" width="616" height="46" rx="6"/>
+  <text class="b" x="16" y="314">4  整合設計</text>
+  <text x="252" y="314">權限、資料流、介面設計</text>
+  <text x="462" y="314">通過資安合規審查</text>
+  <line class="ln" x1="30" y1="332" x2="30" y2="338"/>
+  <rect class="box" x="12" y="338" width="616" height="46" rx="6"/>
+  <text class="b" x="16" y="366">5  試點上線</text>
+  <text x="252" y="366">小範圍上線、人工複核</text>
+  <text x="462" y="366">錯誤率與回饋達標</text>
+  <line class="ln" x1="30" y1="384" x2="30" y2="390"/>
+  <rect class="box" x="12" y="390" width="616" height="46" rx="6"/>
+  <text class="b" x="16" y="418">6  規模化與治理</text>
+  <text x="252" y="418">擴大範圍、配額、治理</text>
+  <text x="462" y="418">成本與風險可控</text>
+  <line class="ln" x1="30" y1="436" x2="30" y2="442"/>
+  <rect class="good" x="12" y="442" width="616" height="46" rx="6"/>
+  <text class="b" x="16" y="470">7  持續營運</text>
+  <text x="252" y="470">監控、回歸、模型更替</text>
+  <text x="462" y="470">回歸測試通過</text>
+  <text class="s" x="320" y="506" text-anchor="middle">模型或資料換版時：回到階段 2、3 重跑評估，通過才切換</text>
+</svg>
