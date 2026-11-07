@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 452" role="img" aria-labelledby="t d">
+  <title id="t">RAG 與 MCP 如何搭配：把檢索包成 MCP server，與其他 MCP server 並用</title>
+  <desc id="d">AI 應用或 Agent 內有 MCP client，連到三類 MCP server：文件檢索 server 背後是 RAG 索引，唯讀；業務系統查詢 server 背後是資料庫或業務系統，取得即時資料；動作 server 背後是工單或審批系統，會寫入，需要審核。每一條連線都要做權限控管與稽核。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="450.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">RAG 與 MCP 並用的常見架構</text>
+  <rect class="acc" x="12" y="56" width="150" height="330" rx="12"/>
+  <text class="b at" x="87" y="84" text-anchor="middle">AI 應用 / Agent</text>
+  <text class="s" x="87" y="110" text-anchor="middle">內含 MCP client</text>
+  <text x="87" y="138" text-anchor="middle">決定何時</text>
+  <text x="87" y="158" text-anchor="middle">呼叫哪個工具</text>
+  <text class="s" x="87" y="330" text-anchor="middle">使用者身分</text>
+  <text class="s" x="87" y="348" text-anchor="middle">隨請求傳遞</text>
+  <line class="ln" x1="162" y1="110" x2="200" y2="110" marker-end="url(#a)"/>
+  <rect class="good" x="202" y="56" width="250" height="98" rx="8"/>
+  <text class="b" x="214" y="80">① 文件檢索 server</text>
+  <text class="s" x="214" y="102">唯讀；大量非結構化文件</text>
+  <text class="s" x="214" y="122">MCP server</text>
+  <line class="ln" x1="452" y1="110" x2="480" y2="110" marker-end="url(#a)"/>
+  <rect class="box" x="482" y="76" width="146" height="68" rx="8"/>
+  <text x="555" y="116" text-anchor="middle">RAG 索引</text>
+  <line class="ln" x1="162" y1="222" x2="200" y2="222" marker-end="url(#a)"/>
+  <rect class="box" x="202" y="168" width="250" height="98" rx="8"/>
+  <text class="b" x="214" y="192">② 業務系統查詢 server</text>
+  <text class="s" x="214" y="214">唯讀；即時資料（庫存、訂單）</text>
+  <text class="s" x="214" y="234">MCP server</text>
+  <line class="ln" x1="452" y1="222" x2="480" y2="222" marker-end="url(#a)"/>
+  <rect class="box" x="482" y="188" width="146" height="68" rx="8"/>
+  <text x="555" y="228" text-anchor="middle">資料庫 / 業務系統</text>
+  <line class="ln" x1="162" y1="334" x2="200" y2="334" marker-end="url(#a)"/>
+  <rect class="bad" x="202" y="280" width="250" height="98" rx="8"/>
+  <text class="b" x="214" y="304">③ 動作 server</text>
+  <text class="s" x="214" y="326">會寫入；建單、審批、觸發流程</text>
+  <text class="s" x="214" y="346">MCP server</text>
+  <line class="ln" x1="452" y1="334" x2="480" y2="334" marker-end="url(#a)"/>
+  <rect class="box" x="482" y="300" width="146" height="68" rx="8"/>
+  <text x="555" y="340" text-anchor="middle">工單 / 審批系統</text>
+  <rect class="dash" x="12" y="398" width="616" height="40" rx="8"/>
+  <text x="24" y="423">每條連線都要：最小權限、依使用者身分過濾、記錄呼叫；寫入類工具要加審核</text>
+</svg>
