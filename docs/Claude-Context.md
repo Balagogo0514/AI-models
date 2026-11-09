@@ -1,7 +1,7 @@
 # Claude Code 的 Context 如何組成：記憶放在哪裡？會互相取代嗎？
 
-> 資料來源：Claude Code 官方文件 [Memory](https://code.claude.com/docs/en/memory.md)、[Explore the context window](https://code.claude.com/docs/en/context-window.md)、[Prompt caching](https://code.claude.com/docs/en/prompt-caching.md)、[Manage sessions](https://code.claude.com/docs/en/sessions.md)、[Explore the .claude directory](https://code.claude.com/docs/en/claude-directory.md)、[Subagents](https://code.claude.com/docs/en/sub-agents.md)、[Settings](https://code.claude.com/docs/en/settings.md)；另以 Claude Code v2.1.318 在本機（雲端容器）觀察檔案位置。
-> 更新日期：2026-11-06
+> 資料來源：Claude Code 官方文件 [Memory](https://code.claude.com/docs/en/memory.md)、[Explore the context window](https://code.claude.com/docs/en/context-window.md)、[Prompt caching](https://code.claude.com/docs/en/prompt-caching.md)、[Manage sessions](https://code.claude.com/docs/en/sessions.md)、[Explore the .claude directory](https://code.claude.com/docs/en/claude-directory.md)、[Subagents](https://code.claude.com/docs/en/sub-agents.md)、[Settings](https://code.claude.com/docs/en/settings.md)、[Extend Claude Code](https://code.claude.com/docs/en/features-overview.md)；另以 Claude Code v2.1.318 在本機（雲端容器）觀察檔案位置。
+> 更新日期：2026-11-09
 >
 > 標記：✅ 官方文件明載　👁 本機實際觀察　⚠️ 官方未明載，屬推論或版本相依
 
@@ -16,6 +16,7 @@
 | 專案目錄的 memory 是什麼？ | 要分兩種：**你寫的** `./CLAUDE.md`、`./.claude/rules/`、`./CLAUDE.local.md`（在專案目錄裡）；以及 **Claude 自己寫的 auto memory**（在 `~/.claude/projects/<project>/memory/`，**不在**專案目錄裡）。✅ |
 | 會互相取代嗎？ | **大多不會。** CLAUDE.md 各層是疊加（concatenate）；CLAUDE.md 與 auto memory 是互補、同時載入。唯一的「取代」是：預設只在**找不到任何 CLAUDE.md** 時才改讀 AGENTS.md；以及 `/compact` 會把**對話**換成摘要（但記憶檔會從磁碟重新注入）。✅ |
 | 切換帳號會影響這些紀錄嗎？ | 本機的逐字稿與 auto memory 只依工作目錄路徑存放，不分帳號；換帳號後應該仍看得到並能 resume，但官方未明說 ⚠️，且模型、組織設定、啟動旗標不一定相同（見 §3.2）。 |
+| skill、MCP、subagent、hook、plugin 對 context 的意義？ | 它們是在決定**什麼內容進 context、何時進、誰決定**：CLAUDE.md 與 output style 常駐；skill 只有描述常駐、本文按需；MCP 只有工具名稱常駐、**工具結果會進 context**；subagent 在獨立 context 做事、只回傳摘要；hook 在 context 外執行、零成本；plugin 只是打包層（見 §六）。✅ |
 
 ---
 
@@ -261,7 +262,77 @@ Subagent 以全新、隔離的 context 開始 ✅：
 
 ---
 
-## 六、實務建議
+## 六、擴充機制（skill、MCP、subagent、hook、plugin）對 context 的意義
+
+Claude Code 有一整層「擴充」機制，用來決定 Claude 知道什麼、能連到什麼、怎麼自動化。從 context 的角度看，它們的差別只有一件事：**什麼內容、在什麼時候、由誰決定，被放進 context window。**（本章依官方〈Extend Claude Code〉整理 ✅）
+
+### 6.1 各名詞的作用與對 context 的影響
+
+| 名詞 | 是什麼、為什麼存在 | 誰決定用 | 對 context 的實質影響 |
+|------|--------------------|----------|------------------------|
+| **CLAUDE.md／rules** | 你寫的「永遠要知道」的規則：慣例、build 指令 | 自動載入 | **每次請求都付費**；官方建議 200 行內 |
+| **Output style** | 設定回應的角色、語氣、格式 | 你切換 | 啟用中的完整指示每次都在；Default 風格不佔 |
+| **Skill** | 可重複使用的知識或工作流（`/deploy`） | 你用 `/名稱`，或 Claude 依描述比對 | **描述每次都在**（成本低），**本文用到才載入**；設 `disable-model-invocation: true` 則用到前完全不佔 |
+| **MCP** | 連外部服務的**協定**，提供工具與資料存取 | Claude 呼叫 | 啟動只載工具名稱與 server 指示，完整 schema 延後（tool search 預設開啟）；**工具回傳的結果會進 context**，這才是主要成本 |
+| **Subagent** | 在**獨立 context** 跑自己迴圈的工作者 | Claude 或你生成 | 不佔主對話；中間過程留在它自己的 context，**只有摘要回來** |
+| **Dynamic workflow** | Claude 寫的腳本，背景跑很多 subagent，回傳一個結果 | 腳本決定下一步 | 同 subagent；由腳本而非 Claude 逐輪決定 |
+| **Hook** | 在生命週期事件（編輯後、送出前等）自動執行的腳本、HTTP、MCP 呼叫、prompt 或 subagent | 事件觸發，**不經 Claude 判斷** | **零成本**，除非它回傳輸出（輸出會成為對話的一部分） |
+| **Plugin／Marketplace** | **打包與分發層**：把 skills、hooks、subagents、MCP 包成一個可安裝單位；plugin 的 skill 加命名空間（如 `/my-plugin:review`） | 你安裝 | 本身不另外佔 context ⚠️（推論）；裡面各元件各自遵守上列規則 |
+| **Code intelligence（LSP）** | 讓 Claude 用語言伺服器做符號導覽與型別錯誤 | Claude | 低；常能取代大範圍讀檔，淨用量可能下降 |
+
+### 6.2 什麼時候進入 context
+
+![各擴充機制何時進入 context：常駐（CLAUDE.md、rules、auto memory 索引、output style、skill 名稱與描述、MCP 工具名稱）、按需（skill 本文、MCP 完整 schema、子目錄 CLAUDE.md、檔案、工具結果、hook 輸出）、隔離（subagent、workflow）、不進（hook、plugin）](figures/claude-context-extensions-loading.svg)
+
+- **常駐**的內容每次請求都要付費，所以越短越好，細節移到按需的地方。
+- **按需**的內容進入對話歷史，`/compact` 時會被一起摘要掉（見 §5.4）。
+- 用 `/context all` 可以看每個已載入的 MCP 工具用了多少 tokens；用 `/mcp` 看各 server 狀態，不用的 server 可以斷線。✅
+
+### 6.3 這件事該放哪
+
+![依序問六個問題決定放哪：永遠要遵守的放 CLAUDE.md；必須每次發生的放 hook；有時才需要的放 skill；連外部服務用 MCP；大量中間輸出交給 subagent；多 repo 重用則打包成 plugin](figures/claude-context-extensions-decision.svg)
+
+官方的經驗法則（節錄）：
+
+| 觸發情況 | 該加什麼 |
+|----------|----------|
+| Claude 同一個慣例或指令錯了兩次 | 寫進 CLAUDE.md |
+| 你第三次把同一份流程貼進對話 | 存成 skill |
+| 你一直從 Claude 看不到的系統複製資料 | 接成 MCP server |
+| 一個旁支任務的輸出灌爆對話，之後又不會引用 | 交給 subagent |
+| 想讓某件事每次都發生，不必開口要求 | 寫成 hook |
+| 第二個 repo 需要同樣的設定 | 打包成 plugin |
+
+**重點差異**
+
+- **CLAUDE.md vs Skill**：CLAUDE.md 每個 session 自動載入，放「永遠要遵守」；skill 按需載入，放參考資料與可觸發的流程。
+- **Skill vs Subagent**：skill 是可載入任何 context 的內容，會**增加**主視窗；subagent 是隔離的工作者，用**另一個**視窗。兩者可以搭配：subagent 預載 skill（`skills:` 欄位），skill 也能用 `context: fork` 在隔離環境執行。
+- **MCP vs Skill**：MCP 提供**工具與資料存取**；skill 提供**怎麼用這些工具的知識**。兩者解決不同問題，常一起用。
+- **Hook vs Skill**：hook 在事件發生時**確定執行**，不經 Claude 判斷；skill 是 Claude **讀了再詮釋**的指示，結果會變。「絕不編輯 `.env`」寫在 CLAUDE.md 或 skill 裡只是請求，用 `PreToolUse` hook 擋下才是強制。
+
+### 6.4 同名時：疊加、合併還是覆寫
+
+![同一種機制在多個層級都有定義時的語意：CLAUDE.md 疊加、hook 合併；skill、subagent、MCP server 依名稱覆寫並各有優先序；settings.json 較高層覆寫較低層](figures/claude-context-extensions-layering.svg)
+
+### 6.5 搭配方式
+
+| 組合 | 做法 | 例子 |
+|------|------|------|
+| Skill + MCP | MCP 提供連線，skill 教 Claude 怎麼用好 | MCP 連資料庫，skill 記錄 schema 與查詢慣例 |
+| CLAUDE.md + Skill | CLAUDE.md 放常駐規則，skill 放按需參考 | CLAUDE.md 寫「遵守我們的 API 慣例」，skill 放完整 API 指南 |
+| Skill + Subagent | skill 同時啟動多個 subagent 平行工作 | `/audit` 啟動安全、效能、風格三個 subagent |
+| Hook + MCP | hook 透過 MCP 觸發外部動作 | 編輯重要檔案後，hook 透過 MCP 發 Slack 通知 |
+
+### 6.6 「Agent」有兩種意思
+
+- **概念上的 agent**：模型加工具加一個迴圈（蒐集 context → 行動 → 驗證）。Claude Code 本身就是這樣運作。
+- **Claude Code 的 subagent**：這個迴圈的「分身」，擁有獨立 context，用來隔離雜訊或平行處理；它不會繼承主對話歷史與主對話的 auto memory（見 §5.6）。
+
+> 別家產品的對應名詞與行為不一定相同（例如 Codex 同樣讀 AGENTS.md、也有自己的 MCP 設定），本章只以 Claude Code 官方文件為準；Codex 的做法見〈[CodeX-CLI](CodeX-CLI.md)〉。
+
+---
+
+## 七、實務建議
 
 1. **要跨 session 記住的事，寫進 CLAUDE.md 或讓 auto memory 記**，不要指望「同一個對話」。逐字稿只是紀錄。
 2. **該遵守的規則放根目錄 CLAUDE.md**；只有局部適用的才用子目錄 CLAUDE.md 或 `paths:` rules，並記得它們壓縮後會消失、需重新觸發。
@@ -270,7 +341,8 @@ Subagent 以全新、隔離的 context 開始 ✅：
 5. **別讓指示互相矛盾**（user 規則 vs project 規則、不同層 CLAUDE.md）；矛盾時行為不確定。
 6. **必須強制的事用 hook 或權限設定**，不要只靠 CLAUDE.md。
 7. 用 AGENTS.md 與其他工具共用說明時：最穩的是在 CLAUDE.md 寫 `@AGENTS.md`，避免被 `CLAUDE.local.md` 意外遮蔽。
-8. 除錯：懷疑沒載入時，`claude --bare` 或 `--safe-mode` 可排除自訂設定的干擾（見〈[Claude-Code-CLI](Claude-Code-CLI.md)〉）。
+8. **把常駐內容壓到最小**：CLAUDE.md 只放「永遠要遵守」；參考資料移進 skill；用不到的 MCP server 斷線；會吃 context 的旁支任務交給 subagent。
+9. 除錯：懷疑沒載入時，`claude --bare` 或 `--safe-mode` 可排除自訂設定的干擾（見〈[Claude-Code-CLI](Claude-Code-CLI.md)〉）。
 
 ---
 
@@ -287,3 +359,4 @@ Subagent 以全新、隔離的 context 開始 ✅：
 - [Explore the .claude directory](https://code.claude.com/docs/en/claude-directory.md)
 - [Subagents：What loads at startup](https://code.claude.com/docs/en/sub-agents.md#what-loads-at-startup)
 - [Settings：Settings precedence](https://code.claude.com/docs/en/settings.md#settings-precedence)
+- [Extend Claude Code](https://code.claude.com/docs/en/features-overview.md)：各擴充機制的選擇與 context 成本
