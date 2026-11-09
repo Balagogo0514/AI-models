@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 524" role="img" aria-labelledby="t d">
+  <title id="t">各擴充機制何時進入 context：常駐、按需、隔離、不進</title>
+  <desc id="d">常駐在每次請求裡的有 CLAUDE.md、無條件 rules、auto memory 索引、output style、skill 的名稱與描述、MCP 的工具名稱。按需才進入對話歷史的有 skill 本文、MCP 工具的完整 schema、子目錄 CLAUDE.md、有 paths 的 rules、讀入的檔案、工具結果與 hook 回傳的輸出。Subagent 與 workflow 在獨立 context 做事，只回傳摘要。Hook 在 context 外執行，除非回傳輸出，否則零成本；plugin 只是打包層。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="522.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">它們什麼時候進入 context？</text>
+  <rect class="acc" x="12" y="44" width="616" height="134" rx="12"/>
+  <text class="b at" x="24" y="66">常駐：每次請求都在（持續付費）</text>
+  <rect class="box" x="24" y="80" width="94" height="26" rx="6"/>
+  <text x="37" y="98">CLAUDE.md</text>
+  <rect class="box" x="126" y="80" width="111" height="26" rx="6"/>
+  <text x="139" y="98">無條件 rules</text>
+  <rect class="box" x="245" y="80" width="143" height="26" rx="6"/>
+  <text x="258" y="98">auto memory 索引</text>
+  <rect class="box" x="396" y="80" width="116" height="26" rx="6"/>
+  <text x="409" y="98">Output style</text>
+  <rect class="box" x="24" y="114" width="138" height="26" rx="6"/>
+  <text x="37" y="132">Skill 名稱＋描述</text>
+  <rect class="box" x="170" y="114" width="110" height="26" rx="6"/>
+  <text x="183" y="132">MCP 工具名稱</text>
+  <text class="s" x="24" y="168">所以：越短越好，細節移到按需的地方</text>
+  <line class="ln" x1="320" y1="179" x2="320" y2="194" marker-end="url(#a)"/>
+  <rect class="box" x="12" y="196" width="616" height="156" rx="12"/>
+  <text class="b" x="24" y="218">按需：用到才進，之後留在對話歷史</text>
+  <rect class="box" x="24" y="232" width="98" height="26" rx="6"/>
+  <text x="37" y="250">Skill 本文</text>
+  <rect class="box" x="130" y="232" width="136" height="26" rx="6"/>
+  <text x="143" y="250">MCP 完整 schema</text>
+  <rect class="box" x="274" y="232" width="142" height="26" rx="6"/>
+  <text x="287" y="250">子目錄 CLAUDE.md</text>
+  <rect class="box" x="424" y="232" width="151" height="26" rx="6"/>
+  <text x="437" y="250">有 paths 的 rules</text>
+  <rect class="box" x="24" y="266" width="93" height="26" rx="6"/>
+  <text x="37" y="284">讀入的檔案</text>
+  <rect class="box" x="125" y="266" width="80" height="26" rx="6"/>
+  <text x="138" y="284">工具結果</text>
+  <rect class="box" x="213" y="266" width="131" height="26" rx="6"/>
+  <text x="226" y="284">Hook 回傳的輸出</text>
+  <text class="s" x="24" y="340">/compact 時會被一起摘要掉；工具結果與輸出常是最大宗</text>
+  <rect class="good" x="12" y="372" width="300" height="112" rx="12"/>
+  <text class="b gt" x="24" y="394">隔離：獨立 context，只回傳摘要</text>
+  <rect class="box" x="24" y="408" width="86" height="26" rx="6"/>
+  <text x="37" y="426">Subagent</text>
+  <rect class="box" x="118" y="408" width="146" height="26" rx="6"/>
+  <text x="131" y="426">Dynamic workflow</text>
+  <text class="s" x="24" y="462">中間過程不佔主對話</text>
+  <rect class="dash" x="328" y="372" width="300" height="112" rx="8"/>
+  <text class="b m" x="340" y="394">不進 context</text>
+  <rect class="box" x="340" y="408" width="56" height="26" rx="6"/>
+  <text x="353" y="426">Hook</text>
+  <rect class="box" x="404" y="408" width="138" height="26" rx="6"/>
+  <text x="417" y="426">Plugin（打包層）</text>
+  <text class="s" x="340" y="462">Hook 除非回傳輸出，否則零成本</text>
+  <text class="s" x="320" y="508" text-anchor="middle">依官方〈Extend Claude Code〉整理；Plugin 本身不另佔 context 為推論 ⚠️</text>
+</svg>

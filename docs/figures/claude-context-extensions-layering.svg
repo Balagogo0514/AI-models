@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 434" role="img" aria-labelledby="t d">
+  <title id="t">同一種機制在多個層級都有定義時，是疊加、合併還是覆寫</title>
+  <desc id="d">CLAUDE.md 各層疊加，全部進 context。Hook 合併，全部都會觸發。Skill、subagent、MCP server 依名稱覆寫，只有一份生效：skill 的優先序是 managed、user、project；subagent 是 managed、命令列旗標、project、user、plugin；MCP 是 local、project、user。settings.json 也是較高層覆寫較低層。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="432.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">同名時：疊加、合併，還是覆寫？</text>
+  <rect class="hd" x="12" y="44" width="616" height="28" rx="6"/>
+  <text class="b" x="20" y="63">機制</text>
+  <text class="b" x="190" y="63">語意</text>
+  <text class="b" x="290" y="63">優先序或說明</text>
+  <rect class="good" x="12" y="80" width="616" height="48" rx="6"/>
+  <text class="b" x="20" y="109">CLAUDE.md／rules</text>
+  <text class="b" x="190" y="109">疊加</text>
+  <text x="290" y="109">各層都進 context；衝突時 Claude 自己判斷</text>
+  <rect class="good" x="12" y="134" width="616" height="48" rx="6"/>
+  <text class="b" x="20" y="163">Hook</text>
+  <text class="b" x="190" y="163">合併</text>
+  <text x="290" y="163">所有註冊的 hook 都會在對應事件觸發</text>
+  <rect class="acc" x="12" y="188" width="616" height="48" rx="6"/>
+  <text class="b" x="20" y="217">Skill</text>
+  <text class="b" x="190" y="217">依名稱覆寫</text>
+  <text x="290" y="217">managed &gt; user &gt; project；plugin 加命名空間避免衝突</text>
+  <rect class="acc" x="12" y="242" width="616" height="48" rx="6"/>
+  <text class="b" x="20" y="271">Subagent</text>
+  <text class="b" x="190" y="271">依名稱覆寫</text>
+  <text x="290" y="271">managed &gt; 命令列旗標 &gt; project &gt; user &gt; plugin</text>
+  <rect class="acc" x="12" y="296" width="616" height="48" rx="6"/>
+  <text class="b" x="20" y="325">MCP server</text>
+  <text class="b" x="190" y="325">依名稱覆寫</text>
+  <text x="290" y="325">local &gt; project &gt; user；欄位不合併</text>
+  <rect class="acc" x="12" y="350" width="616" height="48" rx="6"/>
+  <text class="b" x="20" y="379">settings.json</text>
+  <text class="b" x="190" y="379">較高層覆寫</text>
+  <text x="290" y="379">managed &gt; 命令列 &gt; 專案 local &gt; 專案共享 &gt; 使用者</text>
+  <text class="s" x="320" y="418" text-anchor="middle">疊加與合併：內容一起進來　·　覆寫：只有一份生效，同名要小心</text>
+</svg>

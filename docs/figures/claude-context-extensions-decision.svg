@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">這件事該放哪：CLAUDE.md、Hook、Skill、MCP、Subagent、Plugin</title>
+  <desc id="d">依序問六個問題：永遠要遵守的規則放 CLAUDE.md；必須每次發生、不靠模型判斷的放 hook；有時才需要的知識或可重複流程放 skill；要連外部服務或執行動作用 MCP，再用 skill 教怎麼用；會產生大量中間輸出且之後不再引用的交給 subagent；要在多個 repo 重用或分發給別人，打包成 plugin。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">這件事該放哪？依序問</text>
+  <rect class="acc" x="12" y="48" width="300" height="56" rx="10"/>
+  <text x="24" y="82">永遠都要遵守的規則或慣例？</text>
+  <line class="ln" x1="312" y1="76" x2="346" y2="76" marker-end="url(#a)"/>
+  <text class="s" x="329" y="68" text-anchor="middle">是</text>
+  <rect class="good" x="348" y="48" width="280" height="56" rx="10"/>
+  <text class="b" x="360" y="72">CLAUDE.md／rules</text>
+  <text class="s" x="360" y="92">常駐，每次請求都付費</text>
+  <line class="ln" x1="162" y1="105" x2="162" y2="120" marker-end="url(#a)"/>
+  <text class="s" x="172" y="116">否，下一題</text>
+  <rect class="acc" x="12" y="122" width="300" height="56" rx="10"/>
+  <text x="24" y="156">必須每次發生，不能靠模型判斷？</text>
+  <line class="ln" x1="312" y1="150" x2="346" y2="150" marker-end="url(#a)"/>
+  <text class="s" x="329" y="142" text-anchor="middle">是</text>
+  <rect class="good" x="348" y="122" width="280" height="56" rx="10"/>
+  <text class="b" x="360" y="146">Hook</text>
+  <text class="s" x="360" y="166">事件觸發；零成本，除非回傳輸出</text>
+  <line class="ln" x1="162" y1="179" x2="162" y2="194" marker-end="url(#a)"/>
+  <text class="s" x="172" y="190">否，下一題</text>
+  <rect class="acc" x="12" y="196" width="300" height="56" rx="10"/>
+  <text x="24" y="230">有時才需要的知識，或可重複的流程？</text>
+  <line class="ln" x1="312" y1="224" x2="346" y2="224" marker-end="url(#a)"/>
+  <text class="s" x="329" y="216" text-anchor="middle">是</text>
+  <rect class="good" x="348" y="196" width="280" height="56" rx="10"/>
+  <text class="b" x="360" y="220">Skill</text>
+  <text class="s" x="360" y="240">描述常駐，本文用到才載入</text>
+  <line class="ln" x1="162" y1="253" x2="162" y2="268" marker-end="url(#a)"/>
+  <text class="s" x="172" y="264">否，下一題</text>
+  <rect class="acc" x="12" y="270" width="300" height="56" rx="10"/>
+  <text x="24" y="304">要連外部服務、取資料或執行動作？</text>
+  <line class="ln" x1="312" y1="298" x2="346" y2="298" marker-end="url(#a)"/>
+  <text class="s" x="329" y="290" text-anchor="middle">是</text>
+  <rect class="good" x="348" y="270" width="280" height="56" rx="10"/>
+  <text class="b" x="360" y="294">MCP（再配 Skill）</text>
+  <text class="s" x="360" y="314">工具名稱常駐；結果會進 context</text>
+  <line class="ln" x1="162" y1="327" x2="162" y2="342" marker-end="url(#a)"/>
+  <text class="s" x="172" y="338">否，下一題</text>
+  <rect class="acc" x="12" y="344" width="300" height="56" rx="10"/>
+  <text x="24" y="378">會產生大量中間輸出，之後不再引用？</text>
+  <line class="ln" x1="312" y1="372" x2="346" y2="372" marker-end="url(#a)"/>
+  <text class="s" x="329" y="364" text-anchor="middle">是</text>
+  <rect class="good" x="348" y="344" width="280" height="56" rx="10"/>
+  <text class="b" x="360" y="368">Subagent／Workflow</text>
+  <text class="s" x="360" y="388">獨立 context，只回傳摘要</text>
+  <line class="ln" x1="162" y1="401" x2="162" y2="416" marker-end="url(#a)"/>
+  <text class="s" x="172" y="412">否，下一題</text>
+  <rect class="acc" x="12" y="418" width="300" height="56" rx="10"/>
+  <text x="24" y="452">要在多個 repo 重用，或分發給別人？</text>
+  <line class="ln" x1="312" y1="446" x2="346" y2="446" marker-end="url(#a)"/>
+  <text class="s" x="329" y="438" text-anchor="middle">是</text>
+  <rect class="box" x="348" y="418" width="280" height="56" rx="10"/>
+  <text class="b" x="360" y="442">Plugin</text>
+  <text class="s" x="360" y="462">打包 skills、hooks、MCP 等</text>
+  <text class="s" x="320" y="506" text-anchor="middle">規則必須「一定做到」時，用 Hook 或權限設定，不要只靠 CLAUDE.md 或 Skill</text>
+</svg>
