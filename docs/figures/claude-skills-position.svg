@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 450" role="img" aria-labelledby="t d">
+  <title id="t">grill-me、superpowers、planning-with-files 在開發流程中的位置</title>
+  <desc id="d">開發流程分四段：澄清需求、設計與計畫、執行與審查、驗證與收尾。grill-me 負責第一段，由你手動觸發。superpowers 的 brainstorming 與 writing-plans 負責設計與計畫，executing-plans、subagent-driven-development、TDD 與 code review 負責執行與審查，verification-before-completion 與 finishing-a-development-branch 負責收尾，由 hook 與 meta-skill 自動介入。planning-with-files 橫跨全程，用檔案與 hook 保存計畫，抵抗 context 遺失。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="448.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">三者在開發流程中的位置</text>
+  <rect class="bad" x="12" y="48" width="148" height="156" rx="10"/>
+  <text class="b" x="24" y="72">① 澄清需求</text>
+  <text class="b wt" x="24" y="94">grill-me</text>
+  <text x="24" y="122">・你手動 /grill-me</text>
+  <text x="24" y="144">・被拷問到分支都解決</text>
+  <line class="ln" x1="160" y1="126" x2="168" y2="126" marker-end="url(#a)"/>
+  <rect class="acc" x="168" y="48" width="148" height="156" rx="10"/>
+  <text class="b" x="180" y="72">② 設計與計畫</text>
+  <text class="b at" x="180" y="94">superpowers</text>
+  <text x="180" y="122">・brainstorming</text>
+  <text x="180" y="144">・writing-plans</text>
+  <line class="ln" x1="316" y1="126" x2="324" y2="126" marker-end="url(#a)"/>
+  <rect class="acc" x="324" y="48" width="148" height="156" rx="10"/>
+  <text class="b" x="336" y="72">③ 執行與審查</text>
+  <text class="b at" x="336" y="94">superpowers</text>
+  <text x="336" y="122">・executing-plans</text>
+  <text x="336" y="144">・TDD、code review</text>
+  <text x="336" y="166">・subagent 派工</text>
+  <line class="ln" x1="472" y1="126" x2="480" y2="126" marker-end="url(#a)"/>
+  <rect class="acc" x="480" y="48" width="148" height="156" rx="10"/>
+  <text class="b" x="492" y="72">④ 驗證與收尾</text>
+  <text class="b at" x="492" y="94">superpowers</text>
+  <text x="492" y="122">・驗證後才宣稱完成</text>
+  <text x="492" y="144">・finishing-a-branch</text>
+  <line class="rule" x1="14" y1="212" x2="160" y2="212"/>
+  <text class="s" x="86" y="230" text-anchor="middle">手動觸發</text>
+  <line class="rule" x1="172" y1="212" x2="626" y2="212"/>
+  <text class="s" x="400" y="230" text-anchor="middle">由 SessionStart hook ＋ using-superpowers 自動介入</text>
+  <rect class="good" x="12" y="246" width="616" height="84" rx="10"/>
+  <text class="b gt" x="26" y="270">planning-with-files（橫跨全程）</text>
+  <text x="26" y="292">task_plan.md、findings.md、progress.md 存在磁碟上；</text>
+  <text x="26" y="312">hook 重新注入計畫、防目標漂移、完成前擋停；撐過 /clear 與崩潰</text>
+  <rect class="dash" x="12" y="346" width="616" height="82" rx="8"/>
+  <text class="b" x="24" y="370">怎麼搭</text>
+  <text x="24" y="392">需求不清楚 → 先 grill-me；需求清楚 → 直接交給 superpowers 的設計與計畫</text>
+  <text x="24" y="412">任務會拖很多天或跨 session → 再加 planning-with-files 當持久化層</text>
+</svg>

@@ -41,7 +41,7 @@ CATS = [
         ("Claude-Context", "Claude Code 送給 LLM 的 context 如何組成、記憶放在哪、彼此是否取代"),
         ("Enterprise-AI-Integration", "六個整合層次、八階段流程、RAG 與 MCP 怎麼接內部資料與系統、權限階梯、API／自架／微調的資源與成本判斷"),
         ("Claude-Agent", "平行工作方式選型、多 Agent code review、追蹤彙整，含 fastpath refcount 實戰範例"),
-        ("Claude-Code-Skills", "superpowers 與 planning-with-files 的 Skill／Plugin 比較"),
+        ("Claude-Code-Skills", "superpowers、planning-with-files 與 grill-me 的 Skill／Plugin 比較"),
         ("CodeX-CLI", "OpenAI Codex CLI 的指令、sandbox、approval、設定的完整參考"),
         ("CodeX-Agent", "Codex 的 Subagents、Cloud、codex exec 平行與 code review 做法"),
         ("OpenAI-Python-Agent", "以 Python 控制的 coredump 自動分析流程設計"),

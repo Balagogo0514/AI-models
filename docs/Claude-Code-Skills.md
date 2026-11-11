@@ -1,6 +1,7 @@
-# Claude Code Skill/Plugin 比較：superpowers vs planning-with-files
+# Claude Code Skill/Plugin 比較：superpowers vs planning-with-files vs grill-me
 
 > 資料整理時間：2026-07-12（來源：本機已安裝 plugin 設定、官方 `claude-plugins-official` marketplace 目錄、GitHub 專案文件、Claude Code 官方文件）
+> 2026-11-11 新增 `grill-me`（Matt Pocock，來源：GitHub `mattpocock/skills`，同日讀取 `main`；該 repo 持續更新，內容以安裝當下版本為準）
 
 ## 1. 環境現況
 
@@ -10,6 +11,7 @@
 |---|---|---|---|
 | `superpowers` | 官方 `claude-plugins-official` marketplace | 6.1.1 | 已安裝 |
 | `planning-with-files` | 第三方（[OthmanAdi/planning-with-files](https://github.com/othmanadi/planning-with-files)），非官方 marketplace | — | **未安裝** |
+| `grill-me`（屬於 `mattpocock-skills`） | 第三方（[mattpocock/skills](https://github.com/mattpocock/skills)），README 列為可從 `claude-plugins-official` 安裝 | 讀取 `main`（2026-11-11） | 未檢查本機是否安裝（本次是從雲端環境讀取 GitHub） |
 
 `planning-with-files` 不在官方 marketplace 目錄中，需另外透過 `npx skills add OthmanAdi/planning-with-files --skill planning-with-files -g`（純 skill 安裝）或 `/plugin install planning-with-files@planning-with-files`（正式 plugin 路線，需先加入其 marketplace）才能取得。
 
@@ -138,16 +140,101 @@ npx skills add OthmanAdi/planning-with-files --skill planning-with-files -g
 
 ---
 
-## 5. 兩者定位本質不同
+## 4. grill-me（Matt Pocock，第三方）
 
-| 面向 | superpowers（`writing-plans` / `executing-plans`） | planning-with-files |
+### 4.1 是什麼
+
+`grill-me` 是 Matt Pocock 的 agent skills 集合 [mattpocock/skills](https://github.com/mattpocock/skills) 裡的一個 skill，MIT 授權；README 自述這些 skill「straight from my .agents directory」。✅（2026-11-11 讀取）
+
+- 歸在 **Productivity** 類，一句話描述是「Get relentlessly interviewed about a plan or design until every branch of the design tree is resolved」。
+- SKILL.md 的 frontmatter 是 `disable-model-invocation: true`：**只能由你手動 `/grill-me` 觸發**，Claude 不會自己挑它來用。
+- README 把 `/grill-me` 稱為「for non-code uses」的工具；程式相關的版本是 `grill-with-docs`（見 4.3）。
+
+> ⚠️ 該 repo 持續演進。2026-11-11 讀到的 `grill-me` 本身只有一行：轉呼叫另一個 skill `grilling`；真正的拷問邏輯在 `grilling`。若你讀的版本不同，以你安裝的為準。
+
+### 4.2 運作機制：轉呼叫 `grilling`
+
+依 `grilling` 的 SKILL.md 內容整理（摘要，非逐字）：
+
+| 規則 | 說明 |
+|---|---|
+| 把主題當**設計樹** | 每個決定會帶出依賴它的下一批決定 |
+| **一輪問完所有「目前能回答」的問題** | 編號列出，每題附**建議答案**，寫法讓你回「yes」就等於採納；然後等你回答才繼續 |
+| 有依賴的問題**留到後面輪次** | 每輪結束重新計算「目前能問的問題」 |
+| **事實自己查，決策才問你** | 環境事實（檔案、設定等）由 agent 用 subagent 代查，不問你；決策屬於你 |
+| **結束條件** | 沒有待問問題、每個分支都走過、沒有被默默假設的事 |
+| **不先動手** | 你確認雙方理解一致之前，agent 不依結果採取行動 |
+
+### 4.3 repo 裡的相關 skill
+
+README 列出的相關 skill（✅ 依 README 的一句話描述）：
+
+- **`grill-with-docs`**：同樣的拷問，但過程中會**同時建立文件**（ADR 與領域詞彙表）；也是 `disable-model-invocation: true`。
+- **`to-spec`**：把對話整理成規格並發佈；**`to-tickets`**：把計畫拆成 tracer-bullet 的 ticket，附阻塞關係。
+- **`implement`／`implement-spec`**：依規格或 ticket 實作，用 TDD 與 code review；後者用 task graph 與平行 subagent 跑完整份規格。
+- 其他模型可自動觸發的紀律型 skill：`tdd`、`diagnosing-bugs`、`code-review`、`research`、`prototype` 等。
+
+也就是說，Matt 的這套本身就是一條「拷問 → 規格 → ticket → 實作」的流水線。和 superpowers 的粗略對應如下（🛠 依一句話描述的對照，不代表行為相同）：
+
+| 階段 | superpowers | mattpocock-skills |
 |---|---|---|
-| 核心目的 | 把 spec 轉成**嚴謹的實作計畫**（TDD、bite-sized task、精確檔案路徑），交給 subagent 或 session 逐步執行 | 維持**跨 session 的持久工作記憶**，防止 context 遺失、崩潰、`/clear` 後斷線 |
-| 檔案結構 | 單一計畫檔：`docs/superpowers/plans/YYYY-MM-DD-<feature>.md` | 三個檔案並存：`task_plan.md`（進度）、`findings.md`（發現）、`progress.md`（執行日誌），可用 slug 目錄（`.planning/YYYY-MM-DD-slug/`）隔離平行任務 |
-| 觸發機制 | 手動 Skill 呼叫，由 `using-superpowers` meta-skill 判斷「只要有 1% 可能相關就必須呼叫」 | IDE **hooks** 自動化：`SessionStart`/`UserPromptSubmit` 自動重新注入計畫、`PreToolUse` 執行前複誦、`PostToolUse` 提醒更新進度、`Stop` hook 擋掉未完成就結束 session |
-| 崩潰恢復 | 沒有專門機制——計畫檔是一般 markdown，人工重讀即可 | 有專門「catchup report」：比對 session store 時間戳，抓出崩潰/`/clear` 後遺漏的對話並自動補齊 |
-| 多 agent 協作 | 靠 `subagent-driven-development` 手動派工 | 內建 ledger 檔，支援多 agent 共享狀態 |
-| 支援平台 | Claude Code（及 superpowers 支援的其他 CLI） | 18+ IDE，分三級支援（Enhanced/Standard），含 Claude Code、Cursor、Codex、Gemini CLI 等 |
+| 澄清需求 | `brainstorming` | `grill-me`／`grill-with-docs` |
+| 規格與計畫 | `writing-plans` | `to-spec`、`to-tickets` |
+| 執行 | `executing-plans`、`subagent-driven-development` | `implement`、`implement-spec` |
+| 測試 | `test-driven-development` | `tdd` |
+| 除錯 | `systematic-debugging` | `diagnosing-bugs` |
+| 審查 | `requesting-code-review`／`receiving-code-review` | `code-review` |
+
+### 4.4 安裝
+
+依 README ✅：
+
+```
+# Claude Code（plugin，自動更新）
+claude plugin install mattpocock-skills@claude-plugins-official
+
+# 其他 agent，或想要可編輯的檔案（複製，需手動更新）
+npx skills@latest add mattpocock/skills -a <agent>
+```
+
+- **每個 agent 只選一種安裝方式**，兩種都裝每個 skill 會出現兩次。
+- plugin 會自己更新；用 `npx` 複製的檔案要靠 `npx skills@latest update`。
+- README 提到 `setup-matt-pocock-skills` 是「每個 repo 做一次的設定」。
+- Gemini CLI、GitHub Copilot、Codex 也各有安裝指令，見 README。
+
+### 4.5 對 context 的影響
+
+![三者對 context 的足跡：grill-me 用到前不佔，grilling 描述常駐；superpowers 有 skill 描述常駐與 SessionStart hook 注入；planning-with-files 有六種 hook 與三個計畫檔](figures/claude-skills-context.svg)
+
+- **`grill-me` 本身用到前不佔 context**：官方文件說，設了 `disable-model-invocation: true` 的 user-only skill，在你呼叫前什麼都不載入。✅
+- **但它轉呼叫的 `grilling` 是模型可觸發的 skill**，描述會常駐（成本低）。你手動呼叫後才載入 `grill-me` 本文（極短），再載入 `grilling` 本文。
+- **整包 plugin 會帶進很多 skill**：README 列了不少「模型可自動觸發」的紀律型 skill，它們的描述都會常駐。裝完用 `/context` 看實際用量；不想要的可以用 `skillOverrides` 隱藏。✅
+- **與 superpowers 並裝會功能重疊**（兩邊都有 TDD、除錯、review）。plugin 的 skill 有命名空間，不會直接同名衝突 ✅，但描述互相競爭時，官方警告「描述模糊或重疊，Claude 可能載入錯的 skill」。✅
+- ⚠️ 我沒有逐檔檢查 `mattpocock-skills` 是否註冊 hook；README 沒有提到，所以圖中標為「未見」。
+
+### 4.6 適合與不適合
+
+- **適合**：需求或設計還模糊，想被逼著把每個決定想清楚；非程式用途的規劃。它的核心價值是**把決定「問出來」**，不是產出計畫檔。
+- **不適合**：需求已經清楚的小改動（多一輪問答是純成本）；希望全自動、不想被打斷的流程（它只能手動觸發，而且要等你回答才往下）。
+
+---
+
+## 5. 三者定位本質不同
+
+| 面向 | superpowers（`writing-plans` / `executing-plans`） | planning-with-files | grill-me |
+|---|---|---|---|
+| 核心目的 | 把 spec 轉成**嚴謹的實作計畫**（TDD、bite-sized task、精確檔案路徑），交給 subagent 或 session 逐步執行 | 維持**跨 session 的持久工作記憶**，防止 context 遺失、崩潰、`/clear` 後斷線 | 計畫或設計**之前**的決策澄清：被拷問到每個分支都解決 |
+| 檔案結構 | 單一計畫檔：`docs/superpowers/plans/YYYY-MM-DD-<feature>.md` | 三個檔案並存：`task_plan.md`（進度）、`findings.md`（發現）、`progress.md`（執行日誌），可用 slug 目錄隔離平行任務 | 預設**不寫檔**，產出是對話裡的共識；`grill-with-docs` 才另寫詞彙表與 ADR |
+| 觸發機制 | 手動 Skill 呼叫，由 `using-superpowers` meta-skill 判斷「只要有 1% 可能相關就必須呼叫」 | IDE **hooks** 自動化：`SessionStart`/`UserPromptSubmit` 自動重新注入計畫、`PreToolUse` 執行前複誦、`PostToolUse` 提醒更新進度、`Stop` hook 擋掉未完成就結束 session | **只由你手動 `/grill-me`**（`disable-model-invocation: true`），再轉呼叫 `grilling` |
+| 崩潰恢復 | 沒有專門機制——計畫檔是一般 markdown，人工重讀即可 | 有專門「catchup report」：比對 session store 時間戳，抓出崩潰/`/clear` 後遺漏的對話並自動補齊 | 沒有；只存在於對話中 |
+| 多 agent 協作 | 靠 `subagent-driven-development` 手動派工 | 內建 ledger 檔，支援多 agent 共享狀態 | 不做協作；只用 subagent 代查事實 |
+| 支援平台 | Claude Code（及 superpowers 支援的其他 CLI） | 18+ IDE，分三級支援（Enhanced/Standard），含 Claude Code、Cursor、Codex、Gemini CLI 等 | Claude Code、Codex、Copilot、Gemini CLI 或任何 agent（README） |
+
+### 5.1 三者在開發流程中的位置
+
+![三者在開發流程中的位置：grill-me 負責澄清需求（手動觸發）；superpowers 負責設計與計畫、執行與審查、驗證與收尾（自動介入）；planning-with-files 橫跨全程負責持久化](figures/claude-skills-position.svg)
+
+三者**不在同一個層次競爭**：`grill-me` 管「想清楚要做什麼」，`superpowers` 管「怎麼做完」，`planning-with-files` 管「做很久時不丟進度」。真正會重疊的是 `grill-me` 與 `superpowers:brainstorming`（見第 8 節）。
 
 ---
 
@@ -177,7 +264,7 @@ Claude Code 每次對話都是獨立 session，存成一個 `.jsonl` transcript�
 
 ---
 
-## 8. 兩者會衝突嗎？
+## 8. 會衝突嗎？
 
 目前環境不會衝突（`planning-with-files` 未安裝）。但若兩個都裝上，有兩個實際風險：
 
@@ -185,6 +272,13 @@ Claude Code 每次對話都是獨立 session，存成一個 `.jsonl` transcript�
 2. **Hook 疊加**：`planning-with-files` 掛的 `PreToolUse`/`PostToolUse`/`Stop` hooks 會主動複誦、提醒、甚至擋停；superpowers 沒有 hook，純 skill 邏輯。兩者疊加時會同時收到雙重叨念。
 
 **建議分工**（若真要兩個並用）：讓 superpowers 的 `writing-plans` 負責生成計畫內容（把 spec 拆解成精確任務），把 `planning-with-files` 定位成純粹的崩潰恢復/跨 session 記憶層，不讓它另開一份計畫格式——但這需要在 `CLAUDE.md` 明確分工，兩者預設不會自動協調。
+
+### 8.1 加入 grill-me 之後
+
+- **與 planning-with-files**：不衝突。`grill-me` 沒有 hook、不寫檔（⚠️ plugin 內容未逐檔驗證）；它只在你手動呼叫時介入。
+- **與 superpowers 的 `brainstorming`**：**有功能重疊**，兩者都在動手前釐清需求。差別在於：`brainstorming` 由 hook 與 meta-skill **自動觸發**、之後銜接 `writing-plans`；`grill-me` 只由你**手動觸發**、被拷問到分支都解決，結束時不自動產出計畫檔。
+- **實務上不會打架**：`grill-me` 是 user-only，Claude 不會自己挑它，所以不會和 `brainstorming` 重複觸發。要留意的是 `grilling`（模型可觸發）的描述，可能在你說「幫我把這個問清楚」這類話時被挑中，和 `brainstorming` 搶；若發現行為重疊，可在 `CLAUDE.md` 寫明「需求澄清用 `/grill-me`」。⚠️（推論）
+- **整包安裝 mattpocock-skills 的副作用**：會帶進與 superpowers 重疊的 `tdd`、`diagnosing-bugs`、`code-review` 等，見 4.5。
 
 ---
 
@@ -195,6 +289,8 @@ Claude Code 每次對話都是獨立 session，存成一個 `.jsonl` transcript�
 `planning-with-files` 的價值集中在**長時程、跨多個 session、容易被 `/clear` 或崩潰打斷**的情境（連續多天的大型 agent 任務、多 agent 協作）。一般單次或幾個 session 內能完成的開發用不到它的崩潰恢復機制，硬裝反而增加 hook 疊加、雙重計畫檔的複雜度。
 
 只有當你發現**常常因為 context 被清掉或跨 session 而搞丟進度**時，才值得額外裝 `planning-with-files`。
+
+**需求還沒想清楚時**：先 `/grill-me` 把決策問清楚，再交給 superpowers 的設計與計畫。`grill-me` 是 user-only、不佔常駐 context，所以只裝這一個 skill 的成本很低；但若為了它而整包安裝 `mattpocock-skills`，就會帶進一批會常駐描述的 skill（見 4.5），要先評估。需求已經很清楚的小改動，不需要它。
 
 ---
 
@@ -268,6 +364,8 @@ Claude Code 每次對話都是獨立 session，存成一個 `.jsonl` transcript�
 
 - [GitHub - obra/superpowers](https://github.com/obra/superpowers)
 - [GitHub - OthmanAdi/planning-with-files](https://github.com/othmanadi/planning-with-files)
+- [GitHub - mattpocock/skills](https://github.com/mattpocock/skills)：README、`skills/productivity/grill-me/SKILL.md`、`skills/productivity/grilling/SKILL.md`、`skills/engineering/grill-with-docs/SKILL.md`（2026-11-11 讀取 `main`）
+- Claude Code 官方〈[Extend Claude Code](https://code.claude.com/docs/en/features-overview.md)〉：user-only skill 的 context 成本、`skillOverrides`、skill 描述重疊的警告
 - [Plugins reference - Claude Code Docs](https://code.claude.com/docs/en/plugins-reference)
 - 本機 `superpowers` plugin 原始碼：`~/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/`（`.claude-plugin/plugin.json`、`hooks/hooks.json`、`skills/*/SKILL.md`）
 - 本機 `skill-creator` plugin 原始碼：`~/.claude/plugins/cache/claude-plugins-official/skill-creator/unknown/skills/skill-creator/SKILL.md`

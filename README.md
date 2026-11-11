@@ -24,7 +24,7 @@ AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理�
 | [Claude Code Context 組成](docs/Claude-Context.md) | 送給 LLM 的 context 如何組成、記憶（CLAUDE.md／auto memory／逐字稿）放在哪、彼此是否取代 |
 | [企業整合模型：RAG、MCP、流程與資源判斷](docs/Enterprise-AI-Integration.md) | 六個整合層次、八階段流程、RAG 與 MCP 怎麼接內部資料與系統、權限階梯、API／自架／微調的資源與成本判斷 |
 | [Claude Code 多 Agent 與 Code Review](docs/Claude-Agent.md) | 平行工作方式選型、多 Agent code review、追蹤彙整，含 fastpath refcount 實戰範例 |
-| [Claude Code Skill／Plugin 比較](docs/Claude-Code-Skills.md) | superpowers 與 planning-with-files 的比較 |
+| [Claude Code Skill／Plugin 比較](docs/Claude-Code-Skills.md) | superpowers、planning-with-files 與 grill-me 的比較 |
 | [Codex CLI](docs/CodeX-CLI.md) | OpenAI Codex CLI 的指令、sandbox、approval、設定的完整參考 |
 | [Codex 多 Agent 與 Code Review](docs/CodeX-Agent.md) | Codex 的 Subagents、Cloud、`codex exec` 平行與 code review 做法 |
 | [Python + OpenAI coredump 分析 Agent](docs/OpenAI-Python-Agent.md) | 以 Python 控制的 coredump 自動分析流程設計 |

@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">三者對 context 的足跡：常駐、按需、hook、寫檔</title>
+  <desc id="d">grill-me 本身是只能手動觸發的 skill，用到之前不佔 context；它轉呼叫的 grilling 是模型可觸發的 skill，只有描述常駐。superpowers 的所有 skill 描述常駐，SessionStart hook 在每次新對話、清除與壓縮後注入 using-superpowers 全文，計畫寫在 docs/superpowers/plans。planning-with-files 有六種 hook，會反覆重新注入計畫，並寫入三個 markdown 檔。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">三者對 context 的足跡</text>
+  <rect class="bad" x="12" y="44" width="616" height="142" rx="10"/>
+  <text class="b" x="24" y="66">grill-me（Matt Pocock）</text>
+  <text class="b at" x="24" y="90">常駐</text>
+  <text x="70" y="90">grilling 的描述（模型可觸發，成本低）；grill-me 本身是 user-only，用到前不佔</text>
+  <text class="b at" x="24" y="113">按需</text>
+  <text x="70" y="113">grill-me 本文（極短）→ 轉呼叫 grilling 本文</text>
+  <text class="b at" x="24" y="136">Hook</text>
+  <text x="70" y="136">README 未見；plugin 內容未逐檔驗證 ⚠️</text>
+  <text class="b at" x="24" y="159">寫檔</text>
+  <text x="70" y="159">預設不寫；grill-with-docs 變體才寫詞彙表與 ADR</text>
+  <rect class="acc" x="12" y="194" width="616" height="142" rx="10"/>
+  <text class="b" x="24" y="216">superpowers</text>
+  <text class="b at" x="24" y="240">常駐</text>
+  <text x="70" y="240">13 個 skill 的名稱與描述；SessionStart hook 注入 using-superpowers 全文</text>
+  <text class="b at" x="24" y="263">按需</text>
+  <text x="70" y="263">被觸發的 skill 本文（brainstorming、TDD 等）</text>
+  <text class="b at" x="24" y="286">Hook</text>
+  <text x="70" y="286">SessionStart（startup、clear、compact 時執行）</text>
+  <text class="b at" x="24" y="309">寫檔</text>
+  <text x="70" y="309">docs/superpowers/plans/ 下的單一計畫檔</text>
+  <rect class="good" x="12" y="344" width="616" height="142" rx="10"/>
+  <text class="b" x="24" y="366">planning-with-files</text>
+  <text class="b at" x="24" y="390">常駐</text>
+  <text x="70" y="390">skill 描述；hook 每次送出 prompt 都重新讀回計畫</text>
+  <text class="b at" x="24" y="413">按需</text>
+  <text x="70" y="413">三份計畫檔的內容（從磁碟讀入）</text>
+  <text class="b at" x="24" y="436">Hook</text>
+  <text x="70" y="436">SessionStart、UserPromptSubmit、PreToolUse、PostToolUse、PreCompact、Stop</text>
+  <text class="b at" x="24" y="459">寫檔</text>
+  <text x="70" y="459">task_plan.md、findings.md、progress.md</text>
+  <text class="s" x="320" y="506" text-anchor="middle">grill-me 內容取自 GitHub 上 main 的 SKILL.md（2026-11-11 讀取），其餘取自本文先前章節</text>
+</svg>
