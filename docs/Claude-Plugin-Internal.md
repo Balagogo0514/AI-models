@@ -16,6 +16,7 @@
 | 能把 skill、agent、MCP 都包進同一個 plugin 嗎？ | **可以。** plugin 是一個目錄，裡面可以有 skills、agents、hooks、MCP servers，加上一個 `plugin.json`；沒有任何元件是必要的 ✅ |
 | 怎麼命名？ | plugin 的 skill 與 agent 自動加上 plugin 名稱當前綴，例如 `/acme-toolkit:code-review`，不會和別人同名衝突 ✅ |
 | local knowledge 放哪？ | **小而穩定**的放 skill 的輔助檔；**大、常改、要搜尋**的用 MCP 服務；**不能**放 plugin 根目錄的 `CLAUDE.md`，它不會被載入 ✅ |
+| 公司有很多份 markdown，怎麼放？ | **依「任務」分組，不依「檔案」分組**：一個 skill 掛多份 markdown；規則放 `CLAUDE.md`／rules，大型文件庫用 MCP 檢索服務（見第八節）✅ |
 | 怎麼測試？ | `claude plugin validate`、`claude --plugin-dir`、`/reload-plugins`、`/plugin`、`/mcp`、`claude plugin eval` ✅ |
 | 怎麼全公司推？ | 放進公司 marketplace，再用 managed settings 的 `extraKnownMarketplaces` ＋ `enabledPlugins` 強制啟用 ✅ |
 
@@ -191,10 +192,135 @@ model: sonnet
 **這些變數的作用範圍** ✅：在 skill、agent 的 Markdown 內容、hook 與 monitor 指令、MCP 與 LSP 設定中會替換；**不會**出現在 Claude 用 Bash 工具執行的指令環境裡。
 
 > 為什麼大型知識不該打包進 plugin：打包後沒有權限控管、沒有新鮮度、更新靠發版。RAG 的流程與企業要求見〈[Enterprise-AI-Integration](Enterprise-AI-Integration.md)〉第五章。
+>
+> 知識**很多**、而且是**很多份不同功能的 markdown** 時，見下一節。
 
 ---
 
-## 八、hook：必須強制的事（可選）
+## 八、知識很多：很多份不同功能的 markdown 怎麼放
+
+**不要把它們全塞成一個大 skill，也不要拆成幾百個 skill。** 做法是分層：常駐的只放「導航」，領域知識按需載入，大型語料交給檢索服務。
+
+### 8.1 為什麼不能全塞 skill ✅
+
+| 限制 | 官方說法（〈[Skills](https://code.claude.com/docs/en/skills.md)〉） |
+|------|------|
+| **描述有總預算** | skill 清單的字元預算約為模型 context 視窗的 **1%**；超出時 Claude Code 會**從最少用的 skill 開始丟掉描述**（名稱仍全部列出），關鍵字消失就匹配不到 |
+| **每個描述有上限** | `description` 加 `when_to_use` 合計最多 **1,536 字元**，要把關鍵用途放最前面 |
+| **載入後是重複成本** | skill 一旦載入就留在對話裡，「每一行都是持續的 token 成本」 |
+| **壓縮後只留開頭** | 壓縮後只能保留被呼叫 skill 的前段，重要指示放 `SKILL.md` 最上面 |
+| **長度建議** | `SKILL.md` 控制在 **500 行以內**，詳細參考資料拆到別的檔案 |
+
+預算可以調（`skillListingBudgetFraction`、`SLASH_COMMAND_TOOL_CHAR_BUDGET`、`skillListingMaxDescChars`），但那只是把成本推給所有人，不是解法。`/context` 的 Skills 列顯示套用預算之後的清單大小，`/doctor` 會估算清單的 context 成本與最大貢獻者。
+
+### 8.2 三層放法
+
+![知識很多時的三層放法：L1 常駐的導航；L2 按需載入的領域知識；L3 服務端的大型語料；專案專屬的事實放該 repo 的 CLAUDE.md 或 rules](figures/claude-plugin-scale-layers.svg)
+
+- **L1 常駐：導航**。少量 skill，描述精準。可以做一個「公司知識導覽」skill，列出各領域與去哪找 🛠。
+- **L2 按需：領域知識**。每個領域一個 skill，`SKILL.md` 只當地圖，指向輔助檔。
+- **L3 服務端：大型語料**。MCP 檢索服務，工具少而精（例如 `search`、`get_doc`、`list_domains`，加 `domain` 參數）🛠；MCP 的工具定義預設延後載入，idle 時成本低 ✅。
+- **專案專屬的事實**：放該 repo 的 `CLAUDE.md` 或帶 `paths:` 的 rules。
+
+### 8.3 第一步：把每份 markdown 分類
+
+![每份 markdown 該放哪：必須遵守的規則放 CLAUDE.md 或 rules；流程步驟放 SKILL.md；參考資料放 skill 輔助檔；範例與模板放 examples 或 templates；量大常改的文件庫用 MCP 檢索服務](figures/claude-plugin-markdown-routing.svg)
+
+| 這份 markdown 是… | 例子 | 放哪 |
+|-------------------|------|------|
+| **每個 session 都必須遵守的規則** | 命名規範、安全底線 | **不放 plugin**：plugin 根目錄的 `CLAUDE.md` 不會載入 ✅。全公司通用用 managed `CLAUDE.md`（由 IT 發佈到每台機器）✅；專案專屬放該 repo 的 `CLAUDE.md` 或 `.claude/rules/` |
+| **某個任務的流程步驟** | 上線檢查、PR review、事故處理 | `SKILL.md` 本身 |
+| **查閱用的參考資料** | API 規格、術語表、錯誤碼 | 該 skill 的輔助檔 |
+| **範例與模板** | 回覆範本、設定範例 | 該 skill 的 `examples/` 或 `templates/` |
+| **量大或常改的文件庫** | wiki、設計文件、FAQ | **不打包**，用 MCP 檢索服務 🛠 |
+
+### 8.4 第二步：用情境切 skill，一個 skill 掛多份 markdown
+
+```text
+acme-toolkit/skills/
+├── acme-guide/               # 導航（可選）
+│   └── SKILL.md              # 列出各領域，「想做什麼就用哪個 skill」
+├── release-check/
+│   ├── SKILL.md              # 流程 + 地圖（<500 行）
+│   ├── checklist.md          # 檢查清單
+│   ├── rollback.md           # 回滾步驟
+│   └── examples/
+├── billing-integration/
+│   ├── SKILL.md
+│   ├── api-reference.md
+│   ├── error-codes.md
+│   └── templates/
+└── incident-response/
+    ├── SKILL.md
+    └── runbooks/
+```
+
+`SKILL.md` 當地圖。官方建議在其中**寫清楚每個檔案是什麼、何時讀**，Claude 才知道要不要載入 ✅。輔助檔**不需要 frontmatter**，只有 `SKILL.md` 需要。
+
+```markdown
+---
+description: 上線前檢查與回滾。當被要求發佈、上線或回滾服務時使用。
+---
+
+## 流程
+（核心步驟，簡短）
+
+## 需要細節時再讀
+| 檔案 | 內容 | 何時讀 |
+|---|---|---|
+| ${CLAUDE_SKILL_DIR}/checklist.md | 逐項檢查清單 | 開始上線前 |
+| ${CLAUDE_SKILL_DIR}/rollback.md | 回滾步驟 | 出問題需要回滾時 |
+```
+
+`${CLAUDE_SKILL_DIR}` 在 skill 內容中會被替換成該 skill 目錄的路徑，不論它裝在個人、專案或 plugin 層都能解析 ✅。
+
+### 8.5 幾個 markdown 合成一個 skill，還是拆開？
+
+| 情況 | 做法 |
+|------|------|
+| 總是一起用於同一個任務 | 放同一個 skill，當輔助檔 |
+| 有自己獨立、不同的觸發情境 | 拆成獨立 skill |
+| 只是「查一下」的資料，不是流程 | 輔助檔，或交給 MCP |
+| 同一份內容被好幾個任務共用 | 放一個共用 skill 或 MCP，不要複製多份 🛠 |
+
+**不要「一份 markdown 一個 skill」**：每個 skill 的描述每輪都佔 context，數量一多就會撞到上面的預算。
+
+### 8.6 功能很多時的具體技巧
+
+1. **用 `paths:` 限定啟用範圍** ✅：設了之後，Claude 只在處理相符檔案時才自動載入該 skill；把領域 skill 綁到對應的程式碼目錄。路徑相對於 Claude 目前的工作目錄，目錄外的檔案不會符合。
+2. **少用或重的設成手動** ✅：`disable-model-invocation: true`，描述不進清單，用 `/plugin名:skill名` 呼叫。
+3. **plugin 作者要注意** ✅：`skillOverrides` **不影響 plugin 的 skill**，所以「改成 `name-only`」這招對 plugin 無效；要靠 `paths`、手動觸發，或拆成不同 plugin。
+4. **用腳本代替長文** ✅：skill 目錄裡的腳本是「執行」不是「載入」，只有輸出進 context。
+5. **大型語料別打包進 plugin**：每次更新就是一份新複本，也沒有權限控管。
+6. **很長的 markdown 要拆成主題檔**，並在 `SKILL.md` 的地圖裡寫明；一份幾千行的檔案被整份讀入，是純成本 🛠。
+
+### 8.7 拆 plugin 的方式
+
+- **共同的 `acme-core`**（導航、通用規範）＋**每個領域一個 plugin**（如 `acme-billing`、`acme-risk`），各部門只啟用需要的。
+- **官方沒有「依使用者或部門」的單一開關** ✅，要把 managed settings 分別發給各群組（見〈[Claude-Code-Skills](Claude-Code-Skills.md)〉第 12 節）。
+- **不要把所有領域放進同一個 plugin 再全員啟用**：每個人都會背著全部的 skill 描述。
+
+### 8.8 很多份 markdown 怎麼維護 🛠
+
+1. **來源只有一份**：markdown 留在公司的文件 repo；由 CI 在發版時同步進各 skill 的輔助檔，或由 MCP 服務直接從文件 repo 建索引，不手動複製。
+2. **導航表自動產生**：從每份 markdown 的標題或 frontmatter 產生 `SKILL.md` 的檔案表，避免漏列或過期。
+3. **每個領域指定 owner**：用 CODEOWNERS 要求審查（這是 GitHub 的功能）；輔助檔寫明更新日期。
+4. **量測**：`/skill-doctor` 顯示每個 skill 的成本與使用頻率，找出沒人用的（需 v2.1.252 以上）✅；`claude plugin eval` 用 `tool_used: Skill` 的 grader 測觸發率 ✅。
+
+### 8.9 一個粗略的例子 ⚠️
+
+假設有 40 份 markdown：
+
+- 6 份「必須遵守」→ managed `CLAUDE.md` 與各專案 rules。
+- 18 份流程與參考 → 切成 5 個領域 skill，各自掛輔助檔。
+- 10 份範例與模板 → 放各領域 skill 的 `templates/`。
+- 6 份大型 wiki → MCP 檢索服務。
+
+這個比例只是示意，不是標準；官方沒有「多少個 skill 算太多」的數字，只有 1% 預算這個機制，實際上限取決於你們的模型 context 大小與描述長度，要用 `/context` 實測。「公司知識導覽」索引 skill 與 MCP 工具的切法是我的建議，不是官方範式。
+
+---
+
+## 九、hook：必須強制的事（可選）
 
 **`hooks/hooks.json`**
 
@@ -225,7 +351,7 @@ model: sonnet
 
 ---
 
-## 九、本機測試與驗證
+## 十、本機測試與驗證
 
 ![內部 plugin 從本機測試到全公司強制啟用的流程：validate、plugin-dir、reload 與除錯、eval、發佈到 marketplace、managed settings 強制啟用](figures/claude-plugin-workflow.svg)
 
@@ -245,7 +371,7 @@ model: sonnet
 
 ---
 
-## 十、發佈與強制啟用
+## 十一、發佈與強制啟用
 
 ### 10.1 放進公司 marketplace ✅
 
@@ -301,7 +427,7 @@ claude plugin install acme-toolkit@acme-marketplace
 
 ---
 
-## 十一、對 context 的影響
+## 十二、對 context 的影響
 
 | 元件 | 載入時機 | 對 context |
 |------|----------|------------|
@@ -315,7 +441,7 @@ claude plugin install acme-toolkit@acme-marketplace
 
 ---
 
-## 十二、注意事項
+## 十三、注意事項
 
 | 項目 | 說明 |
 |------|------|
@@ -337,6 +463,7 @@ claude plugin install acme-toolkit@acme-marketplace
 - [Plugin manifest reference](https://code.claude.com/docs/en/plugins/manifest-reference.md)
 - [Create a marketplace](https://code.claude.com/docs/en/plugins/marketplace-reference.md)
 - [Manage Claude Code plugins for your organization](https://code.claude.com/docs/en/plugins/org.md)
+- [Skills](https://code.claude.com/docs/en/skills.md)：skill 清單預算、`paths`、輔助檔、`/skill-doctor`
 - 〈[Claude-Code-Skills](Claude-Code-Skills.md)〉：skill 的比較、並存衝突、團隊治理
 - 〈[Claude-Context](Claude-Context.md)〉：擴充機制對 context 的影響
 - 〈[Enterprise-AI-Integration](Enterprise-AI-Integration.md)〉：RAG、MCP 與企業整合
