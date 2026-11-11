@@ -280,6 +280,133 @@ Claude Code 每次對話都是獨立 session，存成一個 `.jsonl` transcript�
 - **實務上不會打架**：`grill-me` 是 user-only，Claude 不會自己挑它，所以不會和 `brainstorming` 重複觸發。要留意的是 `grilling`（模型可觸發）的描述，可能在你說「幫我把這個問清楚」這類話時被挑中，和 `brainstorming` 搶；若發現行為重疊，可在 `CLAUDE.md` 寫明「需求澄清用 `/grill-me`」。⚠️（推論）
 - **整包安裝 mattpocock-skills 的副作用**：會帶進與 superpowers 重疊的 `tdd`、`diagnosing-bugs`、`code-review` 等，見 4.5。
 
+### 8.2 三者並存時，預設會發生什麼
+
+標記：✅ 官方〈[Extend Claude Code](https://code.claude.com/docs/en/features-overview.md)〉明載　⚠️ 推論，未在三者並裝的環境實測。
+
+- **skill 描述互相競爭** ✅：Claude 用你的任務去比對所有 skill 的描述來挑。官方警告「描述模糊或重疊，Claude 可能載入錯的 skill，或漏掉該用的」。
+- **hook 全部都會觸發** ✅：不同來源的 hook 是**合併**的，沒有誰蓋掉誰。
+- **同名才覆寫** ✅：skill 同名時只有一份生效（managed > user > project）；plugin 的 skill 有命名空間，不會直接同名衝突，但**功能相同**的 skill 會同時存在。
+- **指示互相矛盾時由 Claude 判斷** ✅：CLAUDE.md、skill 都只是請求，不是強制，結果不確定。
+
+**結論**：Claude Code **不會自動仲裁**三者，要靠你自己分工。
+
+### 8.3 三個都會執行嗎？
+
+**不會三個都「主動」執行，但 superpowers 與 planning-with-files（以 plugin 安裝時）的 hook 會一直在背景跑。** 裝了不等於執行，要看它靠什麼觸發。
+
+![三個 skill 誰會自動執行：superpowers 的 hook 與依描述挑都會；planning-with-files 視安裝方式與描述符合；grill-me 只有手動 /grill-me，僅它轉呼叫的 grilling 可被挑；hook 是合併的](figures/claude-skills-trigger.svg)
+
+| 觸發方式 | superpowers | planning-with-files | grill-me |
+|---|---|---|---|
+| **事件觸發的 hook**（不用你叫，每次都跑） | ✅ `SessionStart`（新對話、`/clear`、壓縮後）注入 `using-superpowers` 全文 | ✅ 以 plugin 安裝時有 6 種：`SessionStart`、`UserPromptSubmit`、`PreToolUse`、`PostToolUse`、`PreCompact`、`Stop` | 沒有 ⚠️（README 未見，未逐檔驗證） |
+| **Claude 依任務挑**（描述比對） | ✅ 會，且被 `using-superpowers`「有 1% 可能相關就必須呼叫」的規則推著 | 描述符合才會 | 它本身不會；轉呼叫的 `grilling` 可被挑 ⚠️ |
+| **只有你手動叫才動** | 可選（點名某個 skill） | `/plan` 等指令 | ✅ `/grill-me`（`disable-model-invocation: true`） |
+
+**一個日常情境**：你說「我要做 X 功能」。
+
+- **superpowers**：自動介入，通常先走 `brainstorming`。
+- **planning-with-files**：若以 plugin 安裝且專案已有計畫，hook 會在每次送出 prompt 時把計畫重讀進來；skill 本身要描述符合才會被挑。
+- **grill-me**：不動，除非你打 `/grill-me`。
+
+**關鍵點**
+
+- **hook 是合併的** ✅：兩個 plugin 的 hook 會同時觸發，沒有誰蓋掉誰，所以 superpowers 與 planning-with-files 的 hook 通常**兩個都在跑**。
+- **只裝 skill 沒有 hook**：planning-with-files 若以 `npx skills add` 安裝，就沒有 hook，也沒有背景執行的那部分（見 3.3、3.4）。
+- **同一個任務可能觸發多個 skill**：官方沒有說一次只能用一個，這正是「兩份計畫檔」風險的來源 ⚠️（推論）。
+- **你打 `/grill-me` 時，另外兩個仍在**：superpowers 注入的內容還在 context 裡，planning-with-files 的 hook 照樣觸發，不會因為你呼叫 grill-me 而暫停。這個互動沒有實測 ⚠️。
+
+**想只讓其中一個執行**
+
+- 不要 planning-with-files 的背景 hook：停用該 plugin，或單次設 `PLANNING_DISABLED=1`（見第 10 節）。
+- 不要 superpowers 的自動介入：只能停用該 plugin；文件裡沒看到單獨關閉它 hook 的開關 ⚠️。
+- grill-me：不需要處理，它本來就只由你叫才動。
+
+### 8.4 兩兩之間的衝突風險
+
+![三個 skill 並存時兩兩之間的衝突風險：superpowers 與 planning-with-files 風險高（兩份計畫檔、hook 疊加）；grill-me 與 superpowers 風險中（與 brainstorming 重疊）；grill-me 與 planning-with-files 風險低；三者並裝時 context 成本累加](figures/claude-skills-conflict.svg)
+
+| 組合 | 風險 | 說明 |
+|---|---|---|
+| superpowers × planning-with-files | **高** | 同一個多步驟任務可能同時觸發 `writing-plans` 與 `/plan`，產出兩份位置與格式都不同的計畫檔；兩邊的 hook 疊加（見第 8 節前半） |
+| grill-me × superpowers | **中** | 與 `brainstorming` 功能重疊。`grill-me` 是 user-only，不會自動重複觸發；但它轉呼叫的 `grilling` 可由模型觸發，可能在你說「幫我把這個問清楚」時搶走 `brainstorming` ⚠️ |
+| grill-me × planning-with-files | 低 | 一個只在你手動呼叫時介入，一個負責持久化 |
+| 三者並裝 | context 成本累加 | 三組 skill 描述常駐，再加 SessionStart 注入 `using-superpowers` 全文、planning-with-files 每次重新讀回計畫（見 4.5 的圖） |
+
+### 8.5 怎麼處理（由輕到重）
+
+![skill 衝突的處理方式：把分工寫進 CLAUDE.md（請求，不保證）；用 skillOverrides 隱藏（設定，有效）；只裝需要的 skill（安裝層）；暫停整個 plugin（停用，有效）；用 hook 或權限設定強制（強制）](figures/claude-skills-handling.svg)
+
+1. **把分工寫進 CLAUDE.md**：最便宜，但只是請求，不保證遵守 ✅。例如：
+
+   ```
+   ## Skill 分工
+   - 需求不清楚時，我會手動 /grill-me，你不要自己啟動需求拷問。
+   - 設計與計畫用 superpowers 的 brainstorming、writing-plans，計畫只寫在 docs/superpowers/plans/。
+   - 除非我明確要求 /plan，否則不要建立 task_plan.md、findings.md、progress.md。
+   ```
+
+2. **用 `skillOverrides` 隱藏不要的 skill**：把描述移出 context，不必改別人的檔案 ✅。
+3. **只裝需要的 skill**：不要為了 `grill-me` 整包安裝 `mattpocock-skills`，否則會帶進與 superpowers 重疊的 `tdd`、`diagnosing-bugs` 等（見 4.5）。
+4. **暫停整個 plugin**：`/plugin disable planning-with-files@planning-with-files`，恢復用 `/plugin enable`；單次 session 可用 `PLANNING_DISABLED=1`（見第 10 節）。因為 hook 是合併的，**無法讓其中一個 hook 蓋掉另一個**，要消除 hook 疊加只能停用其中一個 plugin。✅
+5. **必須強制的事用 hook 或權限設定**：不要只靠 skill 或 CLAUDE.md ✅。
+
+### 8.6 怎麼確認有沒有在打架，與建議配置
+
+- 用 `/context` 看三組 skill 描述與注入內容實際佔了多少。
+- 看對話裡實際觸發了哪些 skill：同一個任務是否啟動了兩套流程、是否出現兩份計畫檔、是否被重複提問。
+- 用第 11 節的 `skill-creator` 做「該觸發／不該觸發」的評測。
+
+| 情境 | 建議配置 |
+|---|---|
+| 日常開發 | 只留 superpowers；需求模糊時手動 `/grill-me` |
+| 長時程、跨 session 的任務 | 再加 planning-with-files，並在 CLAUDE.md 明寫計畫檔只能有一份 |
+| 不確定三個能否並存 | 先兩兩試跑，觀察是否出現雙份計畫檔或重複提問，再決定 |
+
+> ⚠️ 以上處理方式是依官方的載入與優先規則推出來的，我沒有在三者並裝的實際環境測過行為。
+
+### 8.7 會不會讓 LLM 更多來回、token 更多？
+
+標記：✅ 官方〈[Manage costs effectively](https://code.claude.com/docs/en/costs.md)〉與〈[Extend Claude Code](https://code.claude.com/docs/en/features-overview.md)〉明載　⚠️ 推論或未實測。
+
+**簡短回答**：**會，但來源不同、大小差很多。** 官方沒有針對這三個 skill 並存的實測數字，所以下面是方向，不是用量。
+
+**兩個先記住的官方事實** ✅
+
+- Claude Code **每次請求都把整個對話重送一次**，每次使用工具又是一個新請求，所以 context 越長，每個請求越貴。
+- 有 prompt caching，重送的歷史多半以**快取讀取價**計算（一般是輸入價的 0.1 倍；Sonnet 5.5 與 Opus 5.5 為 0.05 倍），但它**仍佔 context 視窗**，也讓壓縮更早發生。
+
+![token 與來回增加的來源與相對大小：三組 skill 描述常駐（固定、小）；superpowers 的注入（一次性、中）；planning-with-files 的 hook（每輪累積、大）；superpowers 流程（視任務）；grill-me 問答（視輪數）；session 越拉越長（累積）](figures/claude-skills-tokens.svg)
+
+| 來源 | 多出什麼 | 大小 | 說明 |
+|---|---|---|---|
+| **三組 skill 描述常駐** | 每次請求多帶描述文字 | 小 | 在穩定的前綴裡，多半走快取價；grill-me 本身是 user-only，用到前不佔 ✅ |
+| **superpowers 的 SessionStart 注入** | 新對話、`/clear`、壓縮後各注入一次 `using-superpowers` 全文 | 中 | 之後留在對話歷史裡，每次請求重送 |
+| **planning-with-files 的 hook** | `UserPromptSubmit` 每次送出 prompt 重讀計畫；`PostToolUse` 每次工具呼叫後提醒更新進度 | **大，三者中最容易吃 token** | 官方說 **hook 輸出會成為對話的一部分** ✅，所以一路累積；`Stop` 在未完成時擋停，可能多出額外回合 ⚠️ |
+| **superpowers 的流程本身** | brainstorming → 計畫 → TDD → review → 驗證，回合與工具呼叫都變多；`subagent-driven-development` 每個 subagent 另送自己的請求 ✅ | 視任務 | 這是「方法論的成本」，不是 skill 檔案的成本 |
+| **grill-me** | 你和 Claude 的問答輪次變多；事實用 subagent 代查（另外的 token） | 視輪數 | 設計成**每輪批次提問**，已盡量減少來回（見 4.2） |
+| **session 越拉越長** | 每個請求都更貴；壓縮本身是大請求 ✅ | 中到大 | 三者並裝時這個效應會被放大 ⚠️ |
+
+**也有省 token 的一面**
+
+- **hook 可以省**：官方建議用 hook 預處理資料，例如只回傳 log 裡的錯誤行，把幾萬 token 降到幾百 ✅。
+- **事前澄清可以避免重工**：官方對 plan mode 的說法是「避免方向錯了之後的昂貴重做」；`grill-me` 與 `brainstorming` 的邏輯類似，但我沒有實測它們省多少 ⚠️。
+- **skill 比 CLAUDE.md 省**：skill 按需載入，CLAUDE.md 每次都在 ✅。
+
+**怎麼省**
+
+1. **只開需要的**：日常只留 superpowers，需要時才叫 `/grill-me`；planning-with-files 只在長時程任務使用。
+2. **planning-with-files 用 `--autonomous`**：拿掉逐工具呼叫的複誦，只在 turn 開頭注入（見 3.6）；單次關閉用 `PLANNING_DISABLED=1`。
+3. **隱藏不要的 skill 描述**：用 `skillOverrides` ✅。
+4. **任務之間用 `/clear`**：官方說陳舊的 context 會在之後每則訊息上浪費 token ✅。
+5. **大量輸出交給 subagent，並選小模型**：簡單任務可指定 `model: haiku`；注意 subagent 自己的請求仍算你的用量 ✅。
+
+**怎麼量，而不是猜**
+
+- **`/context`**：看目前各類內容佔多少，包含 skill 描述與 MCP ✅。
+- **`/usage`**：看本次 session 的 token 與 `Prompt cache` 命中率；訂閱方案另有按 skill、subagent、plugin 的用量歸屬與建議 ✅。
+- **做 A/B**：同一個任務，一次只開 superpowers、一次三個都開，比較 `/usage` 的數字。這是唯一能得到你環境真實答案的方法。
+
 ---
 
 ## 9. 一般程式開發工作該用哪個？
@@ -360,12 +487,75 @@ Claude Code 每次對話都是獨立 session，存成一個 `.jsonl` transcript�
 
 ---
 
-## 12. 參考來源
+## 12. 團隊與多部門的 skill 治理
+
+標記：✅ 官方文件明載（〈[Skills](https://code.claude.com/docs/en/skills.md)〉、〈[Manage Claude Code plugins for your organization](https://code.claude.com/docs/en/plugins/org.md)〉、〈[Extend Claude Code](https://code.claude.com/docs/en/features-overview.md)〉）　🛠 建議做法，不是官方流程。
+
+情境：公司專案做 code review，**各部門各自把自己的 skill 放進專案**（假設放在 `.claude/skills/` 並一起提交）。官方沒有說這是錯的，但有幾個具體風險。
+
+### 12.1 各自塞 skill 會發生什麼
+
+| 問題 | 官方依據 | 對 code review 的後果 |
+|---|---|---|
+| **覆寫內建的 `/code-review`** | 專案 skill 與內建指令同名時，你的 skill 會取代內建指令（別名除外）✅ | 某個部門取名 `code-review`，其他人原本的內建流程就悄悄被換掉 |
+| **描述重疊、互相競爭** | 描述模糊或重疊時，Claude 可能挑錯，或漏掉該用的 ✅ | 同一份 PR 會依觸發到哪個 skill 而用不同標準審，結果不穩定、難以稽核 |
+| **context 成本累加** | 每個列出的 skill 每一輪都佔 context，不管有沒有用到；每個描述最多保留 1,536 字元 ✅ | N 個部門乘以數個 skill，常駐成本由所有人分攤；`/skill-doctor` 可看每個 skill 的成本 |
+| **權限預先放行** | `allowed-tools` 會在 skill 執行那一輪免詢問放行工具；官方明說要審查提交進 repo 的 skill 的 `allowed-tools` ✅ | 任何部門的 skill 都可能預先放行 Bash 之類的工具，卻沒有人統一審 |
+| **無擁有者、版本與發佈管道** | plugin marketplace 支援版本固定與 release channel ✅ | 專案內的 skill 隨程式碼走，沒有「誰負責、何時升級」 |
+
+同名的情況：同一個目錄不能有兩個同名資料夾；放在不同子目錄的同名 skill 會**都載入**，但要用帶路徑的名稱呼叫（例如 `/apps/web:deploy`）✅；優先序是 enterprise > personal > project ✅。
+
+### 12.2 建議結構
+
+![多部門團隊的 skill 結構：公司層 plugin marketplace 由單一 owner 維護共同的 code-review 流程並用 managed settings 強制啟用；專案層前端、後端、資安的差異用帶 paths 條件的規則承接；強制層放 CI、hook 與權限設定](figures/claude-skills-governance-structure.svg)
+
+- **共同流程只留一份**：用 plugin 發佈，plugin 的 skill 有命名空間（`/plugin-name:skill-name`），不會和別人同名衝突 ✅。
+- **部門差異用規則承接，而不是另一個 review skill**：有 `paths:` 條件的規則與子目錄的 skill 都是按需載入 ✅（子目錄的 skill 在 Claude 讀或編輯該子目錄的檔案時才載入）；skill 本身也有 `paths` 欄位可限制啟用範圍 ✅。
+- **重或少用的設成手動**：`disable-model-invocation: true`，描述不佔 context，也不會被自動挑中 ✅。
+- **必須做的檢查別只靠 skill**：放進 CI、hook 或權限設定；skill 與 CLAUDE.md 只是請求 ✅。三層 code review 的比較見〈[Claude-Agent](Claude-Agent.md)〉。
+
+### 12.3 想強制時用哪個設定
+
+![想強制時用哪個設定：全公司一套用 extraKnownMarketplaces 加 enabledPlugins；只允許公司來源用 strictKnownMarketplaces 加 disableSideloadFlags；不准另放專案 skill 用 strictPluginOnlyCustomization；各部門不同設定要分別發給各群組；隱藏 skill 用 skillOverrides 但不影響 plugin；封鎖特定 plugin 用 enabledPlugins false](figures/claude-skills-governance-switches.svg)
+
+| 目的 | 設定 | 注意 |
+|---|---|---|
+| 全公司都有同一套 | managed settings 的 `extraKnownMarketplaces` ＋ `enabledPlugins` | 使用者在自己的 scope 停用也擋不住，managed 優先 ✅ |
+| 只允許公司的來源 | `strictKnownMarketplaces`（允許清單）＋ `disableSideloadFlags` | 只設允許清單卻漏掉 `{ "source": "skills-dir" }`，使用者放在 `.claude/skills/` 的**目錄型 plugin** 會停止載入；純 `SKILL.md` 不受影響 ✅ |
+| 不准專案或個人另放 skill | `strictPluginOnlyCustomization`，可只鎖 `["skills"]` | 會讓現有的專案 skill 失效；要搭配上面兩項才完整 ✅ |
+| 各部門不同設定 | 把設定分別發給各群組 | 所有 plugin 相關設定都套用到收到設定的每個人，沒有「依使用者或部門」的單一開關 ✅ |
+| 隱藏某個 skill | `skillOverrides`（`on`／`name-only`／`user-invocable-only`／`off`） | **不影響 plugin 的 skill**；plugin 要用 `/plugin` 或 `enabledPlugins: false` ✅ |
+| 封鎖特定 plugin | managed `enabledPlugins` 設為 `false` | 所有 scope 都擋，且從 marketplace 列表隱藏 ✅ |
+
+另外：managed 設定只會從**一個來源**生效（server-managed、MDM、設定檔依序檢查），若要合併要設 `managedSourcesBehavior: "merge"` ✅。稽核可用 OpenTelemetry 的 `plugin_installed`、`plugin_loaded` 事件 ✅。
+
+### 12.4 整頓步驟 🛠
+
+![整頓多部門 skill 的六個步驟：盤點、分類、指定 owner、發佈成 plugin、鎖定來源、評測驗證，鎖定來源要等前面做完再開](figures/claude-skills-governance-steps.svg)
+
+1. **盤點**：列出所有 review 相關 skill 的名稱、描述、擁有者、`allowed-tools`，用 `/skill-doctor` 看成本。
+2. **分類**：重複的合併、部門專屬的改成規則、過期的刪除。
+3. **指定一個 owner 與唯一入口**：其他部門以 PR 提需求，不自己另開 skill。專案內的 `.claude/` 可用 CODEOWNERS 要求審查（這是 GitHub 的功能，不是 Claude Code 的）。
+4. **發佈成 plugin**：放在公司 marketplace，用 managed settings 強制啟用。
+5. **鎖定來源**：`strictPluginOnlyCustomization` 等前面做完再開，否則現有專案 skill 會全部失效。
+6. **用評測驗證**：拿真實 PR 比較整頓前後的審查結果與觸發是否正確（第 11 節的 `skill-creator` 可做觸發評測）。
+
+### 12.5 取捨與限制
+
+- **部門專屬的知識是合理需求**：問題不在「部門有自己的 skill」，而在「各自塞進同一個專案、重複實作 review 流程、沒有治理」。
+- **強制條款會影響所有人**：先和各部門溝通再開。
+- **我不清楚你們 repo 的實際結構**（例如是否 monorepo），以上是通用版；`strictPluginOnlyCustomization` 的實際影響要在測試環境先驗證 ⚠️。
+
+---
+
+## 13. 參考來源
 
 - [GitHub - obra/superpowers](https://github.com/obra/superpowers)
 - [GitHub - OthmanAdi/planning-with-files](https://github.com/othmanadi/planning-with-files)
 - [GitHub - mattpocock/skills](https://github.com/mattpocock/skills)：README、`skills/productivity/grill-me/SKILL.md`、`skills/productivity/grilling/SKILL.md`、`skills/engineering/grill-with-docs/SKILL.md`（2026-11-11 讀取 `main`）
 - Claude Code 官方〈[Extend Claude Code](https://code.claude.com/docs/en/features-overview.md)〉：user-only skill 的 context 成本、`skillOverrides`、skill 描述重疊的警告
+- Claude Code 官方〈[Skills](https://code.claude.com/docs/en/skills.md)〉：skill 的位置、同名優先序、`allowed-tools`、`paths`、`skillOverrides`
+- Claude Code 官方〈[Manage Claude Code plugins for your organization](https://code.claude.com/docs/en/plugins/org.md)〉：`extraKnownMarketplaces`、`enabledPlugins`、`strictKnownMarketplaces`、`strictPluginOnlyCustomization`、`disableSideloadFlags`
 - [Plugins reference - Claude Code Docs](https://code.claude.com/docs/en/plugins-reference)
 - 本機 `superpowers` plugin 原始碼：`~/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/`（`.claude-plugin/plugin.json`、`hooks/hooks.json`、`skills/*/SKILL.md`）
 - 本機 `skill-creator` plugin 原始碼：`~/.claude/plugins/cache/claude-plugins-official/skill-creator/unknown/skills/skill-creator/SKILL.md`

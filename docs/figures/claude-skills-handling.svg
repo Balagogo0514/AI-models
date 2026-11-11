@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 470" role="img" aria-labelledby="t d">
+  <title id="t">skill 衝突的處理方式，由輕到重與強制力</title>
+  <desc id="d">由輕到重五種處理：把分工寫進 CLAUDE.md，只是請求不保證；用 skillOverrides 隱藏不要的 skill 描述；只安裝需要的 skill 而不整包安裝；用 plugin disable 暫停整個 plugin；真正要強制的事用 hook 或權限設定。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="468.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">處理衝突：由輕到重</text>
+  <rect class="box" x="12" y="48" width="616" height="66" rx="8"/>
+  <text class="b" x="26" y="76">1  把分工寫進 CLAUDE.md</text>
+  <text class="s" x="26" y="98">最便宜；告訴 Claude 誰負責哪一段</text>
+  <rect class="box" x="500" y="66" width="116" height="30" rx="15"/>
+  <text class="b" x="558" y="86" text-anchor="middle">請求，不保證</text>
+  <line class="ln" x1="320" y1="115" x2="320" y2="123" marker-end="url(#a)"/>
+  <rect class="acc" x="12" y="124" width="616" height="66" rx="8"/>
+  <text class="b" x="26" y="152">2  用 skillOverrides 隱藏</text>
+  <text class="s" x="26" y="174">把不要的 skill 描述移出 context，不必改別人的檔案</text>
+  <rect class="box" x="500" y="142" width="116" height="30" rx="15"/>
+  <text class="b" x="558" y="162" text-anchor="middle">設定，有效</text>
+  <line class="ln" x1="320" y1="191" x2="320" y2="199" marker-end="url(#a)"/>
+  <rect class="acc" x="12" y="200" width="616" height="66" rx="8"/>
+  <text class="b" x="26" y="228">3  只裝需要的 skill</text>
+  <text class="s" x="26" y="250">不要為了 grill-me 整包裝 mattpocock-skills</text>
+  <rect class="box" x="500" y="218" width="116" height="30" rx="15"/>
+  <text class="b" x="558" y="238" text-anchor="middle">安裝層</text>
+  <line class="ln" x1="320" y1="267" x2="320" y2="275" marker-end="url(#a)"/>
+  <rect class="acc" x="12" y="276" width="616" height="66" rx="8"/>
+  <text class="b" x="26" y="304">4  暫停整個 plugin</text>
+  <text class="s" x="26" y="326">/plugin disable …；單次可用 PLANNING_DISABLED=1</text>
+  <rect class="box" x="500" y="294" width="116" height="30" rx="15"/>
+  <text class="b" x="558" y="314" text-anchor="middle">停用，有效</text>
+  <line class="ln" x1="320" y1="343" x2="320" y2="351" marker-end="url(#a)"/>
+  <rect class="good" x="12" y="352" width="616" height="66" rx="8"/>
+  <text class="b" x="26" y="380">5  用 hook 或權限設定強制</text>
+  <text class="s" x="26" y="402">真的不能發生的事，不要只靠 skill 或 CLAUDE.md</text>
+  <rect class="box" x="500" y="370" width="116" height="30" rx="15"/>
+  <text class="b" x="558" y="390" text-anchor="middle">強制</text>
+  <text class="s" x="320" y="444" text-anchor="middle">越往下越「硬」，但也越不彈性；日常先用 1 與 3 就夠</text>
+  <text class="s" x="320" y="462" text-anchor="middle">怎麼確認：/context 看佔用；看對話裡實際觸發了哪些 skill</text>
+</svg>
