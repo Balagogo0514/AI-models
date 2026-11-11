@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">多部門團隊的 skill 結構：共同流程放 plugin，部門差異放規則，強制檢查放 CI 與 hook</title>
+  <desc id="d">最上層是公司 plugin marketplace，由單一 owner 維護共同的 code-review 流程與標準，用 managed settings 強制啟用。中間是專案 repo，前端、後端、資安各自的差異用帶 paths 條件的規則或子目錄 skill 承接，只在碰到相符檔案時才載入。最底層是強制性的檢查，放在 CI、hook 或權限設定，因為 skill 只是請求。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">建議結構：共同流程、部門差異、強制檢查分層</text>
+  <rect class="acc" x="12" y="44" width="616" height="102" rx="12"/>
+  <text class="b at" x="24" y="68">公司層：plugin marketplace（單一 owner）</text>
+  <text x="24" y="90">共同的 code-review 流程與標準，只有一份</text>
+  <text class="s" x="24" y="110">plugin 的 skill 有命名空間（/plugin-name:skill-name），不會和別人同名衝突</text>
+  <text class="s" x="24" y="130">managed settings：extraKnownMarketplaces + enabledPlugins 強制啟用，使用者無法覆蓋</text>
+  <line class="ln" x1="320" y1="147" x2="320" y2="168" marker-end="url(#a)"/>
+  <text class="s" x="332" y="162">部門差異＝規則，不是另一個 review skill</text>
+  <rect class="box" x="12" y="170" width="616" height="204" rx="12"/>
+  <text class="b" x="24" y="194">專案層：各部門的差異（規則加 paths 條件，按需載入）</text>
+  <rect class="good" x="24" y="206" width="188" height="112" rx="8"/>
+  <text class="b gt" x="36" y="230">前端</text>
+  <text x="36" y="254">・paths: src/web/**</text>
+  <text x="36" y="276">・或子目錄 skills/</text>
+  <text class="s" x="36" y="306">只在碰到相符檔案時載入</text>
+  <rect class="good" x="224" y="206" width="188" height="112" rx="8"/>
+  <text class="b gt" x="236" y="230">後端</text>
+  <text x="236" y="254">・paths: services/**</text>
+  <text x="236" y="276">・資料庫、API 規範</text>
+  <text class="s" x="236" y="306">只在碰到相符檔案時載入</text>
+  <rect class="good" x="424" y="206" width="188" height="112" rx="8"/>
+  <text class="b gt" x="436" y="230">資安</text>
+  <text x="436" y="254">・paths: auth/**</text>
+  <text x="436" y="276">・安全檢查清單</text>
+  <text class="s" x="436" y="306">只在碰到相符檔案時載入</text>
+  <text class="s" x="24" y="350">重或少用的 skill：disable-model-invocation: true，描述不佔 context，也不會被自動挑中</text>
+  <line class="ln" x1="320" y1="375" x2="320" y2="396" marker-end="url(#a)"/>
+  <rect class="bad" x="12" y="398" width="616" height="108" rx="12"/>
+  <text class="b wt" x="24" y="422">強制層：CI、hook、權限設定</text>
+  <text x="24" y="446">必須每次發生、不能靠模型判斷的檢查，放這裡</text>
+  <text class="s" x="24" y="468">skill 與 CLAUDE.md 只是請求，不保證遵守</text>
+  <text class="s" x="24" y="488">三層 code review 的比較見〈Claude-Agent〉</text>
+</svg>

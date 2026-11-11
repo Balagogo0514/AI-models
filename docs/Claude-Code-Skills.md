@@ -487,12 +487,75 @@ Claude Code 每次對話都是獨立 session，存成一個 `.jsonl` transcript�
 
 ---
 
-## 12. 參考來源
+## 12. 團隊與多部門的 skill 治理
+
+標記：✅ 官方文件明載（〈[Skills](https://code.claude.com/docs/en/skills.md)〉、〈[Manage Claude Code plugins for your organization](https://code.claude.com/docs/en/plugins/org.md)〉、〈[Extend Claude Code](https://code.claude.com/docs/en/features-overview.md)〉）　🛠 建議做法，不是官方流程。
+
+情境：公司專案做 code review，**各部門各自把自己的 skill 放進專案**（假設放在 `.claude/skills/` 並一起提交）。官方沒有說這是錯的，但有幾個具體風險。
+
+### 12.1 各自塞 skill 會發生什麼
+
+| 問題 | 官方依據 | 對 code review 的後果 |
+|---|---|---|
+| **覆寫內建的 `/code-review`** | 專案 skill 與內建指令同名時，你的 skill 會取代內建指令（別名除外）✅ | 某個部門取名 `code-review`，其他人原本的內建流程就悄悄被換掉 |
+| **描述重疊、互相競爭** | 描述模糊或重疊時，Claude 可能挑錯，或漏掉該用的 ✅ | 同一份 PR 會依觸發到哪個 skill 而用不同標準審，結果不穩定、難以稽核 |
+| **context 成本累加** | 每個列出的 skill 每一輪都佔 context，不管有沒有用到；每個描述最多保留 1,536 字元 ✅ | N 個部門乘以數個 skill，常駐成本由所有人分攤；`/skill-doctor` 可看每個 skill 的成本 |
+| **權限預先放行** | `allowed-tools` 會在 skill 執行那一輪免詢問放行工具；官方明說要審查提交進 repo 的 skill 的 `allowed-tools` ✅ | 任何部門的 skill 都可能預先放行 Bash 之類的工具，卻沒有人統一審 |
+| **無擁有者、版本與發佈管道** | plugin marketplace 支援版本固定與 release channel ✅ | 專案內的 skill 隨程式碼走，沒有「誰負責、何時升級」 |
+
+同名的情況：同一個目錄不能有兩個同名資料夾；放在不同子目錄的同名 skill 會**都載入**，但要用帶路徑的名稱呼叫（例如 `/apps/web:deploy`）✅；優先序是 enterprise > personal > project ✅。
+
+### 12.2 建議結構
+
+![多部門團隊的 skill 結構：公司層 plugin marketplace 由單一 owner 維護共同的 code-review 流程並用 managed settings 強制啟用；專案層前端、後端、資安的差異用帶 paths 條件的規則承接；強制層放 CI、hook 與權限設定](figures/claude-skills-governance-structure.svg)
+
+- **共同流程只留一份**：用 plugin 發佈，plugin 的 skill 有命名空間（`/plugin-name:skill-name`），不會和別人同名衝突 ✅。
+- **部門差異用規則承接，而不是另一個 review skill**：有 `paths:` 條件的規則與子目錄的 skill 都是按需載入 ✅（子目錄的 skill 在 Claude 讀或編輯該子目錄的檔案時才載入）；skill 本身也有 `paths` 欄位可限制啟用範圍 ✅。
+- **重或少用的設成手動**：`disable-model-invocation: true`，描述不佔 context，也不會被自動挑中 ✅。
+- **必須做的檢查別只靠 skill**：放進 CI、hook 或權限設定；skill 與 CLAUDE.md 只是請求 ✅。三層 code review 的比較見〈[Claude-Agent](Claude-Agent.md)〉。
+
+### 12.3 想強制時用哪個設定
+
+![想強制時用哪個設定：全公司一套用 extraKnownMarketplaces 加 enabledPlugins；只允許公司來源用 strictKnownMarketplaces 加 disableSideloadFlags；不准另放專案 skill 用 strictPluginOnlyCustomization；各部門不同設定要分別發給各群組；隱藏 skill 用 skillOverrides 但不影響 plugin；封鎖特定 plugin 用 enabledPlugins false](figures/claude-skills-governance-switches.svg)
+
+| 目的 | 設定 | 注意 |
+|---|---|---|
+| 全公司都有同一套 | managed settings 的 `extraKnownMarketplaces` ＋ `enabledPlugins` | 使用者在自己的 scope 停用也擋不住，managed 優先 ✅ |
+| 只允許公司的來源 | `strictKnownMarketplaces`（允許清單）＋ `disableSideloadFlags` | 只設允許清單卻漏掉 `{ "source": "skills-dir" }`，使用者放在 `.claude/skills/` 的**目錄型 plugin** 會停止載入；純 `SKILL.md` 不受影響 ✅ |
+| 不准專案或個人另放 skill | `strictPluginOnlyCustomization`，可只鎖 `["skills"]` | 會讓現有的專案 skill 失效；要搭配上面兩項才完整 ✅ |
+| 各部門不同設定 | 把設定分別發給各群組 | 所有 plugin 相關設定都套用到收到設定的每個人，沒有「依使用者或部門」的單一開關 ✅ |
+| 隱藏某個 skill | `skillOverrides`（`on`／`name-only`／`user-invocable-only`／`off`） | **不影響 plugin 的 skill**；plugin 要用 `/plugin` 或 `enabledPlugins: false` ✅ |
+| 封鎖特定 plugin | managed `enabledPlugins` 設為 `false` | 所有 scope 都擋，且從 marketplace 列表隱藏 ✅ |
+
+另外：managed 設定只會從**一個來源**生效（server-managed、MDM、設定檔依序檢查），若要合併要設 `managedSourcesBehavior: "merge"` ✅。稽核可用 OpenTelemetry 的 `plugin_installed`、`plugin_loaded` 事件 ✅。
+
+### 12.4 整頓步驟 🛠
+
+![整頓多部門 skill 的六個步驟：盤點、分類、指定 owner、發佈成 plugin、鎖定來源、評測驗證，鎖定來源要等前面做完再開](figures/claude-skills-governance-steps.svg)
+
+1. **盤點**：列出所有 review 相關 skill 的名稱、描述、擁有者、`allowed-tools`，用 `/skill-doctor` 看成本。
+2. **分類**：重複的合併、部門專屬的改成規則、過期的刪除。
+3. **指定一個 owner 與唯一入口**：其他部門以 PR 提需求，不自己另開 skill。專案內的 `.claude/` 可用 CODEOWNERS 要求審查（這是 GitHub 的功能，不是 Claude Code 的）。
+4. **發佈成 plugin**：放在公司 marketplace，用 managed settings 強制啟用。
+5. **鎖定來源**：`strictPluginOnlyCustomization` 等前面做完再開，否則現有專案 skill 會全部失效。
+6. **用評測驗證**：拿真實 PR 比較整頓前後的審查結果與觸發是否正確（第 11 節的 `skill-creator` 可做觸發評測）。
+
+### 12.5 取捨與限制
+
+- **部門專屬的知識是合理需求**：問題不在「部門有自己的 skill」，而在「各自塞進同一個專案、重複實作 review 流程、沒有治理」。
+- **強制條款會影響所有人**：先和各部門溝通再開。
+- **我不清楚你們 repo 的實際結構**（例如是否 monorepo），以上是通用版；`strictPluginOnlyCustomization` 的實際影響要在測試環境先驗證 ⚠️。
+
+---
+
+## 13. 參考來源
 
 - [GitHub - obra/superpowers](https://github.com/obra/superpowers)
 - [GitHub - OthmanAdi/planning-with-files](https://github.com/othmanadi/planning-with-files)
 - [GitHub - mattpocock/skills](https://github.com/mattpocock/skills)：README、`skills/productivity/grill-me/SKILL.md`、`skills/productivity/grilling/SKILL.md`、`skills/engineering/grill-with-docs/SKILL.md`（2026-11-11 讀取 `main`）
 - Claude Code 官方〈[Extend Claude Code](https://code.claude.com/docs/en/features-overview.md)〉：user-only skill 的 context 成本、`skillOverrides`、skill 描述重疊的警告
+- Claude Code 官方〈[Skills](https://code.claude.com/docs/en/skills.md)〉：skill 的位置、同名優先序、`allowed-tools`、`paths`、`skillOverrides`
+- Claude Code 官方〈[Manage Claude Code plugins for your organization](https://code.claude.com/docs/en/plugins/org.md)〉：`extraKnownMarketplaces`、`enabledPlugins`、`strictKnownMarketplaces`、`strictPluginOnlyCustomization`、`disableSideloadFlags`
 - [Plugins reference - Claude Code Docs](https://code.claude.com/docs/en/plugins-reference)
 - 本機 `superpowers` plugin 原始碼：`~/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/`（`.claude-plugin/plugin.json`、`hooks/hooks.json`、`skills/*/SKILL.md`）
 - 本機 `skill-creator` plugin 原始碼：`~/.claude/plugins/cache/claude-plugins-official/skill-creator/unknown/skills/skill-creator/SKILL.md`
