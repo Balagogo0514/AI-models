@@ -365,6 +365,48 @@ Claude Code 每次對話都是獨立 session，存成一個 `.jsonl` transcript�
 
 > ⚠️ 以上處理方式是依官方的載入與優先規則推出來的，我沒有在三者並裝的實際環境測過行為。
 
+### 8.7 會不會讓 LLM 更多來回、token 更多？
+
+標記：✅ 官方〈[Manage costs effectively](https://code.claude.com/docs/en/costs.md)〉與〈[Extend Claude Code](https://code.claude.com/docs/en/features-overview.md)〉明載　⚠️ 推論或未實測。
+
+**簡短回答**：**會，但來源不同、大小差很多。** 官方沒有針對這三個 skill 並存的實測數字，所以下面是方向，不是用量。
+
+**兩個先記住的官方事實** ✅
+
+- Claude Code **每次請求都把整個對話重送一次**，每次使用工具又是一個新請求，所以 context 越長，每個請求越貴。
+- 有 prompt caching，重送的歷史多半以**快取讀取價**計算（一般是輸入價的 0.1 倍；Sonnet 5.5 與 Opus 5.5 為 0.05 倍），但它**仍佔 context 視窗**，也讓壓縮更早發生。
+
+![token 與來回增加的來源與相對大小：三組 skill 描述常駐（固定、小）；superpowers 的注入（一次性、中）；planning-with-files 的 hook（每輪累積、大）；superpowers 流程（視任務）；grill-me 問答（視輪數）；session 越拉越長（累積）](figures/claude-skills-tokens.svg)
+
+| 來源 | 多出什麼 | 大小 | 說明 |
+|---|---|---|---|
+| **三組 skill 描述常駐** | 每次請求多帶描述文字 | 小 | 在穩定的前綴裡，多半走快取價；grill-me 本身是 user-only，用到前不佔 ✅ |
+| **superpowers 的 SessionStart 注入** | 新對話、`/clear`、壓縮後各注入一次 `using-superpowers` 全文 | 中 | 之後留在對話歷史裡，每次請求重送 |
+| **planning-with-files 的 hook** | `UserPromptSubmit` 每次送出 prompt 重讀計畫；`PostToolUse` 每次工具呼叫後提醒更新進度 | **大，三者中最容易吃 token** | 官方說 **hook 輸出會成為對話的一部分** ✅，所以一路累積；`Stop` 在未完成時擋停，可能多出額外回合 ⚠️ |
+| **superpowers 的流程本身** | brainstorming → 計畫 → TDD → review → 驗證，回合與工具呼叫都變多；`subagent-driven-development` 每個 subagent 另送自己的請求 ✅ | 視任務 | 這是「方法論的成本」，不是 skill 檔案的成本 |
+| **grill-me** | 你和 Claude 的問答輪次變多；事實用 subagent 代查（另外的 token） | 視輪數 | 設計成**每輪批次提問**，已盡量減少來回（見 4.2） |
+| **session 越拉越長** | 每個請求都更貴；壓縮本身是大請求 ✅ | 中到大 | 三者並裝時這個效應會被放大 ⚠️ |
+
+**也有省 token 的一面**
+
+- **hook 可以省**：官方建議用 hook 預處理資料，例如只回傳 log 裡的錯誤行，把幾萬 token 降到幾百 ✅。
+- **事前澄清可以避免重工**：官方對 plan mode 的說法是「避免方向錯了之後的昂貴重做」；`grill-me` 與 `brainstorming` 的邏輯類似，但我沒有實測它們省多少 ⚠️。
+- **skill 比 CLAUDE.md 省**：skill 按需載入，CLAUDE.md 每次都在 ✅。
+
+**怎麼省**
+
+1. **只開需要的**：日常只留 superpowers，需要時才叫 `/grill-me`；planning-with-files 只在長時程任務使用。
+2. **planning-with-files 用 `--autonomous`**：拿掉逐工具呼叫的複誦，只在 turn 開頭注入（見 3.6）；單次關閉用 `PLANNING_DISABLED=1`。
+3. **隱藏不要的 skill 描述**：用 `skillOverrides` ✅。
+4. **任務之間用 `/clear`**：官方說陳舊的 context 會在之後每則訊息上浪費 token ✅。
+5. **大量輸出交給 subagent，並選小模型**：簡單任務可指定 `model: haiku`；注意 subagent 自己的請求仍算你的用量 ✅。
+
+**怎麼量，而不是猜**
+
+- **`/context`**：看目前各類內容佔多少，包含 skill 描述與 MCP ✅。
+- **`/usage`**：看本次 session 的 token 與 `Prompt cache` 命中率；訂閱方案另有按 skill、subagent、plugin 的用量歸屬與建議 ✅。
+- **做 A/B**：同一個任務，一次只開 superpowers、一次三個都開，比較 `/usage` 的數字。這是唯一能得到你環境真實答案的方法。
+
 ---
 
 ## 9. 一般程式開發工作該用哪個？

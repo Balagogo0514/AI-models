@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">三個 skill 並存時，token 與來回增加的來源與相對大小</title>
+  <desc id="d">六個來源：三組 skill 描述常駐屬固定成本、相對小，多半走快取價；superpowers 的 SessionStart 注入屬一次性、中等，之後留在歷史；planning-with-files 的 hook 每輪累積、相對最大，hook 輸出會進對話；superpowers 的流程屬流程成本、視任務；grill-me 的問答屬流程成本、視輪數但批次提問；長 session 累積使每次請求更貴並使壓縮更頻繁。大小是定性的相對等級，不是實測數字。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">token 與來回從哪裡增加？</text>
+  <rect class="hd" x="12" y="44" width="616" height="28" rx="6"/>
+  <text class="b" x="20" y="63">來源</text>
+  <text class="b" x="216" y="63">類型</text>
+  <text class="b" x="322" y="63">相對大小</text>
+  <text class="b" x="458" y="63">說明</text>
+  <rect class="box" x="12" y="80" width="616" height="46" rx="6"/>
+  <text class="b" x="20" y="108">三組 skill 描述常駐</text>
+  <rect class="box" x="212" y="92" width="84" height="22" rx="11"/>
+  <text x="254" y="108" text-anchor="middle">固定</text>
+  <rect class="acc" x="322" y="95" width="38" height="16" rx="4"/>
+  <rect class="box" x="364" y="95" width="38" height="16" rx="4"/>
+  <rect class="box" x="406" y="95" width="38" height="16" rx="4"/>
+  <text class="s" x="458" y="108">多半走快取價</text>
+  <rect class="box" x="12" y="132" width="616" height="46" rx="6"/>
+  <text class="b" x="20" y="160">superpowers 的注入</text>
+  <rect class="box" x="212" y="144" width="84" height="22" rx="11"/>
+  <text x="254" y="160" text-anchor="middle">一次性</text>
+  <rect class="acc" x="322" y="147" width="38" height="16" rx="4"/>
+  <rect class="acc" x="364" y="147" width="38" height="16" rx="4"/>
+  <rect class="box" x="406" y="147" width="38" height="16" rx="4"/>
+  <text class="s" x="458" y="160">之後留在歷史</text>
+  <rect class="bad" x="12" y="184" width="616" height="46" rx="6"/>
+  <text class="b" x="20" y="212">planning-with-files hook</text>
+  <rect class="box" x="212" y="196" width="84" height="22" rx="11"/>
+  <text x="254" y="212" text-anchor="middle">每輪累積</text>
+  <rect class="bad" x="322" y="199" width="38" height="16" rx="4"/>
+  <rect class="bad" x="364" y="199" width="38" height="16" rx="4"/>
+  <rect class="bad" x="406" y="199" width="38" height="16" rx="4"/>
+  <text class="s" x="458" y="212">hook 輸出進對話</text>
+  <rect class="box" x="12" y="236" width="616" height="46" rx="6"/>
+  <text class="b" x="20" y="264">superpowers 流程本身</text>
+  <rect class="box" x="212" y="248" width="84" height="22" rx="11"/>
+  <text x="254" y="264" text-anchor="middle">流程</text>
+  <rect class="acc" x="322" y="251" width="38" height="16" rx="4"/>
+  <rect class="acc" x="364" y="251" width="38" height="16" rx="4"/>
+  <rect class="box" x="406" y="251" width="38" height="16" rx="4"/>
+  <text class="s" x="458" y="264">視任務；回合變多</text>
+  <rect class="box" x="12" y="288" width="616" height="46" rx="6"/>
+  <text class="b" x="20" y="316">grill-me 問答</text>
+  <rect class="box" x="212" y="300" width="84" height="22" rx="11"/>
+  <text x="254" y="316" text-anchor="middle">流程</text>
+  <rect class="acc" x="322" y="303" width="38" height="16" rx="4"/>
+  <rect class="acc" x="364" y="303" width="38" height="16" rx="4"/>
+  <rect class="box" x="406" y="303" width="38" height="16" rx="4"/>
+  <text class="s" x="458" y="316">批次提問、視輪數</text>
+  <rect class="box" x="12" y="340" width="616" height="46" rx="6"/>
+  <text class="b" x="20" y="368">session 越拉越長</text>
+  <rect class="box" x="212" y="352" width="84" height="22" rx="11"/>
+  <text x="254" y="368" text-anchor="middle">累積</text>
+  <rect class="acc" x="322" y="355" width="38" height="16" rx="4"/>
+  <rect class="acc" x="364" y="355" width="38" height="16" rx="4"/>
+  <rect class="box" x="406" y="355" width="38" height="16" rx="4"/>
+  <text class="s" x="458" y="368">壓縮更頻繁</text>
+  <text class="s" x="320" y="400" text-anchor="middle">相對大小是定性等級，不是實測數字</text>
+  <rect class="dash" x="12" y="412" width="616" height="96" rx="8"/>
+  <text class="b" x="24" y="434">怎麼量，而不是猜</text>
+  <text x="24" y="456">/context：目前各類內容佔多少　·　/usage：本次 token、快取命中率、各 skill 與 plugin 的用量</text>
+  <text x="24" y="478">A/B：同一任務，只開 superpowers 對比三個都開，比較 /usage</text>
+  <text class="s" x="24" y="498">最省：planning-with-files 用 --autonomous；任務之間 /clear；不需要的 skill 隱藏</text>
+</svg>
