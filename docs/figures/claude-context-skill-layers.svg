@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 470" role="img" aria-labelledby="t d">
+  <title id="t">skill 的四個層次：文字與載入規則決定進 context 的內容，harness 規則與腳本在 context 外運作</title>
+  <desc id="d">左邊是模型看得到的 context：skill 的描述與本文是文字，被載入後成為對話的一部分，模型讀了再詮釋，結果會變。載入層規則決定描述何時常駐、本文何時進來、壓縮後如何重新注入。右邊是 context 外由 harness 執行的部分：disable-model-invocation、allowed-tools、paths、context fork 等規則，以及腳本與 plugin 的 hook。harness 規則決定什麼能進 context，腳本只把輸出帶回 context。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="468.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">skill 對模型是文字；harness 另外做了三件事</text>
+  <rect class="acc" x="12" y="44" width="300" height="380" rx="12"/>
+  <text class="b at" x="24" y="68">Context（模型看得到的）</text>
+  <rect class="box" x="24" y="82" width="276" height="112" rx="8"/>
+  <text class="b" x="36" y="106">① 文字層</text>
+  <text x="36" y="128">SKILL.md 的描述與本文</text>
+  <text class="s" x="36" y="150">模型讀了再詮釋，結果會變</text>
+  <text class="s" x="36" y="170">沒有執行力，只影響下一步</text>
+  <rect class="box" x="24" y="206" width="276" height="130" rx="8"/>
+  <text class="b" x="36" y="230">② 載入層（規則決定何時進來）</text>
+  <text x="36" y="252">・描述每次請求常駐（成本低）</text>
+  <text x="36" y="272">・本文被呼叫時才載入</text>
+  <text x="36" y="292">・壓縮後重新注入：單個 ≤5,000</text>
+  <text x="36" y="312">・tokens、合計 ≤25,000</text>
+  <text x="24" y="362">腳本的輸出、hook 的輸出</text>
+  <text x="24" y="382">也會回到這裡，成為對話的一部分</text>
+  <text class="s" x="24" y="408">官方：skill 是 Claude 讀了再遵循的指示</text>
+  <rect class="dash" x="328" y="44" width="300" height="380" rx="8"/>
+  <text class="b m" x="340" y="68">Context 外（harness 執行）</text>
+  <rect class="good" x="340" y="82" width="276" height="136" rx="8"/>
+  <text class="b gt" x="352" y="106">③ harness 規則（不是文字）</text>
+  <text x="352" y="128">・disable-model-invocation：擋下呼叫</text>
+  <text x="352" y="146">・allowed-tools：免詢問放行，不限制</text>
+  <text x="352" y="164">　可用工具</text>
+  <text x="352" y="182">・paths：限制啟用範圍</text>
+  <text x="352" y="200">・context: fork：在隔離環境執行</text>
+  <rect class="bad" x="340" y="230" width="276" height="96" rx="8"/>
+  <text class="b wt" x="352" y="254">④ 附帶能力</text>
+  <text x="352" y="276">・隨 skill 附的腳本</text>
+  <text x="352" y="296">・plugin 的 hook（事件觸發）</text>
+  <text class="s" x="352" y="316">在 context 外執行，只帶回輸出</text>
+  <text class="b" x="340" y="352">要「保證」做到：用 hook 或權限設定</text>
+  <text class="s" x="340" y="374">skill 的內容是 context，</text>
+  <text class="s" x="340" y="392">skill 的行為保證不是</text>
+  <text class="s" x="320" y="450" text-anchor="middle">依官方〈Extend Claude Code〉〈Skills〉〈Explore the context window〉整理</text>
+</svg>

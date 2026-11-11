@@ -1,7 +1,7 @@
 # Claude Code 的 Context 如何組成：記憶放在哪裡？會互相取代嗎？
 
 > 資料來源：Claude Code 官方文件 [Memory](https://code.claude.com/docs/en/memory.md)、[Explore the context window](https://code.claude.com/docs/en/context-window.md)、[Prompt caching](https://code.claude.com/docs/en/prompt-caching.md)、[Manage sessions](https://code.claude.com/docs/en/sessions.md)、[Explore the .claude directory](https://code.claude.com/docs/en/claude-directory.md)、[Subagents](https://code.claude.com/docs/en/sub-agents.md)、[Settings](https://code.claude.com/docs/en/settings.md)、[Extend Claude Code](https://code.claude.com/docs/en/features-overview.md)；另以 Claude Code v2.1.318 在本機（雲端容器）觀察檔案位置。
-> 更新日期：2026-11-09
+> 更新日期：2026-11-11
 >
 > 標記：✅ 官方文件明載　👁 本機實際觀察　⚠️ 官方未明載，屬推論或版本相依
 
@@ -16,7 +16,7 @@
 | 專案目錄的 memory 是什麼？ | 要分兩種：**你寫的** `./CLAUDE.md`、`./.claude/rules/`、`./CLAUDE.local.md`（在專案目錄裡）；以及 **Claude 自己寫的 auto memory**（在 `~/.claude/projects/<project>/memory/`，**不在**專案目錄裡）。✅ |
 | 會互相取代嗎？ | **大多不會。** CLAUDE.md 各層是疊加（concatenate）；CLAUDE.md 與 auto memory 是互補、同時載入。唯一的「取代」是：預設只在**找不到任何 CLAUDE.md** 時才改讀 AGENTS.md；以及 `/compact` 會把**對話**換成摘要（但記憶檔會從磁碟重新注入）。✅ |
 | 切換帳號會影響這些紀錄嗎？ | 本機的逐字稿與 auto memory 只依工作目錄路徑存放，不分帳號；換帳號後應該仍看得到並能 resume，但官方未明說 ⚠️，且模型、組織設定、啟動旗標不一定相同（見 §3.2）。 |
-| skill、MCP、subagent、hook、plugin 對 context 的意義？ | 它們是在決定**什麼內容進 context、何時進、誰決定**：CLAUDE.md 與 output style 常駐；skill 只有描述常駐、本文按需；MCP 只有工具名稱常駐、**工具結果會進 context**；subagent 在獨立 context 做事、只回傳摘要；hook 在 context 外執行、零成本；plugin 只是打包層（見 §六）。✅ |
+| skill、MCP、subagent、hook、plugin 對 context 的意義？ | 它們是在決定**什麼內容進 context、何時進、誰決定**：CLAUDE.md 與 output style 常駐；skill 只有描述常駐、本文按需；MCP 只有工具名稱常駐、**工具結果會進 context**；subagent 在獨立 context 做事、只回傳摘要；hook 在 context 外執行、零成本；plugin 只是打包層（見 §六）。對模型來說它們都只是 context（見 §6.1）。✅ |
 
 ---
 
@@ -266,7 +266,33 @@ Subagent 以全新、隔離的 context 開始 ✅：
 
 Claude Code 有一整層「擴充」機制，用來決定 Claude 知道什麼、能連到什麼、怎麼自動化。從 context 的角度看，它們的差別只有一件事：**什麼內容、在什麼時候、由誰決定，被放進 context window。**（本章依官方〈Extend Claude Code〉整理 ✅）
 
-### 6.1 各名詞的作用與對 context 的影響
+### 6.1 先釐清：對模型來說，skill 就是 context 中的一段內容
+
+模型只看得到 token；「skill」「MCP」「subagent」這些名詞都是 **harness（Claude Code 這層）的概念**，不是模型的概念。所以回答「skill 是不是只是 context 中的某段內容」：**對模型，幾乎是；對整個機制，不只。**
+
+![skill 的四個層次：文字層與載入層在 context 內，harness 規則與附帶的腳本、hook 在 context 外運作](figures/claude-context-skill-layers.svg)
+
+| 層 | 內容 | 是不是 context |
+|---|---|---|
+| ① **文字層** | SKILL.md 的描述與本文 | 是。官方說 skill 是「Claude 讀了再遵循的指示」，Claude 在詮釋它，所以結果會變 ✅ |
+| ② **載入層** | 描述每次請求常駐；本文被呼叫時才載入；壓縮後重新注入，單個 ≤5,000、合計 ≤25,000 tokens ✅ | harness 的規則，決定「何時、多少」進 context |
+| ③ **harness 規則** | `disable-model-invocation`（被擋下時 Claude Code 會封鎖該次呼叫）、`allowed-tools`（免詢問放行，但**不限制**有哪些工具可用）、`paths`（限制啟用範圍）、`context: fork`（在隔離的 subagent 跑）✅ | **不是文字**，是 harness 執行的規則 |
+| ④ **附帶能力** | 隨 skill 附的腳本、plugin 的 hook | 在 context 外執行，只有輸出會進來 ✅ |
+
+**一句話**：skill 的**內容**是 context，skill 的**行為保證**不是。
+
+**這個看法的實際意義**
+
+1. **skill、CLAUDE.md、貼進對話的文字，在模型眼中沒有本質差別**，差別只在「何時載入」「誰決定」「能不能復用與打包」。
+2. **skill 的價值在於延遲載入**：不像 CLAUDE.md 每次都付費，用到才進來。這是 context 管理，不是新能力。
+3. **要「保證」就不能靠 skill**：模型是否採用它由模型決定；要強制，用 hook 或權限設定 ✅。
+4. **多個 skill 衝突，就是同一份 context 裡的指示互相打架**，沒有仲裁（見〈[Claude-Code-Skills](Claude-Code-Skills.md)〉）。
+5. **描述是路由訊號**：它決定 skill 會不會在對的時候被載入，描述重疊就會挑錯 ✅。
+6. **真正讓 skill 多於文字的是腳本**：腳本在 context 外執行，只把結果帶回來，這也是省 token 的來源。
+
+> ⚠️ skill 本文被載入時，是以什麼訊息角色進入對話（工具結果、使用者訊息或其他），官方只說「完整內容載入到對話」，沒有說明角色。所以不能斷言它相對於你的指示是優先還是次要，只能說它是對話歷史的一部分。
+
+### 6.2 各名詞的作用與對 context 的影響
 
 | 名詞 | 是什麼、為什麼存在 | 誰決定用 | 對 context 的實質影響 |
 |------|--------------------|----------|------------------------|
@@ -280,7 +306,7 @@ Claude Code 有一整層「擴充」機制，用來決定 Claude 知道什麼、
 | **Plugin／Marketplace** | **打包與分發層**：把 skills、hooks、subagents、MCP 包成一個可安裝單位；plugin 的 skill 加命名空間（如 `/my-plugin:review`） | 你安裝 | 本身不另外佔 context ⚠️（推論）；裡面各元件各自遵守上列規則 |
 | **Code intelligence（LSP）** | 讓 Claude 用語言伺服器做符號導覽與型別錯誤 | Claude | 低；常能取代大範圍讀檔，淨用量可能下降 |
 
-### 6.2 什麼時候進入 context
+### 6.3 什麼時候進入 context
 
 ![各擴充機制何時進入 context：常駐（CLAUDE.md、rules、auto memory 索引、output style、skill 名稱與描述、MCP 工具名稱）、按需（skill 本文、MCP 完整 schema、子目錄 CLAUDE.md、檔案、工具結果、hook 輸出）、隔離（subagent、workflow）、不進（hook、plugin）](figures/claude-context-extensions-loading.svg)
 
@@ -288,7 +314,7 @@ Claude Code 有一整層「擴充」機制，用來決定 Claude 知道什麼、
 - **按需**的內容進入對話歷史，`/compact` 時會被一起摘要掉（見 §5.4）。
 - 用 `/context all` 可以看每個已載入的 MCP 工具用了多少 tokens；用 `/mcp` 看各 server 狀態，不用的 server 可以斷線。✅
 
-### 6.3 這件事該放哪
+### 6.4 這件事該放哪
 
 ![依序問六個問題決定放哪：永遠要遵守的放 CLAUDE.md；必須每次發生的放 hook；有時才需要的放 skill；連外部服務用 MCP；大量中間輸出交給 subagent；多 repo 重用則打包成 plugin](figures/claude-context-extensions-decision.svg)
 
@@ -310,11 +336,11 @@ Claude Code 有一整層「擴充」機制，用來決定 Claude 知道什麼、
 - **MCP vs Skill**：MCP 提供**工具與資料存取**；skill 提供**怎麼用這些工具的知識**。兩者解決不同問題，常一起用。
 - **Hook vs Skill**：hook 在事件發生時**確定執行**，不經 Claude 判斷；skill 是 Claude **讀了再詮釋**的指示，結果會變。「絕不編輯 `.env`」寫在 CLAUDE.md 或 skill 裡只是請求，用 `PreToolUse` hook 擋下才是強制。
 
-### 6.4 同名時：疊加、合併還是覆寫
+### 6.5 同名時：疊加、合併還是覆寫
 
 ![同一種機制在多個層級都有定義時的語意：CLAUDE.md 疊加、hook 合併；skill、subagent、MCP server 依名稱覆寫並各有優先序；settings.json 較高層覆寫較低層](figures/claude-context-extensions-layering.svg)
 
-### 6.5 搭配方式
+### 6.6 搭配方式
 
 | 組合 | 做法 | 例子 |
 |------|------|------|
@@ -323,7 +349,7 @@ Claude Code 有一整層「擴充」機制，用來決定 Claude 知道什麼、
 | Skill + Subagent | skill 同時啟動多個 subagent 平行工作 | `/audit` 啟動安全、效能、風格三個 subagent |
 | Hook + MCP | hook 透過 MCP 觸發外部動作 | 編輯重要檔案後，hook 透過 MCP 發 Slack 通知 |
 
-### 6.6 「Agent」有兩種意思
+### 6.7 「Agent」有兩種意思
 
 - **概念上的 agent**：模型加工具加一個迴圈（蒐集 context → 行動 → 驗證）。Claude Code 本身就是這樣運作。
 - **Claude Code 的 subagent**：這個迴圈的「分身」，擁有獨立 context，用來隔離雜訊或平行處理；它不會繼承主對話歷史與主對話的 auto memory（見 §5.6）。
