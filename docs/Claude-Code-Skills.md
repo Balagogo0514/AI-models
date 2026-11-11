@@ -291,7 +291,38 @@ Claude Code 每次對話都是獨立 session，存成一個 `.jsonl` transcript�
 
 **結論**：Claude Code **不會自動仲裁**三者，要靠你自己分工。
 
-### 8.3 兩兩之間的衝突風險
+### 8.3 三個都會執行嗎？
+
+**不會三個都「主動」執行，但 superpowers 與 planning-with-files（以 plugin 安裝時）的 hook 會一直在背景跑。** 裝了不等於執行，要看它靠什麼觸發。
+
+![三個 skill 誰會自動執行：superpowers 的 hook 與依描述挑都會；planning-with-files 視安裝方式與描述符合；grill-me 只有手動 /grill-me，僅它轉呼叫的 grilling 可被挑；hook 是合併的](figures/claude-skills-trigger.svg)
+
+| 觸發方式 | superpowers | planning-with-files | grill-me |
+|---|---|---|---|
+| **事件觸發的 hook**（不用你叫，每次都跑） | ✅ `SessionStart`（新對話、`/clear`、壓縮後）注入 `using-superpowers` 全文 | ✅ 以 plugin 安裝時有 6 種：`SessionStart`、`UserPromptSubmit`、`PreToolUse`、`PostToolUse`、`PreCompact`、`Stop` | 沒有 ⚠️（README 未見，未逐檔驗證） |
+| **Claude 依任務挑**（描述比對） | ✅ 會，且被 `using-superpowers`「有 1% 可能相關就必須呼叫」的規則推著 | 描述符合才會 | 它本身不會；轉呼叫的 `grilling` 可被挑 ⚠️ |
+| **只有你手動叫才動** | 可選（點名某個 skill） | `/plan` 等指令 | ✅ `/grill-me`（`disable-model-invocation: true`） |
+
+**一個日常情境**：你說「我要做 X 功能」。
+
+- **superpowers**：自動介入，通常先走 `brainstorming`。
+- **planning-with-files**：若以 plugin 安裝且專案已有計畫，hook 會在每次送出 prompt 時把計畫重讀進來；skill 本身要描述符合才會被挑。
+- **grill-me**：不動，除非你打 `/grill-me`。
+
+**關鍵點**
+
+- **hook 是合併的** ✅：兩個 plugin 的 hook 會同時觸發，沒有誰蓋掉誰，所以 superpowers 與 planning-with-files 的 hook 通常**兩個都在跑**。
+- **只裝 skill 沒有 hook**：planning-with-files 若以 `npx skills add` 安裝，就沒有 hook，也沒有背景執行的那部分（見 3.3、3.4）。
+- **同一個任務可能觸發多個 skill**：官方沒有說一次只能用一個，這正是「兩份計畫檔」風險的來源 ⚠️（推論）。
+- **你打 `/grill-me` 時，另外兩個仍在**：superpowers 注入的內容還在 context 裡，planning-with-files 的 hook 照樣觸發，不會因為你呼叫 grill-me 而暫停。這個互動沒有實測 ⚠️。
+
+**想只讓其中一個執行**
+
+- 不要 planning-with-files 的背景 hook：停用該 plugin，或單次設 `PLANNING_DISABLED=1`（見第 10 節）。
+- 不要 superpowers 的自動介入：只能停用該 plugin；文件裡沒看到單獨關閉它 hook 的開關 ⚠️。
+- grill-me：不需要處理，它本來就只由你叫才動。
+
+### 8.4 兩兩之間的衝突風險
 
 ![三個 skill 並存時兩兩之間的衝突風險：superpowers 與 planning-with-files 風險高（兩份計畫檔、hook 疊加）；grill-me 與 superpowers 風險中（與 brainstorming 重疊）；grill-me 與 planning-with-files 風險低；三者並裝時 context 成本累加](figures/claude-skills-conflict.svg)
 
@@ -302,7 +333,7 @@ Claude Code 每次對話都是獨立 session，存成一個 `.jsonl` transcript�
 | grill-me × planning-with-files | 低 | 一個只在你手動呼叫時介入，一個負責持久化 |
 | 三者並裝 | context 成本累加 | 三組 skill 描述常駐，再加 SessionStart 注入 `using-superpowers` 全文、planning-with-files 每次重新讀回計畫（見 4.5 的圖） |
 
-### 8.4 怎麼處理（由輕到重）
+### 8.5 怎麼處理（由輕到重）
 
 ![skill 衝突的處理方式：把分工寫進 CLAUDE.md（請求，不保證）；用 skillOverrides 隱藏（設定，有效）；只裝需要的 skill（安裝層）；暫停整個 plugin（停用，有效）；用 hook 或權限設定強制（強制）](figures/claude-skills-handling.svg)
 
@@ -320,7 +351,7 @@ Claude Code 每次對話都是獨立 session，存成一個 `.jsonl` transcript�
 4. **暫停整個 plugin**：`/plugin disable planning-with-files@planning-with-files`，恢復用 `/plugin enable`；單次 session 可用 `PLANNING_DISABLED=1`（見第 10 節）。因為 hook 是合併的，**無法讓其中一個 hook 蓋掉另一個**，要消除 hook 疊加只能停用其中一個 plugin。✅
 5. **必須強制的事用 hook 或權限設定**：不要只靠 skill 或 CLAUDE.md ✅。
 
-### 8.5 怎麼確認有沒有在打架，與建議配置
+### 8.6 怎麼確認有沒有在打架，與建議配置
 
 - 用 `/context` 看三組 skill 描述與注入內容實際佔了多少。
 - 看對話裡實際觸發了哪些 skill：同一個任務是否啟動了兩套流程、是否出現兩份計畫檔、是否被重複提問。
