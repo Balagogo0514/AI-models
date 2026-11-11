@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 530" role="img" aria-labelledby="t d">
+  <title id="t">local knowledge 該放哪：skill 輔助檔、MCP 服務、專案 CLAUDE.md 或 PLUGIN_DATA</title>
+  <desc id="d">小而穩定的規範與清單放在 skill 目錄的輔助檔，用到才載入。大、常改、要搜尋的知識用 MCP 服務提供檢索，知識留在服務端。權限敏感的在服務端依使用者身分過濾。只屬於某個專案的放在該專案的 CLAUDE.md 或帶 paths 的 rules。要快取或建索引的寫進 CLAUDE_PLUGIN_DATA，不要寫進 CLAUDE_PLUGIN_ROOT。plugin 根目錄的 CLAUDE.md 不會被載入。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="528.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">local knowledge 該放哪？</text>
+  <rect class="acc" x="12" y="44" width="290" height="64" rx="10"/>
+  <text x="24" y="82">小而穩定：規範、檢查清單、範例</text>
+  <line class="ln" x1="302" y1="76" x2="336" y2="76" marker-end="url(#a)"/>
+  <rect class="good" x="338" y="44" width="290" height="64" rx="10"/>
+  <text class="b" x="350" y="70">skill 目錄的輔助檔</text>
+  <text class="s" x="350" y="92">用到才載入，不佔常駐 context</text>
+  <rect class="acc" x="12" y="122" width="290" height="64" rx="10"/>
+  <text x="24" y="160">大、常改、要搜尋：文件庫、wiki</text>
+  <line class="ln" x1="302" y1="154" x2="336" y2="154" marker-end="url(#a)"/>
+  <rect class="good" x="338" y="122" width="290" height="64" rx="10"/>
+  <text class="b" x="350" y="148">MCP 服務（檢索）</text>
+  <text class="s" x="350" y="170">知識留在服務端，不打包進 plugin</text>
+  <rect class="acc" x="12" y="200" width="290" height="64" rx="10"/>
+  <text x="24" y="238">權限敏感</text>
+  <line class="ln" x1="302" y1="232" x2="336" y2="232" marker-end="url(#a)"/>
+  <rect class="good" x="338" y="200" width="290" height="64" rx="10"/>
+  <text class="b" x="350" y="226">服務端依使用者身分過濾</text>
+  <text class="s" x="350" y="248">模型不會自己守權限</text>
+  <rect class="acc" x="12" y="278" width="290" height="64" rx="10"/>
+  <text x="24" y="316">只屬於某一個專案</text>
+  <line class="ln" x1="302" y1="310" x2="336" y2="310" marker-end="url(#a)"/>
+  <rect class="good" x="338" y="278" width="290" height="64" rx="10"/>
+  <text class="b" x="350" y="304">該專案的 CLAUDE.md 或 rules</text>
+  <text class="s" x="350" y="326">帶 paths: 條件則只在碰到相符檔案時載入</text>
+  <rect class="acc" x="12" y="356" width="290" height="64" rx="10"/>
+  <text x="24" y="394">需要快取或建索引</text>
+  <line class="ln" x1="302" y1="388" x2="336" y2="388" marker-end="url(#a)"/>
+  <rect class="good" x="338" y="356" width="290" height="64" rx="10"/>
+  <text class="b" x="350" y="382">${CLAUDE_PLUGIN_DATA}</text>
+  <text class="s" x="350" y="404">更新後仍保留；不要寫進 PLUGIN_ROOT</text>
+  <rect class="bad" x="12" y="438" width="616" height="80" rx="10"/>
+  <text class="b wt" x="24" y="462">兩個限制</text>
+  <text x="24" y="484">plugin 根目錄的 CLAUDE.md 不會載入，validate 會警告；要放指示就寫成 skill</text>
+  <text x="24" y="504">${CLAUDE_PLUGIN_ROOT} 每個版本一份目錄，路徑會隨更新改變，不要在那裡寫狀態</text>
+</svg>

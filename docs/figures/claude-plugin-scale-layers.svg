@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">知識很多時的三層放法：常駐導航、按需領域知識、服務端大型語料</title>
+  <desc id="d">第一層是常駐的導航：少量 skill，描述精準，成本固定且小。第二層是按需載入的領域知識：每個領域一個 skill，SKILL.md 只當地圖並指向輔助檔，用腳本取代長文。第三層是服務端的大型語料：用 MCP 檢索服務，工具少而精，知識留在服務端。專案專屬的事實放該 repo 的 CLAUDE.md 或帶 paths 的 rules。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">知識很多時：三層放法</text>
+  <rect class="acc" x="12" y="44" width="616" height="112" rx="12"/>
+  <text class="b at" x="24" y="68">L1 常駐：導航（成本固定且小）</text>
+  <text x="24" y="90">少量 skill，描述精準；例如「公司知識導覽」列出各領域與去哪找 🛠</text>
+  <text class="s" x="24" y="112">描述有總預算（約為 context 視窗的 1%）；超出會從最少用的開始丟描述</text>
+  <text class="s" x="24" y="132">每個描述最多 1,536 字元，關鍵用途放最前面</text>
+  <line class="ln" x1="320" y1="157" x2="320" y2="176" marker-end="url(#a)"/>
+  <rect class="box" x="12" y="178" width="616" height="142" rx="12"/>
+  <text class="b" x="24" y="202">L2 按需：領域知識（用到才載入）</text>
+  <text x="24" y="224">每個領域一個 skill；SKILL.md 只當地圖（&lt;500 行）</text>
+  <text x="24" y="246">→ 指向 reference.md、examples、templates，並寫清楚何時讀</text>
+  <text class="s" x="24" y="268">腳本取代長文：腳本是執行，不是載入，只有輸出進 context</text>
+  <text class="s" x="24" y="288">paths: 限定只在相關程式碼目錄啟用；少用的設 disable-model-invocation</text>
+  <text class="s" x="24" y="308">重要指示放 SKILL.md 最上面：壓縮後只保留開頭</text>
+  <line class="ln" x1="320" y1="321" x2="320" y2="340" marker-end="url(#a)"/>
+  <rect class="good" x="12" y="342" width="616" height="96" rx="12"/>
+  <text class="b gt" x="24" y="366">L3 服務端：大型、常改、要搜尋的語料</text>
+  <text x="24" y="388">MCP 檢索服務；工具少而精：search、get_doc、list_domains，加 domain 參數 🛠</text>
+  <text class="s" x="24" y="410">知識留在服務端，權限依使用者身分過濾；工具定義預設延後載入</text>
+  <rect class="dash" x="12" y="452" width="616" height="56" rx="8"/>
+  <text x="24" y="476">另外：專案專屬的事實放該 repo 的 CLAUDE.md 或帶 paths: 的 rules</text>
+  <text class="s" x="24" y="496">plugin 根目錄的 CLAUDE.md 不會載入；全公司通用規則用 managed CLAUDE.md</text>
+</svg>

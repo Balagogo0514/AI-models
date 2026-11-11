@@ -2,7 +2,7 @@
 
 AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理與訓練、Claude Code／Codex 等 Agent 工具的使用與選型。以繁體中文撰寫。
 
-> 共 15 篇筆記。點標題即可開啟對應文件。
+> 共 16 篇筆記。點標題即可開啟對應文件。
 
 ## 模型與訓練
 
@@ -22,6 +22,7 @@ AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理�
 | [Agentic Engineering](docs/Agentic-Engineering.md) | Graph Engineering：把 Agent 執行流程建模為節點、狀態與轉移 |
 | [Claude Code CLI](docs/Claude-Code-CLI.md) | Claude Code 指令、旗標、斜線指令、Hooks、MCP、Plugin 的完整參考 |
 | [Claude Code Context 組成](docs/Claude-Context.md) | 送給 LLM 的 context 如何組成、記憶（CLAUDE.md／auto memory／逐字稿）放在哪、彼此是否取代 |
+| [建立公司內部 plugin](docs/Claude-Plugin-Internal.md) | 把 skill、agent、MCP、local knowledge 包成內部 plugin：結構、manifest、測試、發佈與全公司強制啟用 |
 | [企業整合模型：RAG、MCP、流程與資源判斷](docs/Enterprise-AI-Integration.md) | 六個整合層次、八階段流程、RAG 與 MCP 怎麼接內部資料與系統、權限階梯、API／自架／微調的資源與成本判斷 |
 | [Claude Code 多 Agent 與 Code Review](docs/Claude-Agent.md) | 平行工作方式選型、多 Agent code review、追蹤彙整，含 fastpath refcount 實戰範例 |
 | [Claude Code Skill／Plugin 比較](docs/Claude-Code-Skills.md) | superpowers、planning-with-files 與 grill-me 的比較 |

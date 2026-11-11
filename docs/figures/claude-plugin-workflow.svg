@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 490" role="img" aria-labelledby="t d">
+  <title id="t">內部 plugin 從本機測試到全公司強制啟用的流程</title>
+  <desc id="d">先用 claude plugin validate 檢查，再用 --plugin-dir 在單一 session 載入，改檔後 /reload-plugins，並用 /plugin 的 Errors 分頁與 /mcp 檢查。接著用 claude plugin eval 驗證行為，放進公司 marketplace 發佈，最後用 managed settings 的 extraKnownMarketplaces 與 enabledPlugins 強制啟用。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="488.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">從本機測試到全公司啟用</text>
+  <rect class="box" x="12" y="48" width="616" height="60" rx="8"/>
+  <text class="b" x="24" y="74">1 檢查</text>
+  <text class="mono" x="124" y="74">claude plugin validate ./acme-toolkit</text>
+  <text class="s" x="124" y="94">manifest、frontmatter、.mcp.json</text>
+  <line class="ln" x1="320" y1="109" x2="320" y2="115" marker-end="url(#a)"/>
+  <rect class="box" x="12" y="116" width="616" height="60" rx="8"/>
+  <text class="b" x="24" y="142">2 載入</text>
+  <text class="mono" x="124" y="142">claude --plugin-dir ./acme-toolkit</text>
+  <text class="s" x="124" y="162">只在這個 session 載入，不用安裝</text>
+  <line class="ln" x1="320" y1="177" x2="320" y2="183" marker-end="url(#a)"/>
+  <rect class="acc" x="12" y="184" width="616" height="60" rx="8"/>
+  <text class="b" x="24" y="210">3 除錯</text>
+  <text class="mono" x="124" y="210">/reload-plugins　/plugin（Errors）　/mcp</text>
+  <text class="s" x="124" y="230">改檔後套用；看載入失敗原因與 MCP 狀態</text>
+  <line class="ln" x1="320" y1="245" x2="320" y2="251" marker-end="url(#a)"/>
+  <rect class="acc" x="12" y="252" width="616" height="60" rx="8"/>
+  <text class="b" x="24" y="278">4 驗證行為</text>
+  <text class="mono" x="124" y="278">claude plugin eval</text>
+  <text class="s" x="124" y="298">有無 plugin 各跑一次並評分</text>
+  <line class="ln" x1="320" y1="313" x2="320" y2="319" marker-end="url(#a)"/>
+  <rect class="good" x="12" y="320" width="616" height="60" rx="8"/>
+  <text class="b" x="24" y="346">5 發佈</text>
+  <text class="mono" x="124" y="346">marketplace.json ＋ plugin marketplace add</text>
+  <text class="s" x="124" y="366">放進公司 marketplace，團隊安裝</text>
+  <line class="ln" x1="320" y1="381" x2="320" y2="387" marker-end="url(#a)"/>
+  <rect class="bad" x="12" y="388" width="616" height="60" rx="8"/>
+  <text class="b" x="24" y="414">6 強制</text>
+  <text class="mono" x="124" y="414">extraKnownMarketplaces ＋ enabledPlugins</text>
+  <text class="s" x="124" y="434">managed settings；使用者無法覆蓋</text>
+  <text class="s" x="320" y="474" text-anchor="middle">userConfig 的對話框只在經 /plugin 安裝時出現；--plugin-dir 載入要用 /plugin configure</text>
+</svg>
