@@ -280,6 +280,60 @@ Claude Code 每次對話都是獨立 session，存成一個 `.jsonl` transcript�
 - **實務上不會打架**：`grill-me` 是 user-only，Claude 不會自己挑它，所以不會和 `brainstorming` 重複觸發。要留意的是 `grilling`（模型可觸發）的描述，可能在你說「幫我把這個問清楚」這類話時被挑中，和 `brainstorming` 搶；若發現行為重疊，可在 `CLAUDE.md` 寫明「需求澄清用 `/grill-me`」。⚠️（推論）
 - **整包安裝 mattpocock-skills 的副作用**：會帶進與 superpowers 重疊的 `tdd`、`diagnosing-bugs`、`code-review` 等，見 4.5。
 
+### 8.2 三者並存時，預設會發生什麼
+
+標記：✅ 官方〈[Extend Claude Code](https://code.claude.com/docs/en/features-overview.md)〉明載　⚠️ 推論，未在三者並裝的環境實測。
+
+- **skill 描述互相競爭** ✅：Claude 用你的任務去比對所有 skill 的描述來挑。官方警告「描述模糊或重疊，Claude 可能載入錯的 skill，或漏掉該用的」。
+- **hook 全部都會觸發** ✅：不同來源的 hook 是**合併**的，沒有誰蓋掉誰。
+- **同名才覆寫** ✅：skill 同名時只有一份生效（managed > user > project）；plugin 的 skill 有命名空間，不會直接同名衝突，但**功能相同**的 skill 會同時存在。
+- **指示互相矛盾時由 Claude 判斷** ✅：CLAUDE.md、skill 都只是請求，不是強制，結果不確定。
+
+**結論**：Claude Code **不會自動仲裁**三者，要靠你自己分工。
+
+### 8.3 兩兩之間的衝突風險
+
+![三個 skill 並存時兩兩之間的衝突風險：superpowers 與 planning-with-files 風險高（兩份計畫檔、hook 疊加）；grill-me 與 superpowers 風險中（與 brainstorming 重疊）；grill-me 與 planning-with-files 風險低；三者並裝時 context 成本累加](figures/claude-skills-conflict.svg)
+
+| 組合 | 風險 | 說明 |
+|---|---|---|
+| superpowers × planning-with-files | **高** | 同一個多步驟任務可能同時觸發 `writing-plans` 與 `/plan`，產出兩份位置與格式都不同的計畫檔；兩邊的 hook 疊加（見第 8 節前半） |
+| grill-me × superpowers | **中** | 與 `brainstorming` 功能重疊。`grill-me` 是 user-only，不會自動重複觸發；但它轉呼叫的 `grilling` 可由模型觸發，可能在你說「幫我把這個問清楚」時搶走 `brainstorming` ⚠️ |
+| grill-me × planning-with-files | 低 | 一個只在你手動呼叫時介入，一個負責持久化 |
+| 三者並裝 | context 成本累加 | 三組 skill 描述常駐，再加 SessionStart 注入 `using-superpowers` 全文、planning-with-files 每次重新讀回計畫（見 4.5 的圖） |
+
+### 8.4 怎麼處理（由輕到重）
+
+![skill 衝突的處理方式：把分工寫進 CLAUDE.md（請求，不保證）；用 skillOverrides 隱藏（設定，有效）；只裝需要的 skill（安裝層）；暫停整個 plugin（停用，有效）；用 hook 或權限設定強制（強制）](figures/claude-skills-handling.svg)
+
+1. **把分工寫進 CLAUDE.md**：最便宜，但只是請求，不保證遵守 ✅。例如：
+
+   ```
+   ## Skill 分工
+   - 需求不清楚時，我會手動 /grill-me，你不要自己啟動需求拷問。
+   - 設計與計畫用 superpowers 的 brainstorming、writing-plans，計畫只寫在 docs/superpowers/plans/。
+   - 除非我明確要求 /plan，否則不要建立 task_plan.md、findings.md、progress.md。
+   ```
+
+2. **用 `skillOverrides` 隱藏不要的 skill**：把描述移出 context，不必改別人的檔案 ✅。
+3. **只裝需要的 skill**：不要為了 `grill-me` 整包安裝 `mattpocock-skills`，否則會帶進與 superpowers 重疊的 `tdd`、`diagnosing-bugs` 等（見 4.5）。
+4. **暫停整個 plugin**：`/plugin disable planning-with-files@planning-with-files`，恢復用 `/plugin enable`；單次 session 可用 `PLANNING_DISABLED=1`（見第 10 節）。因為 hook 是合併的，**無法讓其中一個 hook 蓋掉另一個**，要消除 hook 疊加只能停用其中一個 plugin。✅
+5. **必須強制的事用 hook 或權限設定**：不要只靠 skill 或 CLAUDE.md ✅。
+
+### 8.5 怎麼確認有沒有在打架，與建議配置
+
+- 用 `/context` 看三組 skill 描述與注入內容實際佔了多少。
+- 看對話裡實際觸發了哪些 skill：同一個任務是否啟動了兩套流程、是否出現兩份計畫檔、是否被重複提問。
+- 用第 11 節的 `skill-creator` 做「該觸發／不該觸發」的評測。
+
+| 情境 | 建議配置 |
+|---|---|
+| 日常開發 | 只留 superpowers；需求模糊時手動 `/grill-me` |
+| 長時程、跨 session 的任務 | 再加 planning-with-files，並在 CLAUDE.md 明寫計畫檔只能有一份 |
+| 不確定三個能否並存 | 先兩兩試跑，觀察是否出現雙份計畫檔或重複提問，再決定 |
+
+> ⚠️ 以上處理方式是依官方的載入與優先規則推出來的，我沒有在三者並裝的實際環境測過行為。
+
 ---
 
 ## 9. 一般程式開發工作該用哪個？
