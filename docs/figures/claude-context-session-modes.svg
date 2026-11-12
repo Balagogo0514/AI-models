@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-labelledby="t d">
+  <title id="t">Local、Remote Control、雲端、自架環境：檔案與執行在哪、Anthropic 儲存什麼、能否用零資料保留</title>
+  <desc id="d">Local：檔案與執行在你的機器，提示詞與輸出送 Anthropic API，轉錄以明文存在本機 30 天，可用零資料保留。Remote Control：檔案與執行在你的機器，連線期間轉錄存在 Anthropic 伺服器，不可用零資料保留。雲端（Anthropic 託管）：在 Anthropic 管理的隔離 VM 執行，repo 被 clone 進去，轉錄由 Anthropic 儲存，不可用零資料保留。雲端（自架環境）：檔案與執行在你的基礎設施，對話仍送 Anthropic 並由其儲存轉錄，不可用零資料保留。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="478.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">四種模式：資料放哪、誰儲存</text>
+  <rect class="hd" x="12" y="44" width="616" height="28" rx="6"/>
+  <text class="b" x="20" y="63">模式</text>
+  <text class="b" x="150" y="63">檔案與執行</text>
+  <text class="b" x="300" y="63">Anthropic 儲存什麼</text>
+  <text class="b" x="540" y="63">ZDR</text>
+  <rect class="good" x="12" y="80" width="616" height="76" rx="8"/>
+  <text class="b" x="20" y="124">Local</text>
+  <text x="150" y="112">你的機器</text>
+  <text x="300" y="112">提示詞與輸出送 API</text>
+  <text x="300" y="132">轉錄在本機，明文 30 天</text>
+  <text class="b" x="558" y="124" text-anchor="middle">可用</text>
+  <rect class="acc" x="12" y="164" width="616" height="76" rx="8"/>
+  <text class="b" x="20" y="208">Remote Control</text>
+  <text x="150" y="196">你的機器</text>
+  <text x="300" y="196">連線期間，整份轉錄</text>
+  <text x="300" y="216">存在 Anthropic 伺服器</text>
+  <text class="b" x="558" y="208" text-anchor="middle">不可</text>
+  <rect class="bad" x="12" y="248" width="616" height="76" rx="8"/>
+  <text class="b" x="20" y="284">雲端</text>
+  <text class="b" x="20" y="304">Anthropic 託管</text>
+  <text x="150" y="280">Anthropic 的隔離 VM</text>
+  <text x="150" y="300">repo 被 clone 進去</text>
+  <text x="300" y="280">轉錄由 Anthropic 儲存</text>
+  <text x="300" y="300">VM 閒置後回收</text>
+  <text class="b" x="558" y="292" text-anchor="middle">不可</text>
+  <rect class="box" x="12" y="332" width="616" height="76" rx="8"/>
+  <text class="b" x="20" y="368">雲端</text>
+  <text class="b" x="20" y="388">自架環境</text>
+  <text x="150" y="364">你的基礎設施</text>
+  <text x="150" y="384">檔案與 secrets 在你這</text>
+  <text x="300" y="364">對話仍送 Anthropic</text>
+  <text x="300" y="384">並由其儲存轉錄</text>
+  <text class="b" x="558" y="376" text-anchor="middle">不可</text>
+  <rect class="dash" x="12" y="420" width="616" height="52" rx="8"/>
+  <text class="b" x="24" y="442">共同點：Local 也會把提示詞與輸出送到 Anthropic API（TLS）</text>
+  <text class="s" x="24" y="462">ZDR／HIPAA 的組織無法使用 Remote Control 與雲端 session</text>
+</svg>
