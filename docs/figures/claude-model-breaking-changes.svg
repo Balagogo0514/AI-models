@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 548" role="img" aria-labelledby="t d">
+  <title id="t">新版相對前一版的破壞性變更：Fable 5.1、Opus 5.5、Sonnet 5.5</title>
+  <desc id="d">三欄分別是 Fable 5.1 相對 Fable 5、Opus 5.5 相對 Opus 5、Sonnet 5.5 相對 Sonnet 5。三者共通：強制 tool_choice 回 400、thinking block 綁定模型。Fable 5.1 與 Opus 5.5 另有編輯歷史會使 thinking 失效，2026-08-31 起建立的新帳號會回 400。Opus 5.5 與 Sonnet 5.5 的 computer use 只能用 computer_toolset_20260801。disabled thinking 回 400，Sonnet 5.5 改用 between_tools。Opus 5.5 的 effort 預設由 high 改為 medium，Sonnet 5.5 的 effort 級別重新校準。價格方面 Fable 5.1 同 Fable 5，Opus 5.5 較 Opus 5 便宜，Sonnet 5.5 同價。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="546.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">升級時要檢查的破壞性變更</text>
+  <rect class="hd" x="12" y="44" width="616" height="26" rx="6"/>
+  <text class="b" x="20" y="62">變更</text>
+  <text class="b" x="315.0" y="62" text-anchor="middle">Fable 5.1</text>
+  <text class="b" x="425.0" y="62" text-anchor="middle">Opus 5.5</text>
+  <text class="b" x="535.0" y="62" text-anchor="middle">Sonnet 5.5</text>
+  <text class="s" x="20" y="84">相對前一版（Fable 5／Opus 5／Sonnet 5）</text>
+  <rect class="box" x="12" y="92" width="616" height="48" rx="8"/>
+  <text class="b" x="20" y="112">強制 tool_choice 回 400</text>
+  <text class="s" x="20" y="130">改用 auto＋strict 或 structured outputs</text>
+  <circle class="dotf" cx="315.0" cy="116.0" r="6"/>
+  <circle class="dotf" cx="425.0" cy="116.0" r="6"/>
+  <circle class="dotf" cx="535.0" cy="116.0" r="6"/>
+  <rect class="box" x="12" y="144" width="616" height="48" rx="8"/>
+  <text class="b" x="20" y="164">thinking block 綁定模型</text>
+  <text class="s" x="20" y="182">其他模型會（不計費地）捨棄</text>
+  <circle class="dotf" cx="315.0" cy="168.0" r="6"/>
+  <circle class="dotf" cx="425.0" cy="168.0" r="6"/>
+  <circle class="dotf" cx="535.0" cy="168.0" r="6"/>
+  <rect class="box" x="12" y="196" width="616" height="48" rx="8"/>
+  <text class="b" x="20" y="216">編輯歷史使 thinking 失效</text>
+  <text class="s" x="20" y="234">2026-08-31 起新帳號回 400</text>
+  <circle class="dotf" cx="315.0" cy="220.0" r="6"/>
+  <circle class="dotf" cx="425.0" cy="220.0" r="6"/>
+  <text class="s" x="535.0" y="225.0" text-anchor="middle">—</text>
+  <rect class="box" x="12" y="248" width="616" height="48" rx="8"/>
+  <text class="b" x="20" y="268">disabled thinking 回 400</text>
+  <text class="s" x="20" y="286">Sonnet 5.5 改傳 between_tools</text>
+  <circle class="dotf" cx="315.0" cy="272.0" r="6"/>
+  <circle class="dotf" cx="425.0" cy="272.0" r="6"/>
+  <circle class="dotf" cx="535.0" cy="272.0" r="6"/>
+  <rect class="box" x="12" y="300" width="616" height="48" rx="8"/>
+  <text class="b" x="20" y="320">computer use 限新工具集</text>
+  <text class="s" x="20" y="338">僅 computer_toolset_20260801</text>
+  <text class="s" x="315.0" y="329.0" text-anchor="middle">—</text>
+  <circle class="dotf" cx="425.0" cy="324.0" r="6"/>
+  <circle class="dotf" cx="535.0" cy="324.0" r="6"/>
+  <rect class="box" x="12" y="352" width="616" height="48" rx="8"/>
+  <text class="b" x="20" y="372">advisor 限制</text>
+  <text class="s" x="20" y="390">不接受 Opus 4.8、4.7、Sonnet 5 當 advisor</text>
+  <text class="s" x="315.0" y="381.0" text-anchor="middle">—</text>
+  <text class="s" x="425.0" y="381.0" text-anchor="middle">—</text>
+  <circle class="dotf" cx="535.0" cy="376.0" r="6"/>
+  <rect class="box" x="12" y="404" width="616" height="48" rx="8"/>
+  <text class="b" x="20" y="433">effort 預設值</text>
+  <text class="s" x="315.0" y="433.0" text-anchor="middle">—</text>
+  <text x="425.0" y="424" text-anchor="middle">medium</text>
+  <text class="s" x="425.0" y="441" text-anchor="middle">（原 high）</text>
+  <text x="535.0" y="424" text-anchor="middle">high</text>
+  <text class="s" x="535.0" y="441" text-anchor="middle">（級別重新校準）</text>
+  <rect class="box" x="12" y="456" width="616" height="48" rx="8"/>
+  <text class="b" x="20" y="485">價格</text>
+  <text x="315.0" y="484.0" text-anchor="middle">同 Fable 5</text>
+  <text x="425.0" y="476" text-anchor="middle">$4／$20</text>
+  <text class="s" x="425.0" y="493" text-anchor="middle">（原 $5／$25）</text>
+  <text x="535.0" y="484.0" text-anchor="middle">同價 $2／$10</text>
+  <circle class="dotf" cx="24" cy="522" r="6"/>
+  <text class="s" x="36" y="527">文件列出的限制或變更</text>
+  <text class="s" x="190" y="527">—：文件未列出</text>
+</svg>

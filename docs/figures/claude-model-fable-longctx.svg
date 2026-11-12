@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 500" role="img" aria-labelledby="t d">
+  <title id="t">Fable 的長文優勢：視窗一樣大，差在有效使用 context</title>
+  <desc id="d">Fable、Opus、Sonnet 的情境窗口都是 1M、最大輸出都是 128K，視窗並沒有變大。官方說法指出差別在有效使用 context 的能力：更能從很深的 context 準確檢索資訊，避免 context rot；長時程自主性更好，可維持多天目標導向的連續執行；在需連續執行 20 到 50 步的任務鏈上完成率更高、需回滾的錯誤更少。首發配套的長 context 管理工具有 Memory tool、Compaction、Context editing 與 tool result clearing。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="498.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">視窗尺寸相同，差在「用得好不好」</text>
+  <text class="b" x="20" y="63">Fable 5／5.1</text>
+  <rect class="bout" x="130" y="51" width="400" height="18" rx="3"/>
+  <text class="onacc" x="138" y="64">1M context · 128K 輸出</text>
+  <text class="b" x="20" y="93">Opus 系列</text>
+  <rect class="bin" x="130" y="81" width="400" height="18" rx="3"/>
+  <text class="s" x="138" y="94">1M context · 128K 輸出</text>
+  <text class="b" x="20" y="123">Sonnet 系列</text>
+  <rect class="bin" x="130" y="111" width="400" height="18" rx="3"/>
+  <text class="s" x="138" y="124">1M context · 128K 輸出</text>
+  <line class="ln" x1="320" y1="142" x2="320" y2="160" marker-end="url(#a)"/>
+  <rect class="acc" x="12" y="162" width="616" height="30" rx="8"/>
+  <text class="b" x="320" y="182" text-anchor="middle">官方說法：提升來自「有效使用 context 的能力」</text>
+  <rect class="good" x="12" y="202" width="200" height="134" rx="10"/>
+  <text class="b" x="24" y="226">深處檢索更準</text>
+  <text class="s" x="24" y="248">能從很深的 context</text>
+  <text class="s" x="24" y="267">準確檢索所需資訊</text>
+  <text class="s" x="24" y="286">避免 context rot</text>
+  <text class="s" x="24" y="305">（愈後面愈容易被忽略）</text>
+  <rect class="good" x="220" y="202" width="200" height="134" rx="10"/>
+  <text class="b" x="232" y="226">長時程自主性</text>
+  <text class="s" x="232" y="248">可維持多天、目標導向</text>
+  <text class="s" x="232" y="267">的連續執行</text>
+  <text class="s" x="232" y="286">對初始指令的記憶</text>
+  <text class="s" x="232" y="305">與遵循度更強</text>
+  <rect class="good" x="428" y="202" width="200" height="134" rx="10"/>
+  <text class="b" x="440" y="226">長步驟鏈更穩</text>
+  <text class="s" x="440" y="248">連續執行 20–50 步</text>
+  <text class="s" x="440" y="267">中途不靠人工糾正</text>
+  <text class="s" x="440" y="286">完成率更高</text>
+  <text class="s" x="440" y="305">需回滾的錯誤更少</text>
+  <rect class="zone" x="12" y="350" width="616" height="100" rx="10"/>
+  <text class="b" x="24" y="372">首發配套的長 context 管理工具（讓有限視窗用得更久）</text>
+  <rect class="acc" x="24" y="386" width="213" height="24" rx="6"/>
+  <text class="mono" x="33" y="402">Memory tool：跨 session 持久化</text>
+  <rect class="acc" x="243" y="386" width="166" height="24" rx="6"/>
+  <text class="mono" x="252" y="402">Compaction：自動壓縮歷史</text>
+  <rect class="acc" x="24" y="416" width="407" height="24" rx="6"/>
+  <text class="mono" x="33" y="432">Context editing／tool result clearing：清掉不再需要的工具結果</text>
+  <text class="s" x="320" y="474" text-anchor="middle">Fable 的最大輸出（128K）也沒有因為長文能力強而變大</text>
+</svg>

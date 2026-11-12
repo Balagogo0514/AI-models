@@ -2,6 +2,8 @@
 
 > 資料快取時間：2026-10-06（來源：Anthropic `claude-api` skill 模型目錄；目錄未提供的項目標註「未驗證」）
 
+> 2026-11-12 新增 8 張圖示（價格與情境、選型流程、家族 API 能力、思考機制矩陣、Extended 與 Adaptive 差異、refusal 回退流程、Fable 長文優勢、破壞性變更）；圖中內容皆整理自本文既有資料，未更新數值，仍以 2026-10-06 資料為準。
+
 ## 1. 總覽表
 
 | 模型 | Model ID | 情境窗口 (Context) | 最大輸出 | 輸入價格 / 1M tokens | 輸出價格 / 1M tokens |
@@ -21,6 +23,8 @@
 | Claude Haiku 4.5 | `claude-haiku-4-5` | 200K | 64K | $1.00 | $5.00 |
 
 > 註：Fable 系列定價高於 Opus，屬「最高階、最貴」層級；**Opus 5.5（`claude-opus-5-5`）為目前建議的預設模型**；Sonnet 5.5 是性價比選項；Haiku 5.5 價格最低。最大輸出方面，除 Haiku 4.5（64K）外，現行模型皆為 128K。前代的 Claude Mythos 5 未列於目前的模型目錄，已從表中移除。
+
+![圖：現行 Claude 模型的價格與情境窗口。Opus 5.5 為預設推薦；Haiku 4.5 是唯一較小情境的模型](figures/claude-model-lineup.svg)
 
 ---
 
@@ -45,6 +49,8 @@
   - **撰寫 `claude-fable-5` 程式碼時，建議預設加入伺服器端 `fallbacks` 參數**：`betas: ["server-side-fallback-2026-06-01"]` + `fallbacks: [{"model": "claude-opus-4-8"}]`（適用於 Claude API 與 Claude Platform on AWS）。被拒絕的請求會在同一次呼叫中，透明地由回退模型重新產生結果，並自動套用類似退款的重新計費規則（輸出前拒絕不計費；由回退模型產生的內容按回退模型自身費率計費）。
   - 在 Amazon Bedrock、Vertex AI、Microsoft Foundry 等不支援伺服器端回退的平台，可改用 GA SDK 內建的用戶端 `BetaRefusalFallbackMiddleware` + `BetaFallbackState` 進行重試。
   - 較新的簡化寫法：`betas: ["server-side-fallback-2026-07-01"]` + `fallbacks: "default"`，依拒絕類別自動路由，不必維護模型清單（上方陣列形式仍可用）。
+
+![圖：Fable 請求被安全分類器拒絕後的處理流程與三種回退路徑](figures/claude-model-refusal-flow.svg)
 
 **使用時機**：需要最頂尖推理能力、長時程自主代理任務，且能接受較高成本與需要處理 `refusal` 邏輯時。
 
@@ -74,6 +80,8 @@ Fable 5 的 1M context window 與 Opus/Sonnet **完全相同**，並沒有變大
   - **Memory tool**：可跨 session 持久化重點資訊
   - **Compaction**：自動壓縮過長的對話歷史
   - **Context editing / tool result clearing**：主動清除不再需要的工具呼叫結果，釋放空間給新資訊
+
+![圖：Fable 與 Opus、Sonnet 的視窗尺寸相同，差別在有效使用 context 的能力](figures/claude-model-fable-longctx.svg)
 
 **結論**：Fable 5 的長文優勢是「使用 1M window 的效率與穩定度」提升，不是「視窗本身變大」——這也解釋了為何前面提到 Fable 5 的最大輸出（128K）跟 Opus/Sonnet 一樣，並沒有因為「長文能力強」而有更大的輸出上限。
 
@@ -123,6 +131,8 @@ Fable 5 的 1M context window 與 Opus/Sonnet **完全相同**，並沒有變大
   - `effort` 預設仍為 `high`，但各級別已重新校準，建議重跑 effort 比較（agentic coding 與多步驟工具使用從 `medium` 起，一般聊天從 `low` 起）。
 - **Sonnet 4.6**：定價 $3 / $15，Extended Thinking 與 Adaptive Thinking **兩者皆支援**（`budget_tokens` 已標示 deprecated 但仍可用）。可靠知識截止於 2025 年 8 月。
 
+![圖：Fable 5.1、Opus 5.5、Sonnet 5.5 相對前一版的破壞性變更對照](figures/claude-model-breaking-changes.svg)
+
 **使用時機**：當使用者明確要求「用 sonnet」，或在成本敏感、任務複雜度中等的情境下，作為 Opus 的平價替代方案。
 
 > 補充：**Haiku 5.5**（`claude-haiku-5-5`，1M 情境、128K 輸出，$0.10 / $0.50，prompt 超過 100K 為 $0.50 / $2.50）支援 Adaptive Thinking（預設開啟，`effort` 預設 `medium`；`disabled` 僅在 `high` 以下接受），`budget_tokens` 與非預設 sampling 值皆回 400，且沒有 server-side refusal fallback。**Haiku 4.5** 則仍是現行模型中唯一保留 `budget_tokens` 傳統思考、且不支援 Adaptive Thinking 的模型，可靠知識截止於 2025 年 2 月。
@@ -160,6 +170,8 @@ Fable 5 的 1M context window 與 Opus/Sonnet **完全相同**，並沒有變大
 | Priority Tier | Fable 5 支援；Fable 5.1 不支援 | Opus 5.5 / 5 不支援；4.8 支援 | Sonnet 5 / 5.5 不支援 |
 | 建議使用情境 | 使用者明確要求 Fable / 最高難度任務 | 預設選擇（`claude-opus-5-5`），除非使用者另有指示 | 使用者明確要求 sonnet（現行為 5.5），或成本敏感場景 |
 
+![圖：Fable 5.1、Opus 5.5、Sonnet 5.5 的 API 能力比較](figures/claude-model-family.svg)
+
 ---
 
 ## 6. 推理階段（Inference）差異總覽
@@ -190,6 +202,8 @@ Fable 5 的 1M context window 與 Opus/Sonnet **完全相同**，並沒有變大
 | Haiku 5.5 | ❌ | ✅（預設開啟，`effort` 預設 `medium`） |
 | Haiku 4.5 | ✅（現行模型中唯一僅靠此機制） | ❌ 不支援 |
 
+![圖：各模型支援 Extended Thinking 與 Adaptive Thinking 的矩陣](figures/claude-model-thinking-matrix.svg)
+
 > 可以看出：新一代（Opus 5.5 / 5 / 4.8 / 4.7、Sonnet 5.5 / 5、Haiku 5.5）都已拿掉舊式 `budget_tokens`，只留 Adaptive；4.6 世代是新舊並存的過渡期；Haiku 4.5 是現行模型中唯一仍停留在舊機制的。另外，自 2026-10-21 起，任何模型的 Messages 請求只要帶 `temperature`、`top_p` 或 `top_k` 都會回 400。
 
 **Adaptive Thinking 與 Extended Thinking 的機制本身差在哪（不只是支援名單不同）：**
@@ -206,6 +220,8 @@ Fable 5 的 1M context window 與 Opus/Sonnet **完全相同**，並沒有變大
 | Prompt Cache 影響 | 與 adaptive 互相切換會打斷 cache breakpoint | 連續使用 adaptive 可維持 cache breakpoint；但切去 `enabled`/`disabled` 一樣會打斷 |
 | 計費方式 | 依實際產生的思考 token 計費（不管 `budget_tokens` 設多少，只計真正用掉的量，但不能超過上限） | 依實際產生的思考 token 計費——**計費機制完全相同**，差異只在「誰決定要不要思考」 |
 | 目前支援模型 | 僅 Opus 4.6 / Sonnet 4.6（deprecated，仍可用）、Haiku 4.5、更舊的 Opus/Sonnet | Fable 5 / 5.1 / Mythos 5 / 5.1（永遠開啟）、Opus 5.5 / 5 / 4.8 / 4.7 / 4.6、Sonnet 5.5 / 5 / 4.6、Haiku 5.5 |
+
+![圖：Extended Thinking 與 Adaptive Thinking 的機制差異](figures/claude-model-ext-vs-adaptive.svg)
 
 > 一句話總結：Extended Thinking 是「你告訴模型能想多久」；Adaptive Thinking 是「你告訴模型想深入到什麼程度，模型自己決定要不要想、想多久」。兩者計費邏輯相同，差別在**控制權在誰手上**，以及 adaptive 額外自帶「工具呼叫間思考」與較寬鬆的多輪驗證規則。
 
@@ -224,6 +240,8 @@ Fable 5 的 1M context window 與 Opus/Sonnet **完全相同**，並沒有變大
 ---
 
 ## 7. 選型建議
+
+![圖：選型流程——先看使用者有沒有明確指定，沒有就用 Opus 5.5](figures/claude-model-choose.svg)
 
 1. **預設情況下使用 Opus（`claude-opus-5-5`）**——這是目前建議的通用預設模型，適合絕大多數程式開發與推理任務。注意其 `effort` 預設為 `medium`，並且不能關閉 thinking。
 2. **僅在使用者明確要求「Fable」、「最強模型」時，才使用 `claude-fable-5-1`**——需處理 `refusal` 與強制 `tool_choice` 回 400 的限制，並注意其資料保留政策（30 天，與 ZDR 不相容）與較高的計費成本。

@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">Extended Thinking 與 Adaptive Thinking 的差異</title>
+  <desc id="d">Extended Thinking 是你告訴模型能想多久：以 budget_tokens 設硬性上限，必須小於 max_tokens；Adaptive Thinking 是你告訴模型想多深：由模型自己判斷要不要想、想多久，用 low、medium、high、xhigh、max 五段 effort 軟性引導。差異還包括簡單問題的行為、交錯思考、tool_choice 限制與 prompt cache 影響。兩者計費方式完全相同，都依實際產生的思考 token 計費。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">一個是「想多久」，一個是「想多深」</text>
+  <rect class="acc" x="120" y="44" width="244" height="44" rx="8"/>
+  <text class="b" x="242" y="62" text-anchor="middle">Extended Thinking</text>
+  <text class="s" x="242" y="80" text-anchor="middle">你告訴模型能想多久</text>
+  <rect class="good" x="372" y="44" width="256" height="44" rx="8"/>
+  <text class="b" x="500" y="62" text-anchor="middle">Adaptive Thinking</text>
+  <text class="s" x="500" y="80" text-anchor="middle">你告訴模型想多深</text>
+  <rect class="box" x="12" y="96" width="100" height="54" rx="8"/>
+  <text class="b" x="20" y="128.0">控制方式</text>
+  <rect class="box" x="120" y="96" width="244" height="54" rx="8"/>
+  <rect class="box" x="372" y="96" width="256" height="54" rx="8"/>
+  <text x="128" y="118">budget_tokens 硬性上限</text>
+  <text x="128" y="136">且須小於 max_tokens</text>
+  <text x="380" y="118">模型自己判斷想不想、想多久</text>
+  <text x="380" y="136">effort 只是軟性引導</text>
+  <rect class="box" x="12" y="156" width="100" height="54" rx="8"/>
+  <text class="b" x="20" y="188.0">調節旋鈕</text>
+  <rect class="box" x="120" y="156" width="244" height="54" rx="8"/>
+  <rect class="box" x="372" y="156" width="256" height="54" rx="8"/>
+  <text x="128" y="187.0">單一數字（token 數）</text>
+  <text x="380" y="178">5 段 effort：low／medium／</text>
+  <text x="380" y="196">high／xhigh／max</text>
+  <rect class="box" x="12" y="216" width="100" height="54" rx="8"/>
+  <text class="b" x="20" y="248.0">簡單問題</text>
+  <rect class="box" x="120" y="216" width="244" height="54" rx="8"/>
+  <rect class="box" x="372" y="216" width="256" height="54" rx="8"/>
+  <text x="128" y="247.0">仍依 budget 硬性思考</text>
+  <text x="380" y="238">effort 低時可直接跳過思考</text>
+  <text x="380" y="256">high／max 幾乎必思考</text>
+  <rect class="box" x="12" y="276" width="100" height="54" rx="8"/>
+  <text class="b" x="20" y="308.0">交錯思考</text>
+  <rect class="box" x="120" y="276" width="244" height="54" rx="8"/>
+  <rect class="box" x="372" y="276" width="256" height="54" rx="8"/>
+  <text x="128" y="298">Sonnet 4.6 需加 beta header</text>
+  <text x="128" y="316">Opus 4.6 完全不支援</text>
+  <text x="380" y="307.0">自動啟用</text>
+  <rect class="box" x="12" y="336" width="100" height="54" rx="8"/>
+  <text class="b" x="20" y="368.0">tool_choice</text>
+  <rect class="box" x="120" y="336" width="244" height="54" rx="8"/>
+  <rect class="box" x="372" y="336" width="256" height="54" rx="8"/>
+  <text x="128" y="367.0">思考開啟時只能 auto 或 none</text>
+  <text x="380" y="367.0">文件未列出此限制</text>
+  <rect class="box" x="12" y="396" width="100" height="54" rx="8"/>
+  <text class="b" x="20" y="428.0">Prompt cache</text>
+  <rect class="box" x="120" y="396" width="244" height="54" rx="8"/>
+  <rect class="box" x="372" y="396" width="256" height="54" rx="8"/>
+  <text x="128" y="418">與 adaptive 互切會打斷</text>
+  <text x="128" y="436">cache breakpoint</text>
+  <text x="380" y="418">連續用 adaptive 可維持</text>
+  <text x="380" y="436">切到 enabled／disabled 會打斷</text>
+  <rect class="good" x="12" y="456" width="616" height="40" rx="8"/>
+  <text class="b" x="320" y="481" text-anchor="middle">計費完全相同：都依實際產生的思考 token，差別只在誰決定深度</text>
+</svg>
