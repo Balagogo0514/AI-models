@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 600" role="img" aria-labelledby="t d">
+  <title id="t">Fable 的 refusal 處理流程：分類器拒絕後如何回退</title>
+  <desc id="d">請求先經過安全分類器（網路安全、生物與化學、蒸餾防護）。通過的請求照常回應，官方數據指出 95% 以上對話完全不觸發回退。被拒絕時回 HTTP 200 與 stop_reason 為 refusal：輸出前拒絕時 content 為空陣列且不計費；串流中途拒絕則已串流部分會計費，需捨棄。之後依是否啟用回退分三路：用 Claude API 時加 server-side-fallback beta 與 fallbacks，由 claude-opus-4-8 在同一次呼叫重新產生並自動重新計費；Bedrock、Vertex AI、Microsoft Foundry 等平台用用戶端 BetaRefusalFallbackMiddleware 與 BetaFallbackState；沒有啟用回退則直接停止。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="598.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">Fable 請求被拒絕時發生什麼事</text>
+  <rect class="acc" x="190" y="42" width="260" height="34" rx="10"/>
+  <text class="b" x="320" y="64" text-anchor="middle">送出 Fable 請求</text>
+  <line class="ln" x1="320" y1="77" x2="320" y2="94" marker-end="url(#a)"/>
+  <rect class="box" x="130" y="96" width="380" height="48" rx="10"/>
+  <text class="b" x="320" y="116" text-anchor="middle">安全分類器</text>
+  <text class="s" x="320" y="134" text-anchor="middle">網路安全 · 生物／化學 · 蒸餾防護</text>
+  <line class="ln" x1="250" y1="145" x2="150" y2="172" marker-end="url(#a)"/>
+  <line class="ln" x1="390" y1="145" x2="490" y2="172" marker-end="url(#a)"/>
+  <rect class="good" x="12" y="174" width="270" height="56" rx="10"/>
+  <text class="b" x="24" y="196">通過：照常回應</text>
+  <text class="s" x="24" y="216">官方：95% 以上對話不觸發回退</text>
+  <rect class="bad" x="300" y="174" width="328" height="56" rx="10"/>
+  <text class="b" x="312" y="196">被拒絕：HTTP 200＋stop_reason: refusal</text>
+  <text class="s" x="312" y="216">先檢查 stop_reason，再讀 content</text>
+  <line class="ln" x1="464" y1="231" x2="464" y2="246" marker-end="url(#a)"/>
+  <rect class="box" x="300" y="248" width="158" height="66" rx="8"/>
+  <text class="b" x="310" y="270">輸出前拒絕</text>
+  <text class="s" x="310" y="289">content 為空陣列</text>
+  <text class="s" x="310" y="306">完全不計費</text>
+  <rect class="box" x="470" y="248" width="158" height="66" rx="8"/>
+  <text class="b" x="480" y="270">串流中途拒絕</text>
+  <text class="s" x="480" y="289">已串流部分會計費</text>
+  <text class="s" x="480" y="306">需捨棄該部分內容</text>
+  <line class="ln" x1="464" y1="231" x2="549" y2="246"/>
+  <line class="ln" x1="380" y1="315" x2="380" y2="336"/>
+  <line class="ln" x1="549" y1="315" x2="549" y2="336"/>
+  <line class="ln" x1="380" y1="336" x2="549" y2="336"/>
+  <line class="ln" x1="464" y1="336" x2="464" y2="352" marker-end="url(#a)"/>
+  <rect class="acc" x="190" y="354" width="260" height="34" rx="10"/>
+  <text class="b" x="320" y="376" text-anchor="middle">有啟用回退（fallbacks）嗎？</text>
+  <line class="ln" x1="250" y1="389" x2="110" y2="414" marker-end="url(#a)"/>
+  <line class="ln" x1="320" y1="389" x2="320" y2="414" marker-end="url(#a)"/>
+  <line class="ln" x1="390" y1="389" x2="534" y2="414" marker-end="url(#a)"/>
+  <rect class="good" x="12" y="416" width="200" height="124" rx="10"/>
+  <text class="b" x="24" y="438">Claude API／AWS 平台</text>
+  <text class="s" x="24" y="459">加 server-side-fallback beta</text>
+  <text class="s" x="24" y="477">＋ fallbacks 回退到</text>
+  <text class="s" x="24" y="495">claude-opus-4-8（同一次呼叫）</text>
+  <text class="s" x="24" y="513">自動重新計費</text>
+  <rect class="box" x="220" y="416" width="200" height="124" rx="10"/>
+  <text class="b" x="232" y="438">Bedrock／Vertex／Foundry</text>
+  <text class="s" x="232" y="459">不支援伺服器端回退</text>
+  <text class="s" x="232" y="477">改用 GA SDK 用戶端</text>
+  <text class="s" x="232" y="495">BetaRefusalFallbackMiddleware</text>
+  <text class="s" x="232" y="513">＋ BetaFallbackState 重試</text>
+  <rect class="bad" x="428" y="416" width="200" height="124" rx="10"/>
+  <text class="b" x="440" y="438">未啟用（opt-in 才有）</text>
+  <text class="s" x="440" y="459">直接呼叫 API 又沒啟用</text>
+  <text class="s" x="440" y="477">遇到拒絕就直接停止</text>
+  <text class="s" x="440" y="495">安全工具、生命科學等</text>
+  <text class="s" x="440" y="513">合法任務會有誤判</text>
+  <text class="s" x="320" y="562" text-anchor="middle">較新的簡化寫法：server-side-fallback-2026-07-01＋fallbacks: &quot;default&quot;</text>
+  <text class="s" x="320" y="582" text-anchor="middle">依拒絕類別自動路由，不必維護模型清單</text>
+</svg>
