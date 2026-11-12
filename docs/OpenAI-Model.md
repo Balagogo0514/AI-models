@@ -4,6 +4,8 @@
 > 範圍：以 OpenAI 官方 API 文件與定價頁在 2026-07-12 仍可查到的模型為準；不嘗試收錄所有歷史快照。  
 > 讀法：如果某模型只出現在定價頁、特定指南或被明確標示為 deprecated / preview，本文會直接標註。
 
+> 2026-11-12 新增 8 張圖示（六層分類、場景選型、GPT 價格、reasoning effort、深度研究與 computer use、音訊選型、圖像與影片成本、Embeddings）；圖中內容皆整理自本文既有資料，未更新數值，資料日期仍為 2026-07-12。
+
 ## 1. 先看結論
 
 | 場景 | 建議模型 | 原因 |
@@ -22,6 +24,8 @@
 | 高品質 embedding | `text-embedding-3-large` | 檢索品質最佳，但成本高很多。 |
 | 內容審查 | `omni-moderation-latest` | 支援文字與圖片；2026-07-12 的 pricing 頁未單列費率。 |
 
+![圖：九種需求對應的建議 OpenAI 模型](figures/openai-model-choose.svg)
+
 ## 2. 模型分層怎麼看
 
 OpenAI 目前的 API 模型大致分成六層：
@@ -34,6 +38,8 @@ OpenAI 目前的 API 模型大致分成六層：
 6. **基礎設施模型**：Embeddings、Moderation。
 
 另外，官方 Models 首頁已明確把 **GPT-5.6 Sol / Terra / Luna** 放在最前面，代表它們是現在的主力推薦；不是所有列在定價頁的型號都應被當成首選。
+
+![圖：OpenAI API 模型的六個分層與各層代表型號](figures/openai-model-layers.svg)
 
 ## 3. 最新通用 / 推理模型
 
@@ -66,6 +72,8 @@ OpenAI 目前的 API 模型大致分成六層：
 | `gpt-5.4-nano` | $0.20 / $1.25 | 超便宜，適合分類、抽取、簡單 agent 任務。 |
 | `gpt-5.4-pro` | $30 / $180 | 舊代高價位型號，通常只會出現在既有系統。 |
 
+![圖：GPT-5.6 與較舊 GPT 模型的標準價比較](figures/openai-model-gpt-price.svg)
+
 補充：
 
 - reasoning guide 仍提到 `gpt-5.5` 與 `gpt-5.4` 這類推理模型支援 interleaved thinking。
@@ -91,6 +99,8 @@ OpenAI 目前的 API 模型大致分成六層：
 - 更像「研究代理模型」，不是通用聊天模型。
 - Pricing 頁目前把 deep research 與 `computer-use-preview` 放在 Specialized models 的 Batch 區塊；正式報價前應再核對最新 pricing 頁。
 
+![圖：深度研究模型的使用條件，以及 computer use 新舊路徑](figures/openai-model-deep-research.svg)
+
 ## 6. Realtime / Audio / Speech
 
 ### 6.1 最新主力音訊模型
@@ -109,6 +119,8 @@ OpenAI 目前的 API 模型大致分成六層：
 - `gpt-audio-1.5`：官方 audio guide 仍把它列為可做 request-based 音訊輸入/輸出與文字轉語音的音訊模型，但 2026-07-12 的 pricing 頁沒有把它單獨列價。
 - Models 頁仍可見較舊的 `GPT-Realtime-2`、`GPT-Realtime-1.5`、`GPT-Realtime mini`。
 - Models 頁同時把 `GPT-4o mini TTS` 標成 **Deprecated**，新案不應再優先採用。
+
+![圖：音訊與語音模型選型](figures/openai-model-audio.svg)
 
 怎麼選：
 
@@ -142,6 +154,8 @@ OpenAI 目前的 API 模型大致分成六層：
 | `sora-2` | 速度與靈活性優先 | 720p 約 $0.10 / 秒 | 概念驗證、快速迭代、社群內容、rough cut。 |
 | `sora-2-pro` | 品質優先 | 720p $0.30 / 秒；1024p $0.50 / 秒；1080p $0.70 / 秒 | 廣告、行銷素材、較高穩定度與視覺精度。 |
 
+![圖：圖像與影片生成的成本比較](figures/openai-model-media-cost.svg)
+
 補充：
 
 - Batch 價格約是 standard 的一半。
@@ -155,6 +169,8 @@ OpenAI 目前的 API 模型大致分成六層：
 | `text-embedding-3-small` | 62,500 | 62.3% | 1536 | 8192 | 預設首選；CP 值最好。 |
 | `text-embedding-3-large` | 9,615 | 64.6% | 3072 | 8192 | 品質最高，但明顯更貴。 |
 | `text-embedding-ada-002` | 12,500 | 61.0% | 1536 | 8192 | 舊基準模型；新案通常不會再從它開始。 |
+
+![圖：Embedding 模型比較與 Moderation 配套](figures/openai-model-embeddings.svg)
 
 補充：
 
@@ -189,6 +205,8 @@ OpenAI 目前的 API 模型大致分成六層：
 | `medium` | 功能開發、單元測試、一般 issue 分析 | GPT-5.6 預設值；品質、延遲與成本的平衡起點。 |
 | `high` | 複雜除錯、跨模組根因分析、重構規劃 | 品質優先；適合較難的 coding 與 agent 任務。 |
 | `xhigh` | 安全／程式碼審查、長時間 agent、困難研究 | 僅在 eval 證實有明顯收益時使用，因延遲與成本最高。 |
+
+![圖：reasoning.effort 五段旋鈕與 reasoning.mode 的關係](figures/openai-model-reasoning-effort.svg)
 
 `reasoning.mode` 與 effort 是兩個獨立設定：`standard` 是預設模式；`pro` 會讓模型進行更多運算，適合非常困難且能容忍更高延遲與 token 成本的工作。若使用 GPT-5.6 家族的最高能力組合，選 `gpt-5.6-sol` + `reasoning.mode=pro`，再從 `medium` 或 `high` 開始評測。不要把提高 effort 當成修復品質的唯一方法，prompt 仍應明確寫出完成條件與驗證方式。
 
