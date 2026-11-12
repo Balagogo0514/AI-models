@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 540" role="img" aria-labelledby="t d">
+  <title id="t">Codex 多 agent 的五種層次：Subagents、Codex Cloud、多個 codex exec、Desktop App、mcp-server 與 Agents SDK</title>
+  <desc id="d">Subagents 由主 session 的 Codex 決定，只有你明確要求才會 spawn，同一 CLI session 內以多個 thread 並行，只有 sandbox 權限可個別覆寫，無內建檔案隔離，來源為官方間接摘要。Codex Cloud 由你手動提交每個 task，在雲端執行，不碰本機工作樹，來源為本地文件。多個 codex exec 由你的腳本編排，用 git worktree 加 -C 自建隔離，來源為本地文件。Desktop App 與 app-server 偏桌面與整合，多 thread 與 worktree 的說法只見於第三方。mcp-server 與 Agents SDK 是 API 層級，用來自建編排。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="538.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">Codex 多 agent：五種層次</text>
+  <rect class="hd" x="12" y="44" width="616" height="26" rx="6"/>
+  <text class="b" x="20" y="62">機制</text>
+  <text class="b" x="176" y="62">誰決定</text>
+  <text class="b" x="330" y="62">跑在哪裡</text>
+  <text class="b" x="470" y="62">隔離</text>
+  <rect class="acc" x="12" y="76" width="616" height="64" rx="8"/>
+  <text class="b" x="20" y="114">Subagents 🔎</text>
+  <text x="176" y="101">主 session 的 Codex</text>
+  <text x="176" y="121">你明確要求才 spawn</text>
+  <text x="330" y="101">同一 CLI session</text>
+  <text x="330" y="121">以多個 thread 並行</text>
+  <text x="470" y="101">僅 sandbox 權限可</text>
+  <text x="470" y="121">個別覆寫；無檔案隔離</text>
+  <rect class="good" x="12" y="148" width="616" height="64" rx="8"/>
+  <text class="b" x="20" y="186">Codex Cloud ✅</text>
+  <text x="176" y="184">你手動提交每個 task</text>
+  <text x="330" y="173">雲端任務</text>
+  <text x="330" y="193">（experimental）</text>
+  <text x="470" y="173">不碰本機工作樹</text>
+  <text x="470" y="193">套回前先 diff</text>
+  <rect class="good" x="12" y="220" width="616" height="64" rx="8"/>
+  <text class="b" x="20" y="258">多個 codex exec ✅</text>
+  <text x="176" y="256">你的腳本</text>
+  <text x="330" y="256">本機多個非互動程序</text>
+  <text x="470" y="245">自建 git worktree</text>
+  <text x="470" y="265">並用 -C 指向</text>
+  <rect class="dash" x="12" y="292" width="616" height="64" rx="8"/>
+  <text class="b" x="20" y="330">Desktop App ⚠️</text>
+  <text x="176" y="328">桌面 App／app-server</text>
+  <text x="330" y="328">桌面與整合</text>
+  <text x="470" y="317">多 thread 與 worktree</text>
+  <text x="470" y="337">只見於第三方，不展開</text>
+  <rect class="dash" x="12" y="364" width="616" height="64" rx="8"/>
+  <text class="b" x="20" y="402">mcp-server＋SDK ✅</text>
+  <text x="176" y="400">你自建編排</text>
+  <text x="330" y="400">API 層級</text>
+  <text x="470" y="389">產品整合用，不是</text>
+  <text x="470" y="409">互動式 review 入口</text>
+  <text class="s" x="320" y="456" text-anchor="middle">標記：✅ 本地文件　🔎 官方間接（搜尋摘要）　⚠️ 未驗證</text>
+  <text class="s" x="320" y="478" text-anchor="middle">Codex 沒有 Claude 的 Agent View：要並行追蹤多個獨立任務，用 codex cloud list 或自己的腳本</text>
+  <text class="s" x="320" y="500" text-anchor="middle">做 code review 主要看 Subagents 與 Codex Cloud；接 CI 用多個 codex exec</text>
+</svg>

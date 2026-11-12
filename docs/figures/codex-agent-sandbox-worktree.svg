@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 470" role="img" aria-labelledby="t d">
+  <title id="t">Sandbox 與 Worktree 是不同的隔離：一個管權限，一個管改哪份檔案</title>
+  <desc id="d">上層是權限層：Sandbox 加 approval 是 Codex 的權限邊界，管能讀寫哪裡、能否連網、哪些操作要先問你，用 -s 與 -a 設定，比喻是每個工人的權限證。下層是檔案系統與版本控制層：Worktree 是 git 功能，獨立工作目錄加 branch，管平行工作改哪份檔案，用 git worktree add 與 codex exec -C 指向，比喻是每個工人各自的工作檯。對 subagent：sandbox 繼承目前政策並可單一 agent 覆寫；官方未見內建的 per-subagent worktree 機制。唯讀審查只需要 sandbox 設成 read-only。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="468.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">Sandbox（權限）與 Worktree（檔案）</text>
+  <rect class="acc" x="12" y="44" width="616" height="128" rx="12"/>
+  <text class="b at" x="24" y="68">權限層：Sandbox ＋ approval（權限證）</text>
+  <text x="24" y="90">agent 能做什麼：能讀寫哪裡、能否連網、哪些操作要先問你</text>
+  <text class="mono" x="24" y="112">-s read-only｜workspace-write｜danger-full-access</text>
+  <text class="mono" x="24" y="132">-a untrusted｜on-request｜never</text>
+  <text class="s" x="24" y="154">對 subagent：繼承目前政策，可單一 agent 覆寫 🔎</text>
+  <line class="ln" x1="320" y1="173" x2="320" y2="192"/>
+  <text class="s" x="332" y="188">兩者正交，常一起用</text>
+  <rect class="good" x="12" y="196" width="616" height="128" rx="12"/>
+  <text class="b gt" x="24" y="220">檔案層：Worktree（每個工人的工作檯）</text>
+  <text x="24" y="242">平行工作改哪份檔案：防止彼此覆蓋</text>
+  <text class="mono" x="24" y="264">git worktree add …　→　codex exec -C &lt;DIR&gt;</text>
+  <text class="s" x="24" y="286">官方未見內建的 per-subagent worktree 機制 ⚠️；多個 agent 寫同一份程式碼會衝突 🔎</text>
+  <text class="s" x="24" y="306">Claude 的 isolation: worktree 在 Codex 沒有已驗證的對應設定</text>
+  <rect class="dash" x="12" y="340" width="616" height="116" rx="8"/>
+  <text class="b" x="24" y="364">唯讀審查：只需要 sandbox 設成 read-only，不必開 worktree</text>
+  <text class="s" x="24" y="388">常見組合（取自 CodeX-CLI）</text>
+  <text class="mono" x="24" y="408">一般本機開發　-s workspace-write -a on-request</text>
+  <text class="mono" x="24" y="428">嚴格審查　　　-s read-only -a untrusted</text>
+  <text class="mono" x="24" y="448">CI 非互動　　 codex exec -a never --json</text>
+</svg>

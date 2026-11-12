@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440" role="img" aria-labelledby="t d">
+  <title id="t">GitHub 端 at codex review 流程：留言觸發、貼 review、後續 fix</title>
+  <desc id="d">前置條件是先設定好 Codex cloud，並在 Codex 設定中對該 repo 開啟 Code review。在 PR 頂層留言 at codex review，可附一次性焦點，例如 for security regressions。Codex 以 eyes reaction 表示接手，貼出標準的 GitHub review，只標 P0 與 P1。之後可留言 at codex fix the P1 issue，以 PR 為脈絡啟動雲端任務，有權限時可把修正推到分支。常駐規則寫在 repo 的 AGENTS.md，也可設定自動審新 PR。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="438.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">GitHub：@codex review</text>
+  <rect class="dash" x="12" y="44" width="616" height="50" rx="8"/>
+  <text x="24" y="66">前置：設定好 Codex cloud，並對該 repo 開啟 Code review 🔎</text>
+  <text class="s" x="24" y="86">常駐規則寫在 repo 的 AGENTS.md（/init 可產生 scaffold ✅）</text>
+  <rect class="acc" x="12" y="106" width="616" height="64" rx="8"/>
+  <text class="b" x="24" y="134">1 留言觸發</text>
+  <text x="140" y="134">PR 頂層：@codex review　或附焦點：for security regressions</text>
+  <line class="ln" x1="320" y1="171" x2="320" y2="179" marker-end="url(#a)"/>
+  <rect class="box" x="12" y="180" width="616" height="64" rx="8"/>
+  <text class="b" x="24" y="208">2 接手</text>
+  <text x="140" y="208">以 eyes reaction 表示接手</text>
+  <line class="ln" x1="320" y1="245" x2="320" y2="253" marker-end="url(#a)"/>
+  <rect class="good" x="12" y="254" width="616" height="64" rx="8"/>
+  <text class="b" x="24" y="282">3 貼 review</text>
+  <text x="140" y="282">標準 GitHub review；只標 P0／P1，聚焦高優先風險</text>
+  <line class="ln" x1="320" y1="319" x2="320" y2="327" marker-end="url(#a)"/>
+  <rect class="bad" x="12" y="328" width="616" height="64" rx="8"/>
+  <text class="b" x="24" y="356">4 後續動作</text>
+  <text x="140" y="356">@codex fix the P1 issue → 以 PR 為脈絡啟動雲端任務；有權限時推修正到分支</text>
+  <text class="s" x="320" y="414" text-anchor="middle">也可在設定中開啟自動審新 PR；觸發時機細節各來源略有出入 ⚠️</text>
+  <text class="s" x="320" y="432" text-anchor="middle">以官方最新文件為準（本圖依官方間接摘要整理）</text>
+</svg>

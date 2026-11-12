@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">做多 agent 審查時，Codex 與 Claude Code 的主要差異</title>
+  <desc id="d">一鍵雲端多 reviewer 加獨立驗證：Claude 有 code-review ultra，Codex 無已驗證的對應指令。多背景 session 總覽：Claude 有 Agent View，Codex 無內建，用 codex cloud list 或自己的腳本。subagent 檔案隔離：Claude 可設 isolation worktree，Codex 無已驗證的內建設定，要自建 worktree 加 -C。腳本編排大量 agent：Claude 有 Workflows，Codex 無內建，用 codex exec 腳本或 Agents SDK。完成通知：Claude 主動回到 session，Codex 未見已驗證機制。工作區無變更時自動清 worktree：Claude 有，Codex 無已驗證行為。設定中心：Claude 用 settings.json 與 hooks，Codex 用 config.toml、profiles、sandbox 與 approval、MCP、plugin marketplace。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">Codex 與 Claude Code：做多 agent 審查的差異</text>
+  <rect class="hd" x="12" y="44" width="616" height="26" rx="6"/>
+  <text class="b" x="20" y="62">面向</text>
+  <text class="b" x="228" y="62">Claude Code</text>
+  <text class="b" x="424" y="62">Codex</text>
+  <rect class="box" x="12" y="76" width="616" height="50" rx="6"/>
+  <text class="b" x="20" y="107">一鍵雲端多 reviewer＋獨立驗證</text>
+  <text x="228" y="107">/code-review ultra</text>
+  <text x="424" y="107">無已驗證的對應指令 ⚠️</text>
+  <rect class="acc" x="12" y="132" width="616" height="50" rx="6"/>
+  <text class="b" x="20" y="163">多背景 session 總覽</text>
+  <text x="228" y="163">Agent View</text>
+  <text x="424" y="163">無內建；codex cloud list 或腳本</text>
+  <rect class="box" x="12" y="188" width="616" height="50" rx="6"/>
+  <text class="b" x="20" y="219">subagent 檔案隔離</text>
+  <text x="228" y="219">isolation: worktree</text>
+  <text x="424" y="219">自建 worktree ＋ -C</text>
+  <rect class="acc" x="12" y="244" width="616" height="50" rx="6"/>
+  <text class="b" x="20" y="275">腳本編排大量 agent</text>
+  <text x="228" y="275">Workflows</text>
+  <text x="424" y="275">codex exec 腳本或 Agents SDK</text>
+  <rect class="box" x="12" y="300" width="616" height="50" rx="6"/>
+  <text class="b" x="20" y="331">完成通知</text>
+  <text x="228" y="331">主動回到 session</text>
+  <text x="424" y="331">未見已驗證機制 ⚠️</text>
+  <rect class="acc" x="12" y="356" width="616" height="50" rx="6"/>
+  <text class="b" x="20" y="387">無變更時自動清 worktree</text>
+  <text x="228" y="387">有</text>
+  <text x="424" y="387">無已驗證行為 ⚠️</text>
+  <rect class="box" x="12" y="412" width="616" height="50" rx="6"/>
+  <text class="b" x="20" y="443">設定中心</text>
+  <text x="228" y="443">settings.json、hooks</text>
+  <text x="424" y="443">config.toml、profiles、MCP ✅</text>
+  <text class="s" x="320" y="480" text-anchor="middle">Codex 欄位的「無已驗證」代表本文查不到，不等於一定沒有</text>
+  <text class="s" x="320" y="500" text-anchor="middle">要看你所用版本的 /experimental 與 codex --help</text>
+</svg>
