@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 500" role="img" aria-labelledby="t d">
   <title id="t">資料見頂（Data Wall）：五種因應策略與各自的風險</title>
-  <desc id="d">高品質公開文字資料見頂，估計在 2026 到 2032 年間用盡。五種因應策略與風險：多輪 epoch，超過約 4 epoch 後報酬急遽遞減；合成資料，可能導致 model collapse；多模態資料，資料類型間的 transfer 效果仍在研究；提升資料品質，品質評估缺乏統一標準；轉向推論期 scaling，需要額外的 RL 與 verifier 訓練成本。注意：文件正文寫數十兆 token 量級，案例表寫約 300 兆 token，兩處量級不一致。</desc>
+  <desc id="d">高品質公開文字資料見頂，有效存量約 300 兆 token，估計在 2026 到 2032 年間用盡（Epoch AI，2024）。五種因應策略與風險：多輪 epoch，超過約 4 epoch 後報酬急遽遞減；合成資料，可能導致 model collapse；多模態資料，資料類型間的 transfer 效果仍在研究；提升資料品質，品質評估缺乏統一標準；轉向推論期 scaling，需要額外的 RL 與 verifier 訓練成本。</desc>
   <style>
     svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
     @media (prefers-color-scheme: dark) {
@@ -36,7 +36,7 @@
   <text class="t" x="320" y="28" text-anchor="middle">Data Wall：策略與風險</text>
   <rect class="bad" x="120" y="40" width="400" height="42" rx="10"/>
   <text class="b" x="320" y="60" text-anchor="middle">高品質公開文字資料見頂</text>
-  <text class="s" x="320" y="76" text-anchor="middle">估計 2026–2032 年間用盡（Epoch AI，2024）</text>
+  <text class="s" x="320" y="76" text-anchor="middle">有效存量約 300 兆 token；估計 2026–2032 年間用盡（Epoch AI，2024）</text>
   <line class="ln" x1="320" y1="83" x2="320" y2="96"/>
   <line class="ln" x1="110" y1="96" x2="530" y2="96"/>
   <text class="b" x="20" y="112">策略</text>
@@ -82,5 +82,5 @@
   <text x="240" y="436">需額外的 RL／verifier 訓練成本</text>
   <rect class="box" x="462" y="400" width="166" height="62" rx="8"/>
   <text class="s" x="472" y="436">見推論期 scaling 一節</text>
-  <text class="s" x="320" y="486" text-anchor="middle">⚠️ 文件正文寫「數十兆 token」、案例表寫「約 300 兆」，兩處量級不一致，圖中不採單一數字</text>
+  <text class="s" x="320" y="486" text-anchor="middle">存量為品質與重複訓練調整後的估計，90% 信賴區間約 100–1000 兆（Epoch AI，2024）</text>
 </svg>
