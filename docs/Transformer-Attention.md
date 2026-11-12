@@ -4,6 +4,8 @@
 >
 > 更新日期：2026-07-19
 
+> 2026-11-12 新增 10 張圖示（依瓶頸選機制、KV heads 對應、連線模式、exact 邊界、技術層次、選型、KDA 流程、Kimi 混合架構、AttnRes、各家公開路線）；圖中內容皆整理自本文既有內容，連線模式與 head 對應為示意，未更新技術資訊，資訊日期仍為 2026-07-19。
+
 ## 先看結論
 
 - 短到中等 context、追求通用品質：仍以 dense multi-head self-attention（MHA）為基準，搭配 RoPE 與 FlashAttention 類 kernel。
@@ -75,6 +77,8 @@ MQA:  h 個 Q heads -> 1 個 K/V head           KV cache 最小，品質取捨�
 MLA:  h 個 Q heads -> 壓縮 latent KV cache    以投影換取更高壓縮率
 ```
 
+![圖：MHA、GQA、MQA、MLA 中 Query heads 與 K/V 的對應關係（示意）](figures/transformer-attention-kv-heads.svg)
+
 ### 實務判斷
 
 - 新建高併發 decoder-only LLM：GQA 是成熟、相對低風險的預設。
@@ -95,6 +99,8 @@ Dense attention 讓每個 token 都可看全部 token，成本為二次成長。
 | Longformer attention | local window 加上任務指定的 global attention。 | 長文件 classification、QA、summarization；讓關鍵 token 保持全域連線。 | Longformer、LED（Longformer Encoder-Decoder）。 |
 | BigBird block sparse attention | random + window + global token。 | 以近線性成本處理長序列，同時保留全域資訊路徑與理論性質。 | BigBird、BigBird-Pegasus。 |
 | Dilated / block sparse attention | 以固定或擴張間隔保留 blocks。 | 用較少連線擴大 receptive field；常用於特定長序列研究與架構。 | LongNet（dilated attention）。 |
+
+![圖：Dense、Sliding Window、Longformer、BigBird、Dilated 的連線模式（示意）](figures/transformer-attention-patterns.svg)
 
 ### 何時使用
 
@@ -158,6 +164,8 @@ PagedAttention:  多個 request 的歷史 K/V cache 如何配置與回收
 兩者可同時使用：前者加速 kernel，後者提升 serving 記憶體利用率。
 ```
 
+![圖：attention 相關技術所在的層次與是否改變結果](figures/transformer-attention-stack.svg)
+
 **來源：** [FlashAttention](https://arxiv.org/abs/2205.14135)、[FlashAttention-2](https://arxiv.org/abs/2307.08691)、[PagedAttention / vLLM](https://arxiv.org/abs/2309.06180)、[Ring Attention](https://arxiv.org/abs/2310.01889)
 
 ---
@@ -185,6 +193,8 @@ PagedAttention:  多個 request 的歷史 K/V cache 如何配置與回收
 | 極長 sequence 訓練 | FlashAttention、sequence / context parallel、Ring Attention；依工作負載評估 sparse 或 linear 方法。 | 把理論 `O(n)` 直接等同於實際 GPU wall-clock 更快。 |
 | 多模態輸入 | cross-attention / latent resampler，或統一 token 的 multimodal self-attention。 | 將視覺 token 全量加入長文字 context 而不做壓縮。 |
 | 既有 MHA checkpoint 降低推論成本 | 先用 runtime KV quantization / PagedAttention；需要架構改造才評估 MHA-to-GQA / MLA 轉換。 | 假定替換 attention 後不需重新訓練或評測。 |
+
+![圖：六種需求的優先考慮與要避免的誤區](figures/transformer-attention-choose.svg)
 
 ---
 
@@ -231,6 +241,8 @@ Attention(Q, K, V) = softmax(QK^T / sqrt(d_k)) V
 | Performer / kernel linear attention | 否 | 以 feature map 或隨機特徵近似 softmax kernel，避免完整兩兩比較。 |
 | Kimi Delta Attention（KDA） | 否 | 以有限 recurrent state 的 delta-rule 更新／讀取記憶，不會重現每個歷史 token 的完整 softmax 權重。 |
 
+![圖：哪些 attention 機制仍是 exact softmax](figures/transformer-attention-exact.svg)
+
 因此，FlashAttention、MQA 與 GQA 是在**不改變 softmax attention 數學定義**下提升效率；線性注意力則為了讓長度成本接近線性，改變或近似注意力的計算方式。
 
 ## 13. Kimi K3：Kimi Delta Attention（KDA）
@@ -250,6 +262,8 @@ o_t     = S_t q_t
 
 其中 `S` 是固定大小的 recurrent state，`⊙` 表示逐通道調制。實際 KDA 還包含投影、正規化及 chunkwise 演算法；上式用來說明「先讀、再以差值寫回」與細粒度遺忘／寫入的概念，並非其逐項實作公式。
 
+![圖：Kimi Delta Attention 先讀、算差值、再寫回的概念流程](figures/transformer-attention-kda-flow.svg)
+
 Kimi K3 並非以 KDA 完全取代全域 attention。其公開配置為 **69 層 KDA + 24 層 gated MLA（Multi-head Latent Attention）**，大致是 3:1 的交錯比例：KDA 處理多數層的長序列狀態傳遞，MLA 層則定期提供可直接全域檢索的 attention。這個混合設計以少量全域層補足有限 recurrent state 可能遺失的精確 token 細節。
 
 | 面向 | KDA 的效果 | 與 full attention / MLA 的取捨 |
@@ -258,6 +272,8 @@ Kimi K3 並非以 KDA 完全取代全域 attention。其公開配置為 **69 層
 | Decode 與快取 | 保存固定大小 recurrent state，不保存每個歷史 token 的完整 K/V。 | 降低長 context 的 KV-cache 壓力；state 壓縮不保證與 full attention 同等精確。 |
 | 表達能力 | delta rule 可藉由誤差覆寫舊記憶；逐通道 gate 提供更細的遺忘粒度。 | 比一般 kernel linear attention 更像可寫入的記憶模型，但須靠專用 chunkwise kernel 才能取得良好硬體效率。 |
 | 架構策略 | 大多數層使用 KDA，間隔配置 MLA。 | 以少量全域 attention 維持檢索能力，換取多數層的長序列效率。 |
+
+![圖：Kimi K3 的 KDA 與 gated MLA 交錯配置（約 3:1）](figures/transformer-attention-kimi-hybrid.svg)
 
 Kimi 團隊在 Kimi Linear 的相同訓練配方比較中報告：這個混合架構相對全 MLA 最多可減少 75% KV cache，並在 1M context 的 decode 達到最高約 6 倍 throughput。這些是特定模型、kernel 與工作負載下的實驗結果，不應直接外推為所有線性注意力實作的通用保證。
 
@@ -278,6 +294,8 @@ x_(l+1) = Layer_l(x_l) + Attention(q_l, {x_0, x_1, ..., x_l})
 ```
 
 上式是概念式；實作會以 block 等方式控制跨層 attention 的記憶體與通訊成本。它讓目前層可依任務需要偏重較早層的詞彙／位置／檢索線索、中間層已整理的關係，或深層的抽象推理結果。
+
+![圖：一般 residual 與 Attention Residuals 的差別](figures/transformer-attention-attnres.svg)
 
 長上下文推理常經歷「從遠距 token 讀入訊息 → 早期層形成線索 → 中間層整合關係 → 深層做多步推理」。因此 AttnRes 有助於讓前段取得的訊號跨越深度後仍可被取用；模型不會只是看過遠距資訊，卻在最終推理層失去它。它**不會直接擴大 context window，也不取代 KDA／MLA 的序列 attention**：KDA／MLA 處理跨 token 的成本與檢索，AttnRes 處理跨 layer 的資訊傳遞，長上下文資料與 RL 則訓練模型如何運用這些能力。
 
@@ -305,6 +323,8 @@ x_(l+1) = Layer_l(x_l) + Attention(q_l, {x_0, x_1, ..., x_l})
 | Claude（Anthropic；含 Fable） | 官方將 Claude 描述為 Transformer；現行旗艦的 attention head、KV 壓縮、稀疏模式與 kernel 未公開。 | 未公開。 | 公開可驗證的是 context compaction、結構化記憶與 agent harness 等長時程系統做法；不能據此反推模型內部 attention。 | 未公開。 | 不能宣稱其使用 GQA、MLA、線性或任何特定 sparse pattern。 |
 | GPT（OpenAI） | 現行旗艦的 attention 架構未公開。OpenAI 曾公開研究 block-sparse Transformer，也提供 prompt caching。 | 未公開。 | prompt caching 可重用共同 prompt prefix，降低 API 的重複 prefill 成本；它是服務層快取，而非 attention 公式。 | 未公開。 | 早期 sparse-attention 研究不代表現行 GPT 必然採用；不能據此判定其是否線性。 |
 | Gemini（Google DeepMind） | Gemini 1.0 技術報告明示使用如 **MQA（Multi-Query Attention）** 的高效 attention；Gemini 1.5 公開採 MoE。後續旗艦的完整細節有限。 | Gemini 1.0 的 MQA 是；後續未完整公開。 | MQA 縮小 K/V cache；MoE 降低 FFN 的活化計算。 | MQA 是；後續未完整公開。 | MoE 不是 attention 最佳化；不能由 Gemini 1.0 的披露推斷所有 Gemini 世代。 |
+
+![圖：各家公開的 attention 路線與閉源模型的可確認程度](figures/transformer-attention-models.svg)
 
 對 Claude、OpenAI GPT 與 Gemini 的比較必須比開放權重模型保守：**未公開不代表沒有某項技術，也不代表採用了某項技術。** 對這些模型可確認的 API prompt caching、RAG／context engineering、快取或 serving 行為，應視為系統層效率機制，而不能當作其神經網路 attention topology 的證據。
 
@@ -358,6 +378,8 @@ Qwen3-Next 的 Gated DeltaNet 與 Kimi 的 KDA 則採 **混合線性 attention �
 | GPU attention kernel | FlashAttention 系列 | 以 tiling 與 I/O-aware kernel 減少 HBM 往返；輸出仍是 exact softmax attention | 演算法複雜度仍是 dense attention 的複雜度 |
 | 多請求 serving | PagedAttention、continuous batching、prefix/prompt caching | 改善 KV cache 配置、碎片與 batch 利用率 | 屬 runtime / serving 技術，不是模型 attention topology |
 | 位置與長度外推 | RoPE、YaRN、ALiBi | 提供位置關係或將可用 context window 延長 | 本身不會降低 attention 的基本運算量 |
+
+![圖：依瓶頸分類的 attention 機制、典型技術與重要限制](figures/transformer-attention-bottleneck.svg)
 
 ### 15.2 exact attention 與線性／稀疏 attention 不可混為一談
 

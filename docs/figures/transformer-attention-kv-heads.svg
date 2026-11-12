@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">MHA、GQA、MQA、MLA：Query heads 與 K/V 的對應關係（示意）</title>
+  <desc id="d">以 8 個 Query heads 為例。MHA 每個 Query head 都有自己的 K/V head，品質基準但 KV cache 最大；GQA 把 8 個 Query heads 分成 2 組，每組共用一組 K/V heads，是常見折衷；MQA 全部 Query heads 共用 1 個 K/V head，KV cache 最小但品質取捨較大；MLA 把 K/V 壓縮成低維 latent cache，再以上投影重建，以投影換取更高壓縮率。圖為示意，實際 head 數依模型而異。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">Q heads 與 K/V 的對應（示意：8 個 Q heads）</text>
+  <rect class="box" x="12" y="44" width="616" height="108" rx="10"/>
+  <text class="b" x="24" y="72">MHA</text>
+  <text class="s" x="24" y="94">h 個 K/V heads</text>
+  <text class="s" x="24" y="112">品質基準；KV cache 最大</text>
+  <rect class="acc" x="198" y="56" width="40" height="18" rx="4"/>
+  <text class="s" x="218" y="69" text-anchor="middle">Q1</text>
+  <rect class="acc" x="252" y="56" width="40" height="18" rx="4"/>
+  <text class="s" x="272" y="69" text-anchor="middle">Q2</text>
+  <rect class="acc" x="306" y="56" width="40" height="18" rx="4"/>
+  <text class="s" x="326" y="69" text-anchor="middle">Q3</text>
+  <rect class="acc" x="360" y="56" width="40" height="18" rx="4"/>
+  <text class="s" x="380" y="69" text-anchor="middle">Q4</text>
+  <rect class="acc" x="414" y="56" width="40" height="18" rx="4"/>
+  <text class="s" x="434" y="69" text-anchor="middle">Q5</text>
+  <rect class="acc" x="468" y="56" width="40" height="18" rx="4"/>
+  <text class="s" x="488" y="69" text-anchor="middle">Q6</text>
+  <rect class="acc" x="522" y="56" width="40" height="18" rx="4"/>
+  <text class="s" x="542" y="69" text-anchor="middle">Q7</text>
+  <rect class="acc" x="576" y="56" width="40" height="18" rx="4"/>
+  <text class="s" x="596" y="69" text-anchor="middle">Q8</text>
+  <rect class="good" x="198" y="118" width="40" height="20" rx="4"/>
+  <text class="s" x="218" y="132" text-anchor="middle">KV</text>
+  <line class="ln" x1="218" y1="75" x2="218" y2="117"/>
+  <rect class="good" x="252" y="118" width="40" height="20" rx="4"/>
+  <text class="s" x="272" y="132" text-anchor="middle">KV</text>
+  <line class="ln" x1="272" y1="75" x2="272" y2="117"/>
+  <rect class="good" x="306" y="118" width="40" height="20" rx="4"/>
+  <text class="s" x="326" y="132" text-anchor="middle">KV</text>
+  <line class="ln" x1="326" y1="75" x2="326" y2="117"/>
+  <rect class="good" x="360" y="118" width="40" height="20" rx="4"/>
+  <text class="s" x="380" y="132" text-anchor="middle">KV</text>
+  <line class="ln" x1="380" y1="75" x2="380" y2="117"/>
+  <rect class="good" x="414" y="118" width="40" height="20" rx="4"/>
+  <text class="s" x="434" y="132" text-anchor="middle">KV</text>
+  <line class="ln" x1="434" y1="75" x2="434" y2="117"/>
+  <rect class="good" x="468" y="118" width="40" height="20" rx="4"/>
+  <text class="s" x="488" y="132" text-anchor="middle">KV</text>
+  <line class="ln" x1="488" y1="75" x2="488" y2="117"/>
+  <rect class="good" x="522" y="118" width="40" height="20" rx="4"/>
+  <text class="s" x="542" y="132" text-anchor="middle">KV</text>
+  <line class="ln" x1="542" y1="75" x2="542" y2="117"/>
+  <rect class="good" x="576" y="118" width="40" height="20" rx="4"/>
+  <text class="s" x="596" y="132" text-anchor="middle">KV</text>
+  <line class="ln" x1="596" y1="75" x2="596" y2="117"/>
+  <rect class="box" x="12" y="160" width="616" height="108" rx="10"/>
+  <text class="b" x="24" y="188">GQA</text>
+  <text class="s" x="24" y="210">g 個 K/V heads（g &lt; h）</text>
+  <text class="s" x="24" y="228">常見折衷；成熟低風險預設</text>
+  <rect class="acc" x="198" y="172" width="40" height="18" rx="4"/>
+  <text class="s" x="218" y="185" text-anchor="middle">Q1</text>
+  <rect class="acc" x="252" y="172" width="40" height="18" rx="4"/>
+  <text class="s" x="272" y="185" text-anchor="middle">Q2</text>
+  <rect class="acc" x="306" y="172" width="40" height="18" rx="4"/>
+  <text class="s" x="326" y="185" text-anchor="middle">Q3</text>
+  <rect class="acc" x="360" y="172" width="40" height="18" rx="4"/>
+  <text class="s" x="380" y="185" text-anchor="middle">Q4</text>
+  <rect class="acc" x="414" y="172" width="40" height="18" rx="4"/>
+  <text class="s" x="434" y="185" text-anchor="middle">Q5</text>
+  <rect class="acc" x="468" y="172" width="40" height="18" rx="4"/>
+  <text class="s" x="488" y="185" text-anchor="middle">Q6</text>
+  <rect class="acc" x="522" y="172" width="40" height="18" rx="4"/>
+  <text class="s" x="542" y="185" text-anchor="middle">Q7</text>
+  <rect class="acc" x="576" y="172" width="40" height="18" rx="4"/>
+  <text class="s" x="596" y="185" text-anchor="middle">Q8</text>
+  <rect class="good" x="259.0" y="234" width="80" height="20" rx="4"/>
+  <text class="s" x="299.0" y="248" text-anchor="middle">KV 組 1</text>
+  <line class="ln" x1="218" y1="191" x2="299.0" y2="233"/>
+  <line class="ln" x1="272" y1="191" x2="299.0" y2="233"/>
+  <line class="ln" x1="326" y1="191" x2="299.0" y2="233"/>
+  <line class="ln" x1="380" y1="191" x2="299.0" y2="233"/>
+  <rect class="good" x="475.0" y="234" width="80" height="20" rx="4"/>
+  <text class="s" x="515.0" y="248" text-anchor="middle">KV 組 2</text>
+  <line class="ln" x1="434" y1="191" x2="515.0" y2="233"/>
+  <line class="ln" x1="488" y1="191" x2="515.0" y2="233"/>
+  <line class="ln" x1="542" y1="191" x2="515.0" y2="233"/>
+  <line class="ln" x1="596" y1="191" x2="515.0" y2="233"/>
+  <rect class="box" x="12" y="276" width="616" height="108" rx="10"/>
+  <text class="b" x="24" y="304">MQA</text>
+  <text class="s" x="24" y="326">1 個 K/V head</text>
+  <text class="s" x="24" y="344">KV cache 最小；品質取捨較大</text>
+  <rect class="acc" x="198" y="288" width="40" height="18" rx="4"/>
+  <text class="s" x="218" y="301" text-anchor="middle">Q1</text>
+  <rect class="acc" x="252" y="288" width="40" height="18" rx="4"/>
+  <text class="s" x="272" y="301" text-anchor="middle">Q2</text>
+  <rect class="acc" x="306" y="288" width="40" height="18" rx="4"/>
+  <text class="s" x="326" y="301" text-anchor="middle">Q3</text>
+  <rect class="acc" x="360" y="288" width="40" height="18" rx="4"/>
+  <text class="s" x="380" y="301" text-anchor="middle">Q4</text>
+  <rect class="acc" x="414" y="288" width="40" height="18" rx="4"/>
+  <text class="s" x="434" y="301" text-anchor="middle">Q5</text>
+  <rect class="acc" x="468" y="288" width="40" height="18" rx="4"/>
+  <text class="s" x="488" y="301" text-anchor="middle">Q6</text>
+  <rect class="acc" x="522" y="288" width="40" height="18" rx="4"/>
+  <text class="s" x="542" y="301" text-anchor="middle">Q7</text>
+  <rect class="acc" x="576" y="288" width="40" height="18" rx="4"/>
+  <text class="s" x="596" y="301" text-anchor="middle">Q8</text>
+  <rect class="good" x="357.0" y="350" width="100" height="20" rx="4"/>
+  <text class="s" x="407.0" y="364" text-anchor="middle">單一 K/V</text>
+  <line class="ln" x1="218" y1="307" x2="407.0" y2="349"/>
+  <line class="ln" x1="272" y1="307" x2="407.0" y2="349"/>
+  <line class="ln" x1="326" y1="307" x2="407.0" y2="349"/>
+  <line class="ln" x1="380" y1="307" x2="407.0" y2="349"/>
+  <line class="ln" x1="434" y1="307" x2="407.0" y2="349"/>
+  <line class="ln" x1="488" y1="307" x2="407.0" y2="349"/>
+  <line class="ln" x1="542" y1="307" x2="407.0" y2="349"/>
+  <line class="ln" x1="596" y1="307" x2="407.0" y2="349"/>
+  <rect class="box" x="12" y="392" width="616" height="108" rx="10"/>
+  <text class="b" x="24" y="420">MLA</text>
+  <text class="s" x="24" y="442">壓縮 latent KV cache</text>
+  <text class="s" x="24" y="460">以投影換更高壓縮率</text>
+  <rect class="acc" x="198" y="404" width="40" height="18" rx="4"/>
+  <text class="s" x="218" y="417" text-anchor="middle">Q1</text>
+  <rect class="acc" x="252" y="404" width="40" height="18" rx="4"/>
+  <text class="s" x="272" y="417" text-anchor="middle">Q2</text>
+  <rect class="acc" x="306" y="404" width="40" height="18" rx="4"/>
+  <text class="s" x="326" y="417" text-anchor="middle">Q3</text>
+  <rect class="acc" x="360" y="404" width="40" height="18" rx="4"/>
+  <text class="s" x="380" y="417" text-anchor="middle">Q4</text>
+  <rect class="acc" x="414" y="404" width="40" height="18" rx="4"/>
+  <text class="s" x="434" y="417" text-anchor="middle">Q5</text>
+  <rect class="acc" x="468" y="404" width="40" height="18" rx="4"/>
+  <text class="s" x="488" y="417" text-anchor="middle">Q6</text>
+  <rect class="acc" x="522" y="404" width="40" height="18" rx="4"/>
+  <text class="s" x="542" y="417" text-anchor="middle">Q7</text>
+  <rect class="acc" x="576" y="404" width="40" height="18" rx="4"/>
+  <text class="s" x="596" y="417" text-anchor="middle">Q8</text>
+  <rect class="acc" x="337.0" y="462" width="140" height="22" rx="4"/>
+  <text class="s" x="407.0" y="477" text-anchor="middle">低維 latent KV</text>
+  <rect class="box" x="371.0" y="438" width="72" height="16" rx="4"/>
+  <text class="s" x="407.0" y="450" text-anchor="middle">上投影</text>
+  <line class="ln" x1="407.0" y1="461" x2="407.0" y2="455"/>
+  <line class="ln" x1="218" y1="423" x2="407.0" y2="437"/>
+  <line class="ln" x1="272" y1="423" x2="407.0" y2="437"/>
+  <line class="ln" x1="326" y1="423" x2="407.0" y2="437"/>
+  <line class="ln" x1="380" y1="423" x2="407.0" y2="437"/>
+  <line class="ln" x1="434" y1="423" x2="407.0" y2="437"/>
+  <line class="ln" x1="488" y1="423" x2="407.0" y2="437"/>
+  <line class="ln" x1="542" y1="423" x2="407.0" y2="437"/>
+  <line class="ln" x1="596" y1="423" x2="407.0" y2="437"/>
+  <text class="s" x="320" y="512" text-anchor="middle">實際 head 數依模型而異；MQA／GQA／MLA 都不會讓 prefill 的 dense QKᵀ 自動變線性</text>
+</svg>

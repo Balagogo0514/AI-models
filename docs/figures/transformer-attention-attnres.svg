@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 450" role="img" aria-labelledby="t d">
+  <title id="t">一般 residual 與 Attention Residuals 的差別（概念示意）</title>
+  <desc id="d">左側一般 residual：每層輸出以固定權重一路累加，x_(l+1) 等於 x_l 加上 Layer_l 作用在 x_l，模型很深時較早層找到的遠距線索可能被稀釋。右側 AttnRes：目前層依內容用 attention 從先前各層表示 x_0 到 x_l 中選擇性整合。它有助於前段取得的訊號跨越深度後仍可被取用，但不會直接擴大 context window，也不取代 KDA 與 MLA 的序列 attention。上式是概念式，實作會以 block 等方式控制成本。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="448.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">跨深度的資訊流：固定累加 vs 依內容選擇</text>
+  <text class="b" x="150" y="54" text-anchor="middle">一般 residual</text>
+  <text class="b" x="490" y="54" text-anchor="middle">Attention Residuals</text>
+  <rect class="box" x="80" y="66" width="140" height="38" rx="8"/>
+  <text class="mono" x="150" y="90" text-anchor="middle">x_0</text>
+  <line class="ln" x1="150" y1="105" x2="150" y2="123" marker-end="url(#a)"/>
+  <rect class="box" x="80" y="124" width="140" height="38" rx="8"/>
+  <text class="mono" x="150" y="148" text-anchor="middle">x_1</text>
+  <line class="ln" x1="150" y1="163" x2="150" y2="181" marker-end="url(#a)"/>
+  <rect class="box" x="80" y="182" width="140" height="38" rx="8"/>
+  <text class="mono" x="150" y="206" text-anchor="middle">x_2</text>
+  <line class="ln" x1="150" y1="221" x2="150" y2="239" marker-end="url(#a)"/>
+  <rect class="box" x="80" y="240" width="140" height="38" rx="8"/>
+  <text class="mono" x="150" y="264" text-anchor="middle">x_3</text>
+  <text class="mono" x="150" y="308" text-anchor="middle">x_(l+1) = x_l + Layer_l(x_l)</text>
+  <text class="s" x="150" y="328" text-anchor="middle">固定權重一路累加；深層時早期線索可能被稀釋</text>
+  <rect class="box" x="360" y="66" width="100" height="38" rx="8"/>
+  <text class="mono" x="410" y="90" text-anchor="middle">x_0</text>
+  <rect class="box" x="360" y="124" width="100" height="38" rx="8"/>
+  <text class="mono" x="410" y="148" text-anchor="middle">x_1</text>
+  <rect class="box" x="360" y="182" width="100" height="38" rx="8"/>
+  <text class="mono" x="410" y="206" text-anchor="middle">x_2</text>
+  <rect class="box" x="360" y="240" width="100" height="38" rx="8"/>
+  <text class="mono" x="410" y="264" text-anchor="middle">x_3</text>
+  <rect class="good" x="520" y="108" width="108" height="90" rx="10"/>
+  <text class="monob" x="574" y="136" text-anchor="middle">Layer_l</text>
+  <text class="s" x="574" y="156" text-anchor="middle">依內容選擇</text>
+  <text class="s" x="574" y="174" text-anchor="middle">要用哪些層</text>
+  <line class="ln" x1="460" y1="85" x2="520" y2="150" marker-end="url(#a)"/>
+  <line class="ln" x1="460" y1="143" x2="520" y2="150" marker-end="url(#a)"/>
+  <line class="ln" x1="460" y1="201" x2="520" y2="150" marker-end="url(#a)"/>
+  <line class="ln" x1="460" y1="259" x2="520" y2="150" marker-end="url(#a)"/>
+  <text class="mono" x="490" y="308" text-anchor="middle">x_(l+1) = Layer_l(x_l)</text>
+  <text class="mono" x="490" y="326" text-anchor="middle">+ Attention(q_l, {x_0, x_1, …, x_l})</text>
+  <rect class="acc" x="12" y="346" width="616" height="82" rx="10"/>
+  <text class="b" x="24" y="370">效果與邊界</text>
+  <text x="24" y="392">有助於前段取得的訊號跨越深度後仍可被取用，不會在最終推理層失去它</text>
+  <text class="s" x="24" y="412">不會直接擴大 context window，也不取代 KDA／MLA 的序列 attention</text>
+  <text class="s" x="320" y="444" text-anchor="middle">概念式；實作會以 block 等方式控制跨層 attention 的記憶體與通訊成本</text>
+</svg>

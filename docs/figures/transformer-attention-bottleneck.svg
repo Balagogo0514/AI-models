@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 470" role="img" aria-labelledby="t d">
+  <title id="t">依瓶頸選 attention 機制：瓶頸、典型機制與重要限制</title>
+  <desc id="d">五種瓶頸：長 prompt 的 prefill 用 sliding-window、sparse、linear、hybrid attention，限制是可能犧牲任意兩 token 的直接精確互看；長 context 逐 token decode 用 MQA、GQA、MLA、KV quantization，限制是不會消除 dense prefill 的二次成本；GPU attention kernel 用 FlashAttention 系列，演算法複雜度仍是 dense；多請求 serving 用 PagedAttention、continuous batching、prefix caching，屬 runtime 技術而非模型拓撲；位置與長度外推用 RoPE、YaRN、ALiBi，本身不降低運算量。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="468.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">先依瓶頸分類，而不是只看名詞</text>
+  <rect class="hd" x="12" y="44" width="616" height="26" rx="6"/>
+  <text class="b" x="20" y="62">瓶頸</text>
+  <text class="b" x="172" y="62">典型機制</text>
+  <text class="b" x="420" y="62">重要限制</text>
+  <rect class="acc" x="12" y="78" width="150" height="68" rx="8"/>
+  <text class="b" x="22" y="108.0">長 prompt 的</text>
+  <text class="b" x="22" y="124.0">prefill</text>
+  <line class="ln" x1="162" y1="112" x2="170" y2="112" marker-end="url(#a)"/>
+  <rect class="good" x="172" y="78" width="240" height="68" rx="8"/>
+  <text x="182" y="108.0">sliding-window／sparse、linear、</text>
+  <text x="182" y="124.0">hybrid attention</text>
+  <line class="ln" x1="412" y1="112" x2="418" y2="112" marker-end="url(#a)"/>
+  <rect class="bad" x="420" y="78" width="208" height="68" rx="8"/>
+  <text x="430" y="108.0">可能犧牲任意兩 token 的直接精確</text>
+  <text x="430" y="124.0">互看</text>
+  <rect class="acc" x="12" y="154" width="150" height="68" rx="8"/>
+  <text class="b" x="22" y="184.0">長 context 的逐</text>
+  <text class="b" x="22" y="200.0">token decode</text>
+  <line class="ln" x1="162" y1="188" x2="170" y2="188" marker-end="url(#a)"/>
+  <rect class="good" x="172" y="154" width="240" height="68" rx="8"/>
+  <text x="182" y="192.0">MQA、GQA、MLA、KV quantization</text>
+  <line class="ln" x1="412" y1="188" x2="418" y2="188" marker-end="url(#a)"/>
+  <rect class="bad" x="420" y="154" width="208" height="68" rx="8"/>
+  <text x="430" y="184.0">不會消除 dense prefill 的</text>
+  <text x="430" y="200.0">O(n²)</text>
+  <rect class="acc" x="12" y="230" width="150" height="68" rx="8"/>
+  <text class="b" x="22" y="260.0">GPU attention</text>
+  <text class="b" x="22" y="276.0">kernel</text>
+  <line class="ln" x1="162" y1="264" x2="170" y2="264" marker-end="url(#a)"/>
+  <rect class="good" x="172" y="230" width="240" height="68" rx="8"/>
+  <text x="182" y="260.0">FlashAttention 系列（exact</text>
+  <text x="182" y="276.0">softmax）</text>
+  <line class="ln" x1="412" y1="264" x2="418" y2="264" marker-end="url(#a)"/>
+  <rect class="bad" x="420" y="230" width="208" height="68" rx="8"/>
+  <text x="430" y="260.0">演算法複雜度仍是 dense</text>
+  <text x="430" y="276.0">attention 的</text>
+  <rect class="acc" x="12" y="306" width="150" height="68" rx="8"/>
+  <text class="b" x="22" y="344.0">多請求 serving</text>
+  <line class="ln" x1="162" y1="340" x2="170" y2="340" marker-end="url(#a)"/>
+  <rect class="good" x="172" y="306" width="240" height="68" rx="8"/>
+  <text x="182" y="336.0">PagedAttention、continuous</text>
+  <text x="182" y="352.0">batching、prefix／prompt caching</text>
+  <line class="ln" x1="412" y1="340" x2="418" y2="340" marker-end="url(#a)"/>
+  <rect class="bad" x="420" y="306" width="208" height="68" rx="8"/>
+  <text x="430" y="336.0">屬 runtime／serving 技術，不是</text>
+  <text x="430" y="352.0">模型 attention topology</text>
+  <rect class="acc" x="12" y="382" width="150" height="68" rx="8"/>
+  <text class="b" x="22" y="420.0">位置與長度外推</text>
+  <line class="ln" x1="162" y1="416" x2="170" y2="416" marker-end="url(#a)"/>
+  <rect class="good" x="172" y="382" width="240" height="68" rx="8"/>
+  <text x="182" y="420.0">RoPE、YaRN、ALiBi</text>
+  <line class="ln" x1="412" y1="416" x2="418" y2="416" marker-end="url(#a)"/>
+  <rect class="bad" x="420" y="382" width="208" height="68" rx="8"/>
+  <text x="430" y="412.0">本身不降低 attention 的基本運算</text>
+  <text x="430" y="428.0">量</text>
+</svg>

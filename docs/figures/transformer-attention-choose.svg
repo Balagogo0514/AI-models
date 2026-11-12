@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 468" role="img" aria-labelledby="t d">
+  <title id="t">設計選型：六種需求的優先考慮與要避免的誤區</title>
+  <desc id="d">一般 chatbot 與 coding LLM 用 RoPE、GQA、FlashAttention 與 KV cache，避免只因 context window 大就把全部文件塞進 prompt；高併發長輸出 serving 用 GQA 或 MLA、PagedAttention、continuous batching；長文件 QA 以 RAG 與 chunking 為主；極長 sequence 訓練用 FlashAttention、sequence 與 context parallel、Ring Attention；多模態輸入用 cross-attention 或 latent resampler；既有 MHA checkpoint 降成本先用 runtime KV quantization 與 PagedAttention。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="466.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">需求 → 優先考慮</text>
+  <rect class="acc" x="12" y="44" width="270" height="58" rx="10"/>
+  <text x="24" y="78.0">一般 chatbot／coding LLM</text>
+  <line class="ln" x1="282" y1="73.0" x2="316" y2="73.0" marker-end="url(#a)"/>
+  <rect class="good" x="318" y="44" width="310" height="58" rx="10"/>
+  <text class="b" x="330" y="67.0">RoPE＋GQA＋FlashAttention</text>
+  <text class="s" x="330" y="89.0">避免：只因 window 大就全塞進 prompt</text>
+  <rect class="acc" x="12" y="108" width="270" height="58" rx="10"/>
+  <text x="24" y="142.0">高併發、長輸出 serving</text>
+  <line class="ln" x1="282" y1="137.0" x2="316" y2="137.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="108" width="310" height="58" rx="10"/>
+  <text class="b" x="330" y="131.0">GQA／MLA＋PagedAttention</text>
+  <text class="s" x="330" y="153.0">避免：只比參數量，忽略 decode 頻寬</text>
+  <rect class="acc" x="12" y="172" width="270" height="58" rx="10"/>
+  <text x="24" y="206.0">長文件 QA</text>
+  <line class="ln" x1="282" y1="201.0" x2="316" y2="201.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="172" width="310" height="58" rx="10"/>
+  <text class="b" x="330" y="195.0">RAG／chunking 為主</text>
+  <text class="s" x="330" y="217.0">避免：期待 sparse 自動保留遠距關聯</text>
+  <rect class="acc" x="12" y="236" width="270" height="58" rx="10"/>
+  <text x="24" y="270.0">極長 sequence 訓練</text>
+  <line class="ln" x1="282" y1="265.0" x2="316" y2="265.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="236" width="310" height="58" rx="10"/>
+  <text class="b" x="330" y="259.0">FlashAttention＋Ring Attention</text>
+  <text class="s" x="330" y="281.0">避免：把理論 O(n) 當成實際更快</text>
+  <rect class="acc" x="12" y="300" width="270" height="58" rx="10"/>
+  <text x="24" y="334.0">多模態輸入</text>
+  <line class="ln" x1="282" y1="329.0" x2="316" y2="329.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="300" width="310" height="58" rx="10"/>
+  <text class="b" x="330" y="323.0">cross-attention／latent resampler</text>
+  <text class="s" x="330" y="345.0">避免：視覺 token 全量塞進長文字 context</text>
+  <rect class="acc" x="12" y="364" width="270" height="58" rx="10"/>
+  <text x="24" y="398.0">既有 MHA checkpoint 降成本</text>
+  <line class="ln" x1="282" y1="393.0" x2="316" y2="393.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="364" width="310" height="58" rx="10"/>
+  <text class="b" x="330" y="387.0">先用 KV quantization／PagedAttention</text>
+  <text class="s" x="330" y="409.0">避免：假定換 attention 後不用重訓、重測</text>
+  <text class="s" x="320" y="450" text-anchor="middle">更多組合見原文第 9 節；選型後至少要同時量測品質、prefill、decode、serving、長度泛化</text>
+</svg>
