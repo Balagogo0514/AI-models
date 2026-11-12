@@ -260,32 +260,9 @@ case_facts.json + crash fingerprint + artifact IDs
 
 此設計把正式系統的模型成本壓縮到多數新案件只需一次判讀；只有未知、高優先或證據不足的案件才進入第二次深度分析。
 
-### Mermaid 流程圖
+### 流程圖
 
-```mermaid
-flowchart TD
-    A[coredump] --> B[既有程式<br/>full backtrace / info registers / info threads]
-    B --> C[Python 前處理與正規化]
-    C --> D[case_facts.json]
-    C --> E[crash fingerprint]
-
-    E --> F{已知 signature？}
-    F -- 是 --> G[查詢既有 root cause<br/>Issue / fix version]
-    G --> H[輸出既有分析報告<br/>不呼叫模型]
-
-    F -- 否 --> I[建立 CaseBudget<br/>token / 呼叫次數 / 時間上限]
-    D --> J[最小證據集<br/>facts + top frames]
-    I --> J
-    J --> K[openai SDK + Responses API<br/>第一次模型判讀]
-
-    K --> L{證據足夠？}
-    L -- 是 --> M[結構化報告<br/>facts / hypotheses / evidence IDs]
-    L -- 否 --> N[受控工具<br/>source / Git / artifact excerpt]
-    N --> O{值得深度分析？}
-    O -- 否 --> P[needs_human_or_deep_analysis]
-    O -- 是 --> Q[第二次深度分析<br/>額外預算或人工核准]
-    Q --> M
-```
+![圖：已有 backtrace 時的精簡流程——fingerprint 命中就不呼叫模型，未命中才進入預算控管的分析](figures/openai-python-agent-lean-flow.svg)
 
 正式 production 控制層為：
 

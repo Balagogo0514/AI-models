@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 560" role="img" aria-labelledby="t d">
+  <title id="t">RAG 不夠時的順序：先修檢索，再 SFT，再 DPO；有可驗證的 reward 才做 RL</title>
+  <desc id="d">第一步修檢索與資料品質，因為檢索失敗時微調與 RL 都幫不上；仍不夠才做 SFT，處理格式、語氣、術語；回答偏好還不夠時用 DPO 等離線偏好優化，比線上 RL 便宜且穩定；接著判斷有沒有可驗證的 reward：有就做 RL，包含 RAG 行為 RL、Text-to-SQL 與工具 RL、搜尋型 Agent RL；沒有就先補評測集與評分標準，不要硬上 RL。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="558.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">從便宜到昂貴：RL 通常不是第一步</text>
+  <rect class="acc" x="120.0" y="44.0" width="400" height="56" rx="8"/>
+  <text class="b" x="320" y="68" text-anchor="middle">修檢索與資料品質</text>
+  <text x="320" y="84" text-anchor="middle">檢索失敗：微調與 RL 都幫不上</text>
+  <path class="ln" d="M320.0,100.0 L320.0,148.0" marker-end="url(#a)"/>
+  <text class="s" x="360" y="128" text-anchor="middle">仍不夠</text>
+  <rect class="box" x="120.0" y="148.0" width="400" height="56" rx="8"/>
+  <text class="b" x="320" y="172" text-anchor="middle">SFT</text>
+  <text x="320" y="188" text-anchor="middle">格式、語氣、術語</text>
+  <path class="ln" d="M320.0,204.0 L320.0,252.0" marker-end="url(#a)"/>
+  <text class="s" x="396" y="232" text-anchor="middle">回答偏好還不夠</text>
+  <rect class="box" x="120.0" y="252.0" width="400" height="56" rx="8"/>
+  <text class="b" x="320" y="276" text-anchor="middle">DPO 等離線偏好優化</text>
+  <text x="320" y="292" text-anchor="middle">比線上 RL 便宜、穩定</text>
+  <path class="ln" d="M320.0,308.0 L320.0,340.0" marker-end="url(#a)"/>
+  <polygon class="acc" points="320,340.0 460.0,382 320,424.0 180.0,382"/>
+  <text class="b" x="320" y="386" text-anchor="middle">有可驗證的 reward 嗎？</text>
+  <rect class="good" x="15.0" y="444.0" width="230" height="80" rx="8"/>
+  <text class="b" x="130" y="472" text-anchor="middle">做 RL</text>
+  <text x="130" y="488" text-anchor="middle">RAG 行為 RL、Text-to-SQL／</text>
+  <text x="130" y="504" text-anchor="middle">工具 RL、搜尋型 Agent RL</text>
+  <rect class="bad" x="395.0" y="444.0" width="230" height="80" rx="8"/>
+  <text class="b" x="510" y="480" text-anchor="middle">先補評測集與評分標準</text>
+  <text x="510" y="496" text-anchor="middle">不要硬上 RL</text>
+  <path class="ln" d="M180.0,382.0 L130.0,382.0 L130.0,444.0" marker-end="url(#a)"/>
+  <text class="s" x="154" y="374" text-anchor="middle">有</text>
+  <path class="ln" d="M460.0,382.0 L510.0,382.0 L510.0,444.0" marker-end="url(#a)"/>
+  <text class="s" x="486" y="374" text-anchor="middle">沒有</text>
+  <text class="s" x="320" y="546" text-anchor="middle">有可驗證的 reward 時才上 RL</text>
+</svg>
