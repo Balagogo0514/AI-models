@@ -1,7 +1,7 @@
 # Claude Code 的 Context 如何組成：記憶放在哪裡？會互相取代嗎？
 
-> 資料來源：Claude Code 官方文件 [Memory](https://code.claude.com/docs/en/memory.md)、[Explore the context window](https://code.claude.com/docs/en/context-window.md)、[Prompt caching](https://code.claude.com/docs/en/prompt-caching.md)、[Manage sessions](https://code.claude.com/docs/en/sessions.md)、[Explore the .claude directory](https://code.claude.com/docs/en/claude-directory.md)、[Subagents](https://code.claude.com/docs/en/sub-agents.md)、[Settings](https://code.claude.com/docs/en/settings.md)、[Extend Claude Code](https://code.claude.com/docs/en/features-overview.md)；另以 Claude Code v2.1.318 在本機（雲端容器）觀察檔案位置。
-> 更新日期：2026-11-11
+> 資料來源：Claude Code 官方文件 [Memory](https://code.claude.com/docs/en/memory.md)、[Explore the context window](https://code.claude.com/docs/en/context-window.md)、[Prompt caching](https://code.claude.com/docs/en/prompt-caching.md)、[Manage sessions](https://code.claude.com/docs/en/sessions.md)、[Explore the .claude directory](https://code.claude.com/docs/en/claude-directory.md)、[Subagents](https://code.claude.com/docs/en/sub-agents.md)、[Settings](https://code.claude.com/docs/en/settings.md)、[Extend Claude Code](https://code.claude.com/docs/en/features-overview.md)、[Security](https://code.claude.com/docs/en/security.md)、[Data usage](https://code.claude.com/docs/en/data-usage.md)、[Use Claude Code in the cloud](https://code.claude.com/docs/en/claude-code-on-the-web.md)、[Configure cloud environments](https://code.claude.com/docs/en/cloud-environments.md)、[Self-hosted environments](https://code.claude.com/docs/en/self-hosted-environments.md)、[Remote Control](https://code.claude.com/docs/en/remote-control.md)；另以 Claude Code v2.1.318 在本機（雲端容器）觀察檔案位置。
+> 更新日期：2026-11-12
 >
 > 標記：✅ 官方文件明載　👁 本機實際觀察　⚠️ 官方未明載，屬推論或版本相依
 
@@ -16,6 +16,7 @@
 | 專案目錄的 memory 是什麼？ | 要分兩種：**你寫的** `./CLAUDE.md`、`./.claude/rules/`、`./CLAUDE.local.md`（在專案目錄裡）；以及 **Claude 自己寫的 auto memory**（在 `~/.claude/projects/<project>/memory/`，**不在**專案目錄裡）。✅ |
 | 會互相取代嗎？ | **大多不會。** CLAUDE.md 各層是疊加（concatenate）；CLAUDE.md 與 auto memory 是互補、同時載入。唯一的「取代」是：預設只在**找不到任何 CLAUDE.md** 時才改讀 AGENTS.md；以及 `/compact` 會把**對話**換成摘要（但記憶檔會從磁碟重新注入）。✅ |
 | 切換帳號會影響這些紀錄嗎？ | 本機的逐字稿與 auto memory 只依工作目錄路徑存放，不分帳號；換帳號後應該仍看得到並能 resume，但官方未明說 ⚠️，且模型、組織設定、啟動旗標不一定相同（見 §3.2）。 |
+| 雲端 session 與 local session 的私密性有差異嗎？ | **有，但差在「檔案放哪、誰儲存、能不能用 ZDR、能不能分享」，不在「對話有沒有送 Anthropic」**：Local 也會把所有提示詞與輸出送到 Anthropic API。雲端 session 的 repo 在 Anthropic 的 VM 上，且 ZDR／HIPAA 組織無法使用（見 §七）。✅ |
 | skill、MCP、subagent、hook、plugin 對 context 的意義？ | 它們是在決定**什麼內容進 context、何時進、誰決定**：CLAUDE.md 與 output style 常駐；skill 只有描述常駐、本文按需；MCP 只有工具名稱常駐、**工具結果會進 context**；subagent 在獨立 context 做事、只回傳摘要；hook 在 context 外執行、零成本；plugin 只是打包層（見 §六）。對模型來說它們都只是 context（見 §6.1）。✅ |
 
 ---
@@ -358,7 +359,85 @@ Claude Code 有一整層「擴充」機制，用來決定 Claude 知道什麼、
 
 ---
 
-## 七、實務建議
+## 七、Local 與雲端 session：資料放哪、私密性差在哪裡
+
+標記：✅ 官方文件明載（〈[Security](https://code.claude.com/docs/en/security.md)〉〈[Data usage](https://code.claude.com/docs/en/data-usage.md)〉〈[Use Claude Code in the cloud](https://code.claude.com/docs/en/claude-code-on-the-web.md)〉〈[Configure cloud environments](https://code.claude.com/docs/en/cloud-environments.md)〉〈[Self-hosted environments](https://code.claude.com/docs/en/self-hosted-environments.md)〉〈[Remote Control](https://code.claude.com/docs/en/remote-control.md)〉）　⚠️ 未驗證。
+
+### 7.1 先講共同點：local 也不是離線
+
+本機 session 會把「**所有提示詞與模型輸出**」經 TLS 送到 Anthropic API ✅。所以「local＝資料不離開我的電腦」不成立。差別在**檔案與執行環境**，以及 Anthropic 額外儲存什麼。
+
+### 7.2 四種模式對照
+
+![Local、Remote Control、雲端（Anthropic 託管）、雲端（自架環境）：檔案與執行在哪、Anthropic 儲存什麼、能否用零資料保留](figures/claude-context-session-modes.svg)
+
+| | **Local**（終端機、IDE、桌面版 Local） | **Remote Control** | **雲端（Anthropic 託管）** | **雲端（自架環境）** |
+|---|---|---|---|---|
+| **檔案與執行** | 你的機器 | 你的機器 | **Anthropic 管理的隔離 VM**，repo 被 clone 進去 | **你的基礎設施**；checkout、產物、secrets 留在你的機器 |
+| **Anthropic 儲存** | 依帳號政策保留你送出的內容 | **連線期間整份轉錄存在 Anthropic 伺服器**（為了跨裝置同步與斷線重連），依 Data usage 政策保留 | 轉錄由 Anthropic 儲存，讓你回到 session；程式碼與 session 資料受保留政策約束 | 對話（提示詞、回應、工具結果）仍送 `api.anthropic.com`，Anthropic 儲存轉錄 |
+| **本機落地** | 轉錄以**明文**存於 `~/.claude/projects/`，預設 30 天 | 同左 | 本機沒有執行環境 | — |
+| **ZDR／HIPAA** | 可用（ZDR 限 Claude for Enterprise 的 Claude Code，逐組織啟用） | **不可用** | **不可用** | **不可用** |
+| **誰能用** | 所有方案 | Pro、Max、Ultra 等 | Pro、Max、Ultra、Team；Enterprise 需 premium seat 或 Chat + Claude Code seat；需組織的 `allow_remote_sessions` 政策開啟 | Team、Enterprise（公測，預設關閉） |
+
+### 7.3 雲端 session 要額外注意的
+
+- **repo 在 Anthropic 的 VM 上** ✅：VM 閒置幾分鐘會暫停並保存檔案，下次傳訊息再恢復；一段時間不活動後回收。刪除 session 會「永久移除 session 與其資料」。⚠️ VM 資料確切何時刪除，官方只說「閒置後回收」，沒有給具體時限。
+- **`claude --cloud` 可能上傳本機 repo** ✅：從沒有 git remote、或沒裝 Claude GitHub App 的 repo 執行時，會把本機 repo 打包上傳，**含所有分支的歷史，以及已追蹤檔案的未提交變更**。macOS、Linux、WSL 會排除 `.env`、`*.tfvars`、`id_rsa`、`*.pem` 這類檔案的未提交變更；**原生 Windows 不排除，原樣上傳**。
+- **分享** ✅：Team／Enterprise 是「私人／團隊」；**Pro／Max／Ultra 是「私人／公開」，公開代表任何登入 claude.ai 的使用者都看得到，且預設不驗證 repo 權限**。官方提醒 session 可能含私有 repo 的程式碼與憑證。
+- **環境變數不是秘密** ✅：官方寫「**使用該環境的任何人都能讀到這些值**」。金鑰要改用 **network secret**：由 Anthropic 的代理在請求離開 session 後才附上，session 看不到，存檔後也無法再檢視（自架環境沒有 network secret；使用客戶自管加密金鑰的組織也不能存）。
+- **網路** ✅：Anthropic 託管環境預設有限制，可關閉或只允許特定網域；但官方警告「即使網路關閉，Claude Code 仍可與 Anthropic API 通訊，這可能讓資料離開 VM」。
+- **內建保護** ✅：每個 session 一個隔離 VM、所有操作有稽核紀錄、GitHub 憑證加密存在伺服器且不進 VM（VM 只拿到限定於該 session 的短期憑證）、代理會拒絕刪除分支與推送非分支（如 tag）。
+- **不可用的組織** ✅：啟用 ZDR、HIPAA，或使用客戶自管加密金鑰（CMEK）的組織，**無法啟動雲端 session**。
+
+### 7.4 本機 session 的風險
+
+- **轉錄是明文** ✅：工具讀到的 `.env` 內容、印出的密碼都會留在 `~/.claude/projects/`；可用 `cleanupPeriodDays` 縮短保留（見 §3.1）。
+- **沒有雲端那層隔離** ✅：Claude 在你的機器上以你的權限工作，要靠權限設定與 sandbox；官方建議對敏感程式碼可在 sandbox runtime 或 dev container 內執行整個 Claude Code。
+- **Remote Control 不是雲端 session** ✅：它沒有雲端 VM 與 sandbox，只是讓網頁或手機連到你本機的行程；連線用多個短期、限定單一用途的憑證。可用 `disableRemoteControl` 設定整個關掉。
+
+### 7.5 怎麼選
+
+![依情況選 session 模式：受規範資料只用 local；要雲端體驗但程式碼不離開網路用自架環境；個人帳號不要放公司程式碼；一般公司開發可用雲端但要限制網路、金鑰用 network secret、關閉分享](figures/claude-context-session-choice.svg)
+
+| 情況 | 建議 |
+|---|---|
+| 受規範資料，需要 ZDR 或 HIPAA | 只用 local（雲端與 Remote Control 本來就不可用） |
+| 要雲端體驗，但程式碼不離開公司網路 | **自架環境**：檔案與執行留在你的網路內；對話仍送 Anthropic，且 ZDR／HIPAA 不可用 |
+| 個人帳號（Pro、Max、Ultra） | 公司程式碼不要放；雲端分享的預設選項較鬆，且訓練設定另有影響（見 7.6） |
+| 一般公司開發 | 雲端 session 可用，但要限制網路、金鑰用 network secret、關閉不需要的分享 🛠 |
+
+### 7.6 資料用途與保留：跟帳號類型有關 ✅
+
+| | 個人方案（Free、Pro、Max、Ultra） | 商用方案（Team、Enterprise、API、第三方平台、Claude Gov） |
+|---|---|---|
+| **訓練** | 提供選擇；**設定開啟時會用你的資料訓練**，包含用這些帳號使用 Claude Code | Anthropic **不**用商用條款下送到 Claude Code 的程式碼或提示詞訓練生成式模型，除非客戶主動選擇提供（例如 Development Partner Program，由組織管理員明確加入，僅限第一方 API） |
+| **保留** | 允許訓練：5 年；不允許：30 天 | 標準 30 天；ZDR 可用於符合資格的 Claude for Enterprise 的 Claude Code，**不含在標準 Enterprise 方案內**，由帳號團隊逐組織啟用 |
+| **設定位置** | claude.ai 的資料隱私控制頁 | 合約 |
+
+**例外與額外資料流**（個別設定可關閉）
+
+| 項目 | 內容 | 關閉方式 |
+|---|---|---|
+| `/feedback`、`/bug`、`/share` | 送出的對話記錄**保留 5 年**，可能用於改善產品 | `DISABLE_FEEDBACK_COMMAND=1` |
+| 工作階段品質問卷的後續詢問 | 選 Yes 會上傳完整對話與原始日誌，**內容原樣上傳**，保留最多 6 個月；官方說這不影響訓練偏好，也不能用來訓練 | `CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1`；ZDR 組織不會出現 |
+| 使用指標 | 延遲、可靠度、使用模式；**不含程式碼、提示詞、檔案路徑** | `DISABLE_TELEMETRY=1` |
+| 錯誤報告 | 僅在個人訂閱（Pro、Max、Ultra）登入、v2.1.198 以上、直連 Claude API，且無 ZDR 或 HIPAA 協議時開啟 | `DISABLE_ERROR_REPORTING=1` |
+| 全部非必要流量 | 一次關掉遙測、錯誤報告、問卷、`/feedback` | `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` |
+| WebFetch 域名檢查 | 只送主機名稱，不含完整網址與內容；**不受上一項影響** | `skipWebFetchPreflight: true` |
+
+使用 Amazon Bedrock、Google Cloud 的 Agent Platform、Microsoft Foundry 時，錯誤報告、遙測與 `/feedback` **預設關閉**。
+
+### 7.7 沒驗證的部分 ⚠️
+
+- 雲端 VM **確切何時刪除**資料。
+- **組織管理員能看到哪些雲端 session**。
+- Team 與 Enterprise 之間的細部差異。
+- 商用條款的原文措辭：本節只引用 Claude Code 官方文件對它的描述，合約請看原文。
+- OpenAI 的同類資料沒有納入本文。
+
+---
+
+## 八、實務建議
 
 1. **要跨 session 記住的事，寫進 CLAUDE.md 或讓 auto memory 記**，不要指望「同一個對話」。逐字稿只是紀錄。
 2. **該遵守的規則放根目錄 CLAUDE.md**；只有局部適用的才用子目錄 CLAUDE.md 或 `paths:` rules，並記得它們壓縮後會消失、需重新觸發。
@@ -386,3 +465,7 @@ Claude Code 有一整層「擴充」機制，用來決定 Claude 知道什麼、
 - [Subagents：What loads at startup](https://code.claude.com/docs/en/sub-agents.md#what-loads-at-startup)
 - [Settings：Settings precedence](https://code.claude.com/docs/en/settings.md#settings-precedence)
 - [Extend Claude Code](https://code.claude.com/docs/en/features-overview.md)：各擴充機制的選擇與 context 成本
+- [Security](https://code.claude.com/docs/en/security.md)：雲端執行的安全控制
+- [Data usage](https://code.claude.com/docs/en/data-usage.md)：訓練政策、保留、遙測、feedback
+- [Use Claude Code in the cloud](https://code.claude.com/docs/en/claude-code-on-the-web.md)、[Configure cloud environments](https://code.claude.com/docs/en/cloud-environments.md)：雲端 session 的資料、分享、環境變數與 network secret
+- [Self-hosted environments](https://code.claude.com/docs/en/self-hosted-environments.md)、[Remote Control](https://code.claude.com/docs/en/remote-control.md)：自架環境與 Remote Control 的資料流
