@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 500" role="img" aria-labelledby="t d">
+  <title id="t">依情境選 Codex 指令：互動、exec、review、resume 或 fork、cloud</title>
+  <desc id="d">要在終端機互動開發用 codex。要在 script、CI 或排程裡執行用 codex exec。要審查未提交變更、分支或 commit 用 codex review。要接續舊工作用 codex resume，要從舊 session 分叉用 codex fork。要把任務交給雲端跑用 codex cloud exec，再用 cloud diff 與 cloud apply 取回。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="498.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">你要做什麼？選哪個指令</text>
+  <rect class="acc" x="12" y="44" width="270" height="70" rx="10"/>
+  <text x="24" y="85">在終端機互動開發</text>
+  <line class="ln" x1="282" y1="79" x2="316" y2="79" marker-end="url(#a)"/>
+  <rect class="good" x="318" y="44" width="310" height="70" rx="10"/>
+  <text class="monob" x="330" y="74">codex</text>
+  <text class="s" x="330" y="98">例：codex -C . -s workspace-write</text>
+  <rect class="acc" x="12" y="126" width="270" height="70" rx="10"/>
+  <text x="24" y="167">在 script、CI、排程裡執行</text>
+  <line class="ln" x1="282" y1="161" x2="316" y2="161" marker-end="url(#a)"/>
+  <rect class="acc" x="318" y="126" width="310" height="70" rx="10"/>
+  <text class="monob" x="330" y="156">codex exec</text>
+  <text class="s" x="330" y="180">不開 TUI；可 --json、--output-schema</text>
+  <rect class="acc" x="12" y="208" width="270" height="70" rx="10"/>
+  <text x="24" y="249">審查未提交變更、分支或 commit</text>
+  <line class="ln" x1="282" y1="243" x2="316" y2="243" marker-end="url(#a)"/>
+  <rect class="acc" x="318" y="208" width="310" height="70" rx="10"/>
+  <text class="monob" x="330" y="238">codex review</text>
+  <text class="s" x="330" y="262">例：codex review --uncommitted</text>
+  <rect class="acc" x="12" y="290" width="270" height="70" rx="10"/>
+  <text x="24" y="331">接續或分叉舊工作</text>
+  <line class="ln" x1="282" y1="325" x2="316" y2="325" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="290" width="310" height="70" rx="10"/>
+  <text class="monob" x="330" y="320">codex resume／fork</text>
+  <text class="s" x="330" y="344">resume --last；fork --last</text>
+  <rect class="acc" x="12" y="372" width="270" height="70" rx="10"/>
+  <text x="24" y="413">把任務交給雲端跑</text>
+  <line class="ln" x1="282" y1="407" x2="316" y2="407" marker-end="url(#a)"/>
+  <rect class="bad" x="318" y="372" width="310" height="70" rx="10"/>
+  <text class="monob" x="330" y="402">codex cloud exec</text>
+  <text class="s" x="330" y="426">再用 cloud diff／apply 取回結果</text>
+  <text class="s" x="320" y="470" text-anchor="middle">不確定安裝或設定是否正常：先 codex doctor --summary</text>
+  <text class="s" x="320" y="490" text-anchor="middle">想知道有哪些旗標：codex --help；實際以你本機版本為準</text>
+</svg>

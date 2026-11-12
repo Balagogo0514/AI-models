@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 540" role="img" aria-labelledby="t d">
+  <title id="t">Codex CLI 頂層命令分組地圖</title>
+  <desc id="d">頂層命令分七組：互動與非互動執行（codex、exec、review）；session 管理（resume、fork、archive、unarchive）；認證（login、logout）；擴充（mcp、plugin、mcp-server）；診斷與維運（doctor、update、completion、features、debug、sandbox、help）；整合（app、app-server、remote-control、exec-server，皆為實驗性或進階）；Codex Cloud（cloud、apply，實驗性）。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="538.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">Codex CLI 的命令分組</text>
+  <rect class="acc" x="12" y="44" width="300" height="116" rx="10"/>
+  <text class="b" x="24" y="66">執行與審查</text>
+  <rect class="box" x="24" y="78" width="52" height="24" rx="6"/>
+  <text class="mono" x="33" y="94">codex</text>
+  <rect class="box" x="82" y="78" width="87" height="24" rx="6"/>
+  <text class="mono" x="91" y="94">codex exec</text>
+  <rect class="box" x="175" y="78" width="101" height="24" rx="6"/>
+  <text class="mono" x="184" y="94">codex review</text>
+  <text class="s" x="24" y="150">互動 TUI、非互動、程式碼審查</text>
+  <rect class="box" x="328" y="44" width="300" height="116" rx="10"/>
+  <text class="b" x="340" y="66">session 管理</text>
+  <rect class="box" x="340" y="78" width="59" height="24" rx="6"/>
+  <text class="mono" x="349" y="94">resume</text>
+  <rect class="box" x="405" y="78" width="45" height="24" rx="6"/>
+  <text class="mono" x="414" y="94">fork</text>
+  <rect class="box" x="456" y="78" width="66" height="24" rx="6"/>
+  <text class="mono" x="465" y="94">archive</text>
+  <rect class="box" x="528" y="78" width="80" height="24" rx="6"/>
+  <text class="mono" x="537" y="94">unarchive</text>
+  <text class="s" x="340" y="150">可用 --last 取最近一次</text>
+  <rect class="box" x="12" y="168" width="300" height="116" rx="10"/>
+  <text class="b" x="24" y="190">認證</text>
+  <rect class="box" x="24" y="202" width="52" height="24" rx="6"/>
+  <text class="mono" x="33" y="218">login</text>
+  <rect class="box" x="82" y="202" width="59" height="24" rx="6"/>
+  <text class="mono" x="91" y="218">logout</text>
+  <text class="s" x="24" y="274">login 含 status</text>
+  <rect class="good" x="328" y="168" width="300" height="116" rx="10"/>
+  <text class="b" x="340" y="190">擴充</text>
+  <rect class="box" x="340" y="202" width="38" height="24" rx="6"/>
+  <text class="mono" x="349" y="218">mcp</text>
+  <rect class="box" x="384" y="202" width="59" height="24" rx="6"/>
+  <text class="mono" x="393" y="218">plugin</text>
+  <rect class="box" x="449" y="202" width="87" height="24" rx="6"/>
+  <text class="mono" x="458" y="218">mcp-server</text>
+  <text class="s" x="340" y="274">MCP、plugin；mcp-server 讓 Codex 當 server</text>
+  <rect class="box" x="12" y="292" width="300" height="116" rx="10"/>
+  <text class="b" x="24" y="314">診斷與維運</text>
+  <rect class="box" x="24" y="326" width="59" height="24" rx="6"/>
+  <text class="mono" x="33" y="342">doctor</text>
+  <rect class="box" x="89" y="326" width="59" height="24" rx="6"/>
+  <text class="mono" x="98" y="342">update</text>
+  <rect class="box" x="154" y="326" width="73" height="24" rx="6"/>
+  <text class="mono" x="163" y="342">features</text>
+  <rect class="box" x="233" y="326" width="52" height="24" rx="6"/>
+  <text class="mono" x="242" y="342">debug</text>
+  <rect class="box" x="24" y="356" width="66" height="24" rx="6"/>
+  <text class="mono" x="33" y="372">sandbox</text>
+  <rect class="box" x="96" y="356" width="87" height="24" rx="6"/>
+  <text class="mono" x="105" y="372">completion</text>
+  <rect class="box" x="189" y="356" width="45" height="24" rx="6"/>
+  <text class="mono" x="198" y="372">help</text>
+  <text class="s" x="24" y="398">doctor 檢查安裝、設定、認證、執行環境</text>
+  <rect class="dash" x="328" y="292" width="300" height="116" rx="10"/>
+  <text class="b" x="340" y="314">整合（進階或實驗性）</text>
+  <rect class="box" x="340" y="326" width="38" height="24" rx="6"/>
+  <text class="mono" x="349" y="342">app</text>
+  <rect class="box" x="384" y="326" width="87" height="24" rx="6"/>
+  <text class="mono" x="393" y="342">app-server</text>
+  <rect class="box" x="477" y="326" width="115" height="24" rx="6"/>
+  <text class="mono" x="486" y="342">remote-control</text>
+  <rect class="box" x="340" y="356" width="94" height="24" rx="6"/>
+  <text class="mono" x="349" y="372">exec-server</text>
+  <text class="s" x="340" y="398">桌面 App、app-server、遠端控制</text>
+  <rect class="bad" x="12" y="416" width="300" height="116" rx="10"/>
+  <text class="b" x="24" y="438">Codex Cloud（實驗性）</text>
+  <rect class="box" x="24" y="450" width="52" height="24" rx="6"/>
+  <text class="mono" x="33" y="466">cloud</text>
+  <rect class="box" x="82" y="450" width="52" height="24" rx="6"/>
+  <text class="mono" x="91" y="466">apply</text>
+  <text class="s" x="24" y="522">cloud: exec／status／list／apply／diff</text>
+  <rect class="box" x="328" y="416" width="300" height="116" rx="10"/>
+  <text class="b" x="340" y="440">最常用的四個</text>
+  <text class="mono" x="340" y="464">codex　　　　互動式</text>
+  <text class="mono" x="340" y="484">codex exec　　非互動（CI、script）</text>
+  <text class="mono" x="340" y="504">codex review　審查變更</text>
+  <text class="mono" x="340" y="524">codex resume　接續舊 session</text>
+</svg>

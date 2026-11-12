@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 540" role="img" aria-labelledby="t d">
+  <title id="t">Codex 擴充：MCP server、plugin 與 marketplace 的操作流程，以及 Codex 自己當 MCP server</title>
+  <desc id="d">MCP：用 codex mcp add 新增 HTTP 或 stdio server，需要時 codex mcp login 做 OAuth，再用 list 與 get 檢視，互動中用 /mcp 查看工具。Plugin：先 plugin marketplace add 加入來源（本機路徑、owner/repo@ref、HTTPS 或 SSH Git URL），再 plugin list 與 plugin add 名稱@marketplace 安裝，plugin remove 移除。另外 codex mcp-server 把 Codex 自己啟動成 MCP server，供其他 client 以 stdio 接入。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="538.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">擴充：MCP 與 plugin</text>
+  <rect class="good" x="12" y="44" width="616" height="160" rx="12"/>
+  <text class="b gt" x="24" y="68">MCP：接外部工具</text>
+  <rect class="box" x="24" y="82" width="136" height="56" rx="8"/>
+  <text class="monob" x="92" y="106" text-anchor="middle">add</text>
+  <text class="s" x="92" y="126" text-anchor="middle">新增 HTTP 或 stdio</text>
+  <line class="ln" x1="160" y1="110" x2="174" y2="110" marker-end="url(#a)"/>
+  <rect class="box" x="174" y="82" width="136" height="56" rx="8"/>
+  <text class="monob" x="242" y="106" text-anchor="middle">login</text>
+  <text class="s" x="242" y="126" text-anchor="middle">OAuth（需要時）</text>
+  <line class="ln" x1="310" y1="110" x2="324" y2="110" marker-end="url(#a)"/>
+  <rect class="box" x="324" y="82" width="136" height="56" rx="8"/>
+  <text class="monob" x="392" y="106" text-anchor="middle">list／get</text>
+  <text class="s" x="392" y="126" text-anchor="middle">檢視設定</text>
+  <line class="ln" x1="460" y1="110" x2="474" y2="110" marker-end="url(#a)"/>
+  <rect class="box" x="474" y="82" width="136" height="56" rx="8"/>
+  <text class="monob" x="542" y="106" text-anchor="middle">/mcp</text>
+  <text class="s" x="542" y="126" text-anchor="middle">互動中看工具</text>
+  <text class="mono" x="24" y="164">HTTP：codex mcp add NAME --url URL（--bearer-token-env-var）</text>
+  <text class="mono" x="24" y="184">stdio：codex mcp add NAME -- node server.js（--env KEY=VALUE）</text>
+  <rect class="acc" x="12" y="214" width="616" height="176" rx="12"/>
+  <text class="b at" x="24" y="238">plugin：從 marketplace 安裝</text>
+  <rect class="box" x="24" y="252" width="136" height="56" rx="8"/>
+  <text class="monob" x="92" y="276" text-anchor="middle">marketplace add</text>
+  <text class="s" x="92" y="296" text-anchor="middle">加入來源</text>
+  <line class="ln" x1="160" y1="280" x2="174" y2="280" marker-end="url(#a)"/>
+  <rect class="box" x="174" y="252" width="136" height="56" rx="8"/>
+  <text class="monob" x="242" y="276" text-anchor="middle">plugin list</text>
+  <text class="s" x="242" y="296" text-anchor="middle">列出可用</text>
+  <line class="ln" x1="310" y1="280" x2="324" y2="280" marker-end="url(#a)"/>
+  <rect class="box" x="324" y="252" width="136" height="56" rx="8"/>
+  <text class="monob" x="392" y="276" text-anchor="middle">plugin add</text>
+  <text class="s" x="392" y="296" text-anchor="middle">NAME@MARKETPLACE</text>
+  <line class="ln" x1="460" y1="280" x2="474" y2="280" marker-end="url(#a)"/>
+  <rect class="box" x="474" y="252" width="136" height="56" rx="8"/>
+  <text class="monob" x="542" y="276" text-anchor="middle">plugin remove</text>
+  <text class="s" x="542" y="296" text-anchor="middle">移除</text>
+  <text x="24" y="332">marketplace 來源：本機路徑｜owner/repo[@ref]｜HTTPS Git URL｜SSH Git URL</text>
+  <text class="s" x="24" y="354">可加 --ref 指定 Git ref、--sparse 稀疏 checkout（可重複）</text>
+  <text class="mono" x="24" y="376">例：codex plugin add sample@debug</text>
+  <rect class="dash" x="12" y="402" width="616" height="128" rx="8"/>
+  <text class="b" x="24" y="426">反向：Codex 當 MCP server</text>
+  <text x="24" y="450">codex mcp-server：把 Codex 自己啟動成 MCP server，</text>
+  <text x="24" y="472">讓其他 client 以 stdio 接入</text>
+  <text class="s" x="24" y="500">其他整合面（app-server、remote-control、exec-server）屬進階或實驗性</text>
+</svg>
