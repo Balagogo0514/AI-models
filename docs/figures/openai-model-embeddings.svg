@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440" role="img" aria-labelledby="t d">
+  <title id="t">Embedding 模型比較與 Moderation 配套</title>
+  <desc id="d">三個 embedding 模型：text-embedding-3-small 每美元 62,500 頁、MTEB 62.3%、1536 維，是預設首選；text-embedding-3-large 每美元 9,615 頁、MTEB 64.6%、3072 維，品質最高但較貴；text-embedding-ada-002 每美元 12,500 頁、MTEB 61.0%、1536 維，舊基準。三者最大輸入皆 8192。可用 dimensions 參數縮短向量，large 壓到 256 維仍可能優於 ada-002 的 1536 維。另外 omni-moderation-latest 做文字與圖片的內容審查。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="438.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">Embeddings：品質與成本取捨</text>
+  <rect class="hd" x="12" y="44" width="616" height="26" rx="6"/>
+  <text class="b" x="20" y="62">模型</text>
+  <text class="b" x="188" y="62">每美元可嵌入頁數（愈長愈便宜；三者輸入上限皆 8192）</text>
+  <rect class="good" x="12" y="76" width="616" height="72" rx="8"/>
+  <text class="monob" x="20" y="100">text-embedding-3-small</text>
+  <text class="s" x="20" y="120">MTEB 62.3%｜1536 維</text>
+  <text class="s" x="20" y="138">預設首選，CP 值最好</text>
+  <rect class="bout" x="188" y="96" width="300.0" height="16" rx="2"/>
+  <text class="s" x="496.0" y="109">62,500</text>
+  <rect class="box" x="12" y="154" width="616" height="72" rx="8"/>
+  <text class="monob" x="20" y="178">text-embedding-3-large</text>
+  <text class="s" x="20" y="198">MTEB 64.6%｜3072 維</text>
+  <text class="s" x="20" y="216">品質最高，但明顯更貴</text>
+  <rect class="bout" x="188" y="174" width="46.2" height="16" rx="2"/>
+  <text class="s" x="242.152" y="187">9,615</text>
+  <rect class="bad" x="12" y="232" width="616" height="72" rx="8"/>
+  <text class="monob" x="20" y="256">text-embedding-ada-002</text>
+  <text class="s" x="20" y="276">MTEB 61.0%｜1536 維</text>
+  <text class="s" x="20" y="294">舊基準；新案通常不從它開始</text>
+  <rect class="bout" x="188" y="252" width="60.0" height="16" rx="2"/>
+  <text class="s" x="256.0" y="265">12,500</text>
+  <rect class="acc" x="12" y="314" width="616" height="50" rx="10"/>
+  <text class="b" x="24" y="336">dimensions 參數可縮短向量長度</text>
+  <text class="s" x="24" y="355">large 壓到 256 維，仍可能優於完整 1536 維的 ada-002</text>
+  <rect class="box" x="12" y="374" width="616" height="50" rx="10"/>
+  <text class="b" x="24" y="396">Moderation：omni-moderation-latest（文字、圖片；不支援音訊）</text>
+  <text class="s" x="24" y="414">單張圖片上限 20 MB；pricing 頁未單列費率；審核輸入、上傳與輸出幾乎必備</text>
+</svg>

@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 490" role="img" aria-labelledby="t d">
+  <title id="t">音訊與語音模型選型：即時、轉錄與已棄用型號</title>
+  <desc id="d">即時對話 agent 用 gpt-realtime-2.1，音訊每百萬輸入 32 輸出 64 美元；低成本大量語音用 gpt-realtime-2.1-mini；即時翻譯 gpt-realtime-translate 每分鐘 0.034 美元；即時轉文字 gpt-realtime-whisper 每分鐘 0.017 美元；檔案轉錄 gpt-4o-transcribe 約每分鐘 0.006 美元；便宜版 gpt-4o-mini-transcribe 約 0.003 美元；既有 chat 系統加音訊可研究 gpt-audio-1.5，但 pricing 頁未單獨列價，需先確認；GPT-4o mini TTS 被標為 Deprecated，新案不應優先採用。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="488.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">音訊與語音：怎麼選</text>
+  <rect class="acc" x="12" y="44" width="270" height="50" rx="10"/>
+  <text x="24" y="74.0">即時對話 agent（可推理、可用工具）</text>
+  <line class="ln" x1="282" y1="69.0" x2="316" y2="69.0" marker-end="url(#a)"/>
+  <rect class="good" x="318" y="44" width="310" height="50" rx="10"/>
+  <text class="b" x="330" y="63.0">gpt-realtime-2.1</text>
+  <text class="s" x="330" y="85.0">Audio $32／$64；Text $4／$24</text>
+  <rect class="acc" x="12" y="100" width="270" height="50" rx="10"/>
+  <text x="24" y="130.0">低成本客服、大量語音 session</text>
+  <line class="ln" x1="282" y1="125.0" x2="316" y2="125.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="100" width="310" height="50" rx="10"/>
+  <text class="b" x="330" y="119.0">gpt-realtime-2.1-mini</text>
+  <text class="s" x="330" y="141.0">Audio $10／$20；Text $0.60／$2.40</text>
+  <rect class="acc" x="12" y="156" width="270" height="50" rx="10"/>
+  <text x="24" y="186.0">即時語音翻譯</text>
+  <line class="ln" x1="282" y1="181.0" x2="316" y2="181.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="156" width="310" height="50" rx="10"/>
+  <text class="b" x="330" y="175.0">gpt-realtime-translate</text>
+  <text class="s" x="330" y="197.0">$0.034／分鐘</text>
+  <rect class="acc" x="12" y="212" width="270" height="50" rx="10"/>
+  <text x="24" y="242.0">即時語音轉文字</text>
+  <line class="ln" x1="282" y1="237.0" x2="316" y2="237.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="212" width="310" height="50" rx="10"/>
+  <text class="b" x="330" y="231.0">gpt-realtime-whisper</text>
+  <text class="s" x="330" y="253.0">$0.017／分鐘</text>
+  <rect class="acc" x="12" y="268" width="270" height="50" rx="10"/>
+  <text x="24" y="298.0">檔案／request-based 轉錄</text>
+  <line class="ln" x1="282" y1="293.0" x2="316" y2="293.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="268" width="310" height="50" rx="10"/>
+  <text class="b" x="330" y="287.0">gpt-4o-transcribe</text>
+  <text class="s" x="330" y="309.0">約 $0.006／分鐘；便宜版 mini 約 $0.003</text>
+  <rect class="acc" x="12" y="324" width="270" height="50" rx="10"/>
+  <text x="24" y="354.0">既有 chat 系統加音訊 I/O</text>
+  <line class="ln" x1="282" y1="349.0" x2="316" y2="349.0" marker-end="url(#a)"/>
+  <rect class="bad" x="318" y="324" width="310" height="50" rx="10"/>
+  <text class="b" x="330" y="343.0">gpt-audio-1.5</text>
+  <text class="s" x="330" y="365.0">pricing 頁未單列；先確認價格與支援</text>
+  <rect class="acc" x="12" y="380" width="270" height="50" rx="10"/>
+  <text x="24" y="410.0">文字轉語音（舊）</text>
+  <line class="ln" x1="282" y1="405.0" x2="316" y2="405.0" marker-end="url(#a)"/>
+  <rect class="bad" x="318" y="380" width="310" height="50" rx="10"/>
+  <text class="b" x="330" y="399.0">GPT-4o mini TTS</text>
+  <text class="s" x="330" y="421.0">Models 頁標為 Deprecated，新案不優先</text>
+  <text class="s" x="320" y="470" text-anchor="middle">單位：美元；Realtime 價格為每 1M tokens（輸入／輸出）</text>
+</svg>

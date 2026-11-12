@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">GPT-5.6 的 reasoning effort 與 reasoning mode</title>
+  <desc id="d">reasoning.effort 有五段：none 適合分類與低延遲流程；low 適合簡單修改與一般工具呼叫；medium 是預設值，適合功能開發與一般 issue 分析；high 適合複雜除錯與重構規劃；xhigh 適合安全審查、長時間 agent 與困難研究，僅在 eval 證實有收益時使用。愈高品質愈好但延遲、輸出 token 與成本愈高。reasoning.mode 是獨立設定：standard 為預設，pro 運算更多，最高組合為 gpt-5.6-sol 加 pro，再從 medium 或 high 開始評測。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">reasoning.effort：五段旋鈕</text>
+  <line class="ln" x1="24" y1="52" x2="24" y2="330" marker-end="url(#a)"/>
+  <text class="s" x="32" y="344">愈往下：品質與穩定度提高，但延遲、輸出 token 與成本也更高</text>
+  <rect class="box" x="36" y="44" width="592" height="52" rx="8"/>
+  <text class="monob" x="48" y="75">none</text>
+  <text class="b" x="158" y="65">分類、快速查詢、極低延遲</text>
+  <text class="s" x="158" y="84">不適合多步推理、複雜工具呼叫或 agent</text>
+  <rect class="box" x="36" y="102" width="592" height="52" rx="8"/>
+  <text class="monob" x="48" y="133">low</text>
+  <text class="b" x="158" y="123">簡單修改、初步 log 判讀、一般工具呼叫</text>
+  <text class="s" x="158" y="142">速度與成本優先，適合大量日常小任務</text>
+  <rect class="good" x="36" y="160" width="592" height="52" rx="8"/>
+  <text class="monob" x="48" y="191">medium</text>
+  <rect class="acc" x="104" y="168" width="40" height="18" rx="9"/>
+  <text class="b" x="124" y="181" text-anchor="middle">預設</text>
+  <text class="b" x="158" y="181">功能開發、單元測試、一般 issue 分析</text>
+  <text class="s" x="158" y="200">預設值；品質、延遲與成本的平衡起點</text>
+  <rect class="box" x="36" y="218" width="592" height="52" rx="8"/>
+  <text class="monob" x="48" y="249">high</text>
+  <text class="b" x="158" y="239">複雜除錯、跨模組根因、重構規劃</text>
+  <text class="s" x="158" y="258">品質優先；較難的 coding 與 agent 任務</text>
+  <rect class="bad" x="36" y="276" width="592" height="52" rx="8"/>
+  <text class="monob" x="48" y="307">xhigh</text>
+  <text class="b" x="158" y="297">安全／程式碼審查、長時間 agent、困難研究</text>
+  <text class="s" x="158" y="316">僅在 eval 證實有明顯收益時使用</text>
+  <text class="t" x="320" y="372" text-anchor="middle">reasoning.mode：獨立於 effort 的另一個設定</text>
+  <rect class="box" x="36" y="384" width="280" height="76" rx="10"/>
+  <text class="monob" x="48" y="408">standard（預設）</text>
+  <text class="s" x="48" y="430">一般模式</text>
+  <rect class="acc" x="348" y="384" width="280" height="76" rx="10"/>
+  <text class="monob" x="360" y="408">pro</text>
+  <text class="s" x="360" y="430">運算更多，適合非常困難</text>
+  <text class="s" x="360" y="447">且能容忍高延遲與 token 成本</text>
+  <text class="s" x="320" y="484" text-anchor="middle">最高能力組合：gpt-5.6-sol＋mode=pro，再從 medium 或 high 開始評測</text>
+  <text class="s" x="320" y="504" text-anchor="middle">提高 effort 不是修品質的唯一辦法：prompt 仍要寫清完成條件與驗證方式</text>
+</svg>
