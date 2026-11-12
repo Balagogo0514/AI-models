@@ -3,7 +3,7 @@
 > 資料來源：
 > - OpenAI 官方文件：https://developers.openai.com/codex/cli 、https://developers.openai.com/codex/cli/reference 、https://developers.openai.com/codex/cli/slash-commands 、https://developers.openai.com/codex/quickstart 、https://developers.openai.com/codex/config-reference 、https://developers.openai.com/codex/permissions 、https://developers.openai.com/codex/environment-variables
 > - 本機 CLI help：`codex-cli 0.137.0`
-> - 更新日期：2026-06-05
+> - 更新日期：2026-06-05（2026-11-12 新增 8 張圖示）
 
 > 說明：
 > - 本文件以本機已安裝的 `codex-cli 0.137.0` 實際 `--help` 輸出為主。
@@ -13,6 +13,10 @@
 ---
 
 ## 零、快速速查
+
+### 該用哪個指令
+
+![依情境選 Codex 指令：互動開發用 codex；script、CI、排程用 codex exec；審查變更用 codex review；接續或分叉舊工作用 codex resume 或 fork；交給雲端跑用 codex cloud exec](figures/codex-cli-chooser.svg)
 
 ### 最常用指令
 
@@ -206,6 +210,9 @@ codex [OPTIONS] <COMMAND> [ARGS]
 | `codex features` | 檢視與切換 feature flags | `list/enable/disable` |
 | `codex help` | 顯示 help | - |
 
+![Codex CLI 頂層命令分七組：執行與審查、session 管理、認證、擴充、診斷與維運、整合（進階或實驗性）、Codex Cloud](figures/codex-cli-commands-map.svg)
+
+
 ---
 
 ## 五、全域旗標
@@ -352,6 +359,8 @@ codex review "focus on security and backward compatibility"
 
 ## 九、session 管理
 
+![Codex session 的生命週期：codex 開新 session；resume 接續同一個；fork 分叉成新 session；archive 與 unarchive 封存與還原；非互動用 codex exec resume](figures/codex-cli-session-lifecycle.svg)
+
 ### `codex resume`
 
 恢復先前互動式 session。
@@ -423,6 +432,10 @@ codex logout
 ---
 
 ## 十一、MCP 管理
+
+MCP 與第十二節的 plugin 操作流程如下圖：
+
+![Codex 擴充：MCP 依序 add、login、list 或 get、在互動中用 /mcp；plugin 依序 marketplace add、plugin list、plugin add 名稱@marketplace、plugin remove；另有 codex mcp-server 讓 Codex 當 MCP server](figures/codex-cli-mcp-plugin.svg)
 
 ### `codex mcp`
 
@@ -693,6 +706,8 @@ Standalone exec-server，主要選項：
 
 `codex cloud` 用來瀏覽 cloud task，或把 cloud task 的 diff 套回本機。此功能在本機 help 中標示為 experimental。
 
+![Codex Cloud 任務流程：cloud exec 提交、cloud list 與 status 查詢、cloud diff 檢視、cloud apply 或 codex apply 套用，以 git apply 套回本機工作樹](figures/codex-cli-cloud-flow.svg)
+
 ### 子命令
 
 | 子命令 | 說明 |
@@ -766,6 +781,8 @@ Codex CLI 的安全控制是文件中很重要的一塊。常見控制面有三�
 2. approval policy
 3. permission profiles
 
+![sandbox 模式與 approval policy 的組合矩陣：嚴格審查是 read-only 加 untrusted；一般本機開發是 workspace-write 加 on-request；CI 非互動是 read-only 加 never；另有 permission profiles 與極危險的 bypass 旗標](figures/codex-cli-sandbox-approval.svg)
+
 ### Sandbox 模式
 
 | 模式 | 說明 |
@@ -822,6 +839,8 @@ Codex 的設定核心是 `config.toml`。
 - 專案內規則與 `AGENTS.md`
 - CLI `-c key=value` 動態覆寫
 - 環境變數
+
+![Codex 設定的疊加：基礎是使用者層 config.toml；profile 疊加在其上；CLI 的 -c key=value 覆寫；另有專案規則、AGENTS.md 與環境變數等其他來源](figures/codex-cli-config-layers.svg)
 
 ### CLI 動態覆寫
 
@@ -1122,6 +1141,8 @@ Webhook / CI / 排程
 ```
 
 `codex exec` 不是常駐 event listener。Jira webhook、重試、併發、timeout、成本預算與回寫 Jira 都應由 n8n、CI、queue worker 或其他外部服務負責。
+
+![codex exec 的執行模型：外部觸發、呼叫端準備、Codex 自行多輪執行、輸出 stdout 與退出碼、呼叫端檢查與回寫；timeout、重試、併發、成本預算由外部服務負責](figures/codex-cli-exec-flow.svg)
 
 ### 基本語法
 

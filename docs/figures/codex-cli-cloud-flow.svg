@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-labelledby="t d">
+  <title id="t">Codex Cloud 任務流程：提交、查詢、看 diff、套用回本機</title>
+  <desc id="d">codex cloud exec 加上 env 提交雲端任務，可設定 attempts 做 best-of-N 與指定 branch。用 cloud list 列清單、cloud status 查狀態。用 cloud diff 看某個任務的 unified diff。確認後用 cloud apply 或 codex apply 把 diff 以 git apply 套回本機工作樹。Codex Cloud 在本機 help 中標示為實驗性。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="478.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">Codex Cloud：從提交到套回本機</text>
+  <rect class="good" x="12" y="44" width="616" height="68" rx="8"/>
+  <text class="b" x="24" y="72">1 提交</text>
+  <text class="mono" x="140" y="72">codex cloud exec --env &lt;ENV_ID&gt; &quot;…&quot;</text>
+  <text class="s" x="140" y="96">--attempts N（best-of-N）、--branch</text>
+  <line class="ln" x1="320" y1="113" x2="320" y2="121" marker-end="url(#a)"/>
+  <rect class="box" x="12" y="122" width="616" height="68" rx="8"/>
+  <text class="b" x="24" y="150">2 查詢</text>
+  <text class="mono" x="140" y="150">codex cloud list　　codex cloud status &lt;TASK_ID&gt;</text>
+  <text class="s" x="140" y="174">list 可 --env、--limit、--json</text>
+  <line class="ln" x1="320" y1="191" x2="320" y2="199" marker-end="url(#a)"/>
+  <rect class="box" x="12" y="200" width="616" height="68" rx="8"/>
+  <text class="b" x="24" y="228">3 檢視</text>
+  <text class="mono" x="140" y="228">codex cloud diff &lt;TASK_ID&gt; [--attempt N]</text>
+  <text class="s" x="140" y="252">顯示該任務的 unified diff</text>
+  <line class="ln" x1="320" y1="269" x2="320" y2="277" marker-end="url(#a)"/>
+  <rect class="acc" x="12" y="278" width="616" height="68" rx="8"/>
+  <text class="b" x="24" y="306">4 套用</text>
+  <text class="mono" x="140" y="306">codex cloud apply &lt;TASK_ID&gt; [--attempt N]</text>
+  <text class="s" x="140" y="330">或直接 codex apply &lt;TASK_ID&gt;</text>
+  <line class="ln" x1="320" y1="347" x2="320" y2="355" marker-end="url(#a)"/>
+  <rect class="bad" x="12" y="356" width="616" height="68" rx="8"/>
+  <text class="b" x="24" y="384">5 本機工作樹</text>
+  <text class="mono" x="140" y="384">以 git apply 套回</text>
+  <text class="s" x="140" y="408">agent 產出的最新 diff</text>
+  <text class="s" x="320" y="454" text-anchor="middle">Codex Cloud 在本機 help 中標示為 experimental</text>
+  <text class="s" x="320" y="472" text-anchor="middle">任務在雲端執行；結果用 cloud apply 或 codex apply 套回本機</text>
+</svg>
