@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 460" role="img" aria-labelledby="t d">
+  <title id="t">Kimi Delta Attention 的概念流程：先讀、算差值、再寫回</title>
+  <desc id="d">每個 token 先用 key 從固定大小的 recurrent state 讀取記憶 read_t，等於 S_{t-1} 乘 k_t；接著算出 delta_t，等於 value 減去讀值；然後以逐通道的 decay 與 write gate 更新 state，S_t 等於 decay 作用在 S_{t-1} 加上 write gate 作用在 delta 與 k 的外積；最後以 query 讀出 o_t 等於 S_t 乘 q_t。S_t 再傳給下一個 token。KDA 不會重現每個歷史 token 的完整 softmax 權重，這是概念式，並非逐項實作公式。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="458.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">KDA：以 delta rule 更新固定大小的 state</text>
+  <rect class="box" x="12" y="44" width="560" height="76" rx="10"/>
+  <text class="b" x="24" y="66">1 讀取</text>
+  <text class="mono" x="24" y="88">read_t = S_{t-1} k_t</text>
+  <text class="s" x="24" y="108">用目前的 key 從 state 讀出舊記憶</text>
+  <line class="ln" x1="292" y1="121" x2="292" y2="127" marker-end="url(#a)"/>
+  <rect class="acc" x="12" y="128" width="560" height="76" rx="10"/>
+  <text class="b" x="24" y="150">2 算差值</text>
+  <text class="mono" x="24" y="172">delta_t = v_t − read_t</text>
+  <text class="s" x="24" y="192">新 value 與讀值的差（要修正的部分）</text>
+  <line class="ln" x1="292" y1="205" x2="292" y2="211" marker-end="url(#a)"/>
+  <rect class="good" x="12" y="212" width="560" height="76" rx="10"/>
+  <text class="b" x="24" y="234">3 寫回（逐通道 gate）</text>
+  <text class="mono" x="24" y="256">S_t = decay_t ⊙ S_{t-1} + write_gate_t ⊙ (delta_t k_tᵀ)</text>
+  <text class="s" x="24" y="276">每個通道各自決定保留、衰減或覆寫</text>
+  <line class="ln" x1="292" y1="289" x2="292" y2="295" marker-end="url(#a)"/>
+  <rect class="box" x="12" y="296" width="560" height="76" rx="10"/>
+  <text class="b" x="24" y="318">4 輸出</text>
+  <text class="mono" x="24" y="340">o_t = S_t q_t</text>
+  <text class="s" x="24" y="360">用 query 讀取更新後的 state</text>
+  <line class="ln" x1="572" y1="378" x2="596" y2="378"/>
+  <line class="ln" x1="596" y1="378" x2="596" y2="82"/>
+  <line class="ln" x1="596" y1="82" x2="574" y2="82" marker-end="url(#a)"/>
+  <text class="mono" x="608" y="230" text-anchor="middle">S_t</text>
+  <text class="s" x="608" y="246" text-anchor="middle">傳給</text>
+  <text class="s" x="608" y="260" text-anchor="middle">下一個</text>
+  <text class="s" x="608" y="274" text-anchor="middle">token</text>
+  <text class="s" x="320" y="398" text-anchor="middle">S 是固定大小的 recurrent state；⊙ 表示逐通道調制</text>
+  <text class="s" x="320" y="418" text-anchor="middle">概念式，不是逐項實作公式；實際 KDA 還包含投影、正規化與 chunkwise 演算法</text>
+  <text class="s" x="320" y="438" text-anchor="middle">不保留每個歷史 token 的完整 K/V，因此不等同 exact softmax attention</text>
+</svg>

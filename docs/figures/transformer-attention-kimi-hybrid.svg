@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-labelledby="t d">
+  <title id="t">Kimi K3 的混合架構：KDA 層與 gated MLA 層交錯，約 3:1</title>
+  <desc id="d">示意圖：以 KDA、KDA、KDA、gated MLA 的重複排列表示約 3 比 1 的交錯。實際公開配置是 69 層 KDA 加 24 層 gated MLA。KDA 層保存固定大小 recurrent state，處理多數層的長序列狀態傳遞，不保存每個歷史 token 的完整 K/V；gated MLA 層定期提供可直接全域檢索的 attention。Kimi Linear 的相同訓練配方比較報告：相對全 MLA 最多減少 75% KV cache，1M context decode 最高約 6 倍 throughput，屬特定模型、kernel 與工作負載下的結果，不應外推。另有 Attention Residuals 改善跨層資訊流。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="478.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">KDA × gated MLA：多數層線性、少數層全域</text>
+  <rect class="bin" x="12.0" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="31.3" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="50.6" y="46" width="17" height="34" rx="3"/>
+  <rect class="bout" x="69.9" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="89.2" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="108.5" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="127.8" y="46" width="17" height="34" rx="3"/>
+  <rect class="bout" x="147.1" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="166.4" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="185.7" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="205.0" y="46" width="17" height="34" rx="3"/>
+  <rect class="bout" x="224.3" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="243.6" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="262.9" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="282.2" y="46" width="17" height="34" rx="3"/>
+  <rect class="bout" x="301.5" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="320.8" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="340.1" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="359.4" y="46" width="17" height="34" rx="3"/>
+  <rect class="bout" x="378.7" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="398.0" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="417.3" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="436.6" y="46" width="17" height="34" rx="3"/>
+  <rect class="bout" x="455.9" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="475.2" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="494.5" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="513.8" y="46" width="17" height="34" rx="3"/>
+  <rect class="bout" x="533.1" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="552.4" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="571.7" y="46" width="17" height="34" rx="3"/>
+  <rect class="bin" x="591.0" y="46" width="17" height="34" rx="3"/>
+  <rect class="bout" x="610.3" y="46" width="17" height="34" rx="3"/>
+  <rect class="acc" x="12" y="92" width="12" height="12" rx="3"/>
+  <text class="s" x="30" y="102">KDA（固定 state，線性）</text>
+  <rect class="bout" x="210" y="92" width="12" height="12" rx="3"/>
+  <text class="s" x="228" y="102">gated MLA（全域 attention）</text>
+  <text class="s" x="630" y="102" text-anchor="end">示意；實際 69 層 KDA ＋ 24 層 gated MLA</text>
+  <rect class="acc" x="12" y="120" width="304" height="96" rx="10"/>
+  <text class="b" x="24" y="144">KDA 層（多數層）</text>
+  <text class="s" x="24" y="166">固定大小 recurrent state，可串流處理</text>
+  <text class="s" x="24" y="184">不保存每個歷史 token 的完整 K/V</text>
+  <text class="s" x="24" y="202">→ 降低長 context 的計算與 KV-cache 壓力</text>
+  <rect class="good" x="324" y="120" width="304" height="96" rx="10"/>
+  <text class="b" x="336" y="144">gated MLA 層（間隔配置）</text>
+  <text class="s" x="336" y="166">定期提供可直接全域檢索的 attention</text>
+  <text class="s" x="336" y="184">每個 query 可對全部歷史 token 計分</text>
+  <text class="s" x="336" y="202">→ 補足精確檢索，換取其他層的效率</text>
+  <rect class="box" x="12" y="232" width="616" height="92" rx="10"/>
+  <text class="b" x="24" y="256">Kimi Linear 報告（相同訓練配方，對照全 MLA）</text>
+  <text x="24" y="280">KV cache 最多減少 75%；1M context decode throughput 最高約 6 倍</text>
+  <text class="s" x="24" y="304">特定模型、kernel 與工作負載下的實驗結果，不應外推為所有線性注意力的通則</text>
+  <rect class="acc" x="12" y="338" width="616" height="72" rx="10"/>
+  <text class="b" x="24" y="362">另加 Attention Residuals（AttnRes）</text>
+  <text class="s" x="24" y="384">改善跨深度的資訊流與訓練穩定性；KDA／MLA 才決定跨序列長度的效率與全域檢索取捨</text>
+  <text class="s" x="320" y="436" text-anchor="middle">可輸入 1M token 是容量規格，不等於能在其中可靠地定位與推理</text>
+  <text class="s" x="320" y="456" text-anchor="middle">有效長上下文還取決於位置處理、長序列訓練資料、推理預算與 agent 的 context 管理</text>
+</svg>
