@@ -2,6 +2,8 @@
 
 描述模型效能（通常以 loss 衡量）如何隨**模型參數量**、**訓練資料量**、**運算量**三者變化的經驗規律。是過去五年推動大模型軍備競賽的核心理論依據。
 
+> 2026-11-12 新增 10 張圖示（冪律、演進時間軸、Gopher 對 Chinchilla、D/N 比例、突現能力、推論期 scaling、Data Wall、MoE、適用範圍、常見誤解）；曲線圖皆為示意，不是實測數據，數值與論述皆取自本文既有內容。
+
 ---
 
 ## 一、核心概念
@@ -18,6 +20,8 @@ L(x) ≈ (x_c / x)^α
 
 三個變數同時放大時，loss 會沿著一條平滑曲線下降，**幾乎沒有明顯的天花板**（在已測試的規模範圍內）——這是與傳統機器學習「越大越容易 overfit」直覺相反的關鍵發現。
 
+![圖：冪律關係在線性座標與 log-log 座標上的樣子，及 Kaplan 的三個指數](figures/scaling-laws-power-law.svg)
+
 ---
 
 ## 二、關鍵論文與演進
@@ -30,6 +34,8 @@ L(x) ≈ (x_c / x)^α
 | 2023–2024 | LLaMA / LLaMA 2/3 系列（Meta） | 刻意用遠超 Chinchilla-optimal 的資料量訓練小模型，換取推論期效率 |
 | 2024 | 多篇 *Inference / Test-time Scaling* 研究 | 把 scaling 焦點從訓練期轉向推論期（見第五節） |
 | 2024–2025 | Data-constrained scaling（如 Muennighoff et al.） | 探討高品質資料見頂後如何持續 scaling |
+
+![圖：Scaling Law 從 2020 到 2025 年的演進時間軸](figures/scaling-laws-timeline.svg)
 
 ---
 
@@ -83,6 +89,8 @@ D_opt ∝ C^0.5
 
 結果：**參數量僅 1/4 的 Chinchilla 在多數 benchmark 上顯著超越 Gopher**——證明先前一代大模型「嚴重欠訓練（undertrained）」，把過多運算浪費在參數規模而非資料量上。
 
+![圖：同運算量下 Gopher 與 Chinchilla 的參數量與訓練 tokens 配比](figures/scaling-laws-chinchilla-gopher.svg)
+
 ### 影響
 
 此後主流模型（GPT-4、Claude、Gemini 等）訓練配比大幅轉向「加大資料量」，而非單純堆參數。
@@ -98,6 +106,8 @@ D_opt ∝ C^0.5
 | Besiroglu et al. 2024，*Chinchilla Scaling: A Replication Attempt* | — | 重新分析 DeepMind 論文附錄公開的實驗數據，發現原始論文其中一種擬合方法（parametric loss fit）估計的信賴區間過窄、與其他兩種方法結果不完全一致，對外界一度引發「Chinchilla 結論是否可靠」的討論；但三種方法**共同結論**（Gopher 欠訓練、需要更多資料）並未被推翻，僅精確指數估計值有爭議 |
 
 > 這些案例顯示：Chinchilla 提出的 `D≈20N` 是**訓練損失最小化**下的最優解，但業界實務上常有除了 loss 以外的考量（如推論成本、部署裝置限制），因此主動偏離這個比例、往資料量更多的方向去訓練，而非盲目照搬。
+
+![圖：各代表模型的訓練 tokens 與參數量比例 D/N（對數座標）](figures/scaling-laws-dn-ratio.svg)
 
 ---
 
@@ -123,6 +133,8 @@ Wei et al. 觀察到：某些任務（如多步驟算術推理、指令遵循）
 | 測量假象（Schaefer et al. 2023）| 突現是**評估指標的非線性**（如 exact-match 這種離散指標）造成的錯覺；換成連續指標（如 token 機率）後曲線其實平滑 |
 
 > 對實務的啟示：小規模模型的測試結果**不能線性外推**判斷大模型是否具備某能力，需保留驗證空間。
+
+![圖：離散指標與連續指標下突現能力的差異，以及兩派解讀](figures/scaling-laws-emergent.svg)
 
 ### 實際案例
 
@@ -167,6 +179,8 @@ Wei et al. 觀察到：某些任務（如多步驟算術推理、指令遵循）
 
 這也是 Claude Code 中 `/effort` 指令（low/medium/high/xhigh/max）背後的理論基礎：讓使用者在「推論成本」與「答案品質」之間動態取捨。
 
+![圖：推論期 scaling 的報酬曲線與四類技術](figures/scaling-laws-inference-time.svg)
+
 ### 實際案例
 
 | 案例 | 技術 | 觀察到的 scaling 效果 |
@@ -197,6 +211,8 @@ Wei et al. 觀察到：某些任務（如多步驟算術推理、指令遵循）
 | 提升資料品質而非數量 | 精煉/過濾（如 FineWeb、textbook-quality data）| 品質評估本身仍缺乏統一標準 |
 | 轉向推論期 scaling | 見第七節 | 需要額外的 RL / verifier 訓練成本 |
 
+![圖：資料見頂的五種因應策略與各自風險](figures/scaling-laws-data-wall.svg)
+
 ### 實際案例
 
 | 案例 | 對應策略 | 說明 |
@@ -224,6 +240,8 @@ Wei et al. 觀察到：某些任務（如多步驟算術推理、指令遵循）
 | 「只要堆算力就能解決一切」 | 運算量需要「正確配比」到參數與資料上，盲目堆單一維度效益遞減 |
 | 「Scaling Law 只適用於預訓練」 | 只是最初、最經典的版本；概念已延伸到推論期、post-training/RL、微調等各階段（見第十一節） |
 
+![圖：Scaling Law 的六個常見誤解與實際情況](figures/scaling-laws-myths.svg)
+
 ---
 
 ## 十、延伸方向（研究前沿）
@@ -246,6 +264,8 @@ Wei et al. 觀察到：某些任務（如多步驟算術推理、指令遵循）
 | GPT-4（OpenAI，傳言/洩漏資訊，未經官方證實）| 業界廣泛流傳 GPT-4 採用 MoE 架構，總參數量約 1.8T、每 token 啟用約 220B——若屬實，則是文件第二節提到「主流模型轉向資料量」之外，另一條「用稀疏架構繞開參數量瓶頸」的路線；因缺乏官方確認，僅供參考 |
 
 > 核心啟示：MoE 的「參數量」數字容易誤導——比較不同模型時，應該看**有效參數量（推論時實際啟用的參數）**而非總參數量，這也是為什麼 Clark et al. 認為 MoE 需要一套獨立於 Kaplan/Chinchilla 的 scaling law。
+
+![圖：MoE 模型的總參數量與每 token 啟用參數量](figures/scaling-laws-moe-active.svg)
 
 ### Post-training / RL scaling 實際案例
 
@@ -303,6 +323,8 @@ Kaplan、Chinchilla 這類最初、最經典的 Scaling Law 專指**預訓練（
 | Downstream task scaling | 第五節 | Loss 平滑下降不保證特定任務（數學、coding）同步線性提升，是 Emergent Abilities 爭議的根源 |
 | Long-context scaling | 第十節 | context 長度對訓練/推論運算的影響，通常呈二次方或近似線性 |
 | 多模態 scaling | 第十節 | 文字、圖像、影片混合訓練時的最佳配比，冪律指數可能與純文字模型不同 |
+
+![圖：Scaling Law 七個適用範圍的對象與特性](figures/scaling-laws-stages.svg)
 
 **目前業界最活躍的其實是推論期 scaling**（第七節）：預訓練那條曲線的邊際效益開始遞減（第八節 Data Wall），加上高品質公開文字資料見頂，把資源投入「訓練完之後讓模型多想一下」反而更划算。
 

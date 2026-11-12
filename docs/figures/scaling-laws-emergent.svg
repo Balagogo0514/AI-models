@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 486" role="img" aria-labelledby="t d">
+  <title id="t">突現能力：離散指標看到跳升，連續指標看到平滑上升</title>
+  <desc id="d">左圖示意以 exact-match 這類離散指標衡量時，小模型表現接近隨機水準，跨過規模門檻後急遽跳升；右圖示意改用連續指標如 token 機率時，同一個能力隨規模平滑上升。對應兩派解讀：真實突現認為模型內部形成新的表徵或電路；測量假象（Schaefer 等 2023）認為是評估指標的非線性造成的錯覺。實務啟示：小規模模型的測試結果不能線性外推。圖為示意。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="484.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">突現能力：真實，還是指標造成的錯覺？</text>
+  <text class="b" x="165" y="56" text-anchor="middle">離散指標（exact-match）</text>
+  <text class="b" x="485" y="56" text-anchor="middle">連續指標（如 token 機率）</text>
+  <line class="ln" x1="40" y1="220" x2="290" y2="220" marker-end="url(#a)"/>
+  <line class="ln" x1="40" y1="220" x2="40" y2="66" marker-end="url(#a)"/>
+  <text class="s" x="290" y="236" text-anchor="end">規模 →</text>
+  <text class="s" x="46" y="76">表現</text>
+  <line class="ln" x1="360" y1="220" x2="610" y2="220" marker-end="url(#a)"/>
+  <line class="ln" x1="360" y1="220" x2="360" y2="66" marker-end="url(#a)"/>
+  <text class="s" x="610" y="236" text-anchor="end">規模 →</text>
+  <text class="s" x="366" y="76">表現</text>
+  <path class="curve" d="M44.0,200.0 L110.0,198.0 L160.0,196.0 L190.0,150.0 L205.0,92.0 L230.0,84.0 L280.0,80.0"/>
+  <path class="curve" d="M364.0,198.0 L372.0,190.8 L380.0,183.8 L388.0,177.1 L396.0,170.6 L404.0,164.4 L412.0,158.4 L420.0,152.7 L428.0,147.2 L436.0,141.9 L444.0,136.9 L452.0,132.1 L460.0,127.6 L468.0,123.3 L476.0,119.3 L484.0,115.5 L492.0,112.0 L500.0,108.7 L508.0,105.6 L516.0,102.8 L524.0,100.2 L532.0,97.9 L540.0,95.8 L548.0,94.0 L556.0,92.4 L564.0,91.1 L572.0,90.0 L580.0,89.1 L588.0,88.5 L596.0,88.1 L604.0,88.0"/>
+  <line class="dash" x1="40" y1="200" x2="290" y2="200"/>
+  <text class="s" x="160" y="252" text-anchor="middle">隨機水準持平 → 跨過門檻急遽跳升</text>
+  <text class="s" x="485" y="252" text-anchor="middle">同一能力換成連續指標：平滑</text>
+  <rect class="acc" x="12" y="270" width="304" height="112" rx="10"/>
+  <text class="b" x="24" y="294">真實突現</text>
+  <text x="24" y="318">模型內部形成新的表徵或電路</text>
+  <text class="s" x="24" y="338">能力質變，不只是度量方式</text>
+  <rect class="bad" x="324" y="270" width="304" height="112" rx="10"/>
+  <text class="b" x="336" y="294">測量假象（Schaefer et al. 2023）</text>
+  <text x="336" y="318">突現是評估指標的非線性造成的錯覺</text>
+  <text class="s" x="336" y="338">換成連續指標後曲線其實平滑</text>
+  <rect class="box" x="12" y="398" width="616" height="70" rx="10"/>
+  <text class="b" x="24" y="422">對實務的啟示</text>
+  <text class="s" x="24" y="444">小規模模型的測試結果不能線性外推去判斷大模型是否具備某能力，需保留驗證空間</text>
+  <text class="s" x="24" y="460">至今學界沒有共識；圖為示意，不是實測數據</text>
+</svg>
