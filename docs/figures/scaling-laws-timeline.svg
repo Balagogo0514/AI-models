@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440" role="img" aria-labelledby="t d">
+  <title id="t">Scaling Law 的演進：2020 到 2025 年的六個節點</title>
+  <desc id="d">2020 年 Kaplan 等人（OpenAI）首次系統性提出 N、D、C 三變數冪律；2022 年 Hoffmann 等人（DeepMind）Chinchilla 推翻 Kaplan 的資料配比；2022 年 Wei 等人（Google）提出 Emergent Abilities；2023 到 2024 年 Meta 的 LLaMA 系列刻意用遠超 Chinchilla-optimal 的資料量訓練小模型；2024 年起推論期 scaling 研究；2024 到 2025 年資料受限下的 scaling，例如 Muennighoff 等人。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="438.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">Scaling Law 演進</text>
+  <line class="ln" x1="70" y1="52" x2="70" y2="412"/>
+  <rect class="box" x="12" y="56" width="116" height="28" rx="14"/>
+  <rect class="acc" x="12" y="56" width="116" height="28" rx="14"/>
+  <text class="b" x="70" y="75" text-anchor="middle">2020</text>
+  <rect class="box" x="140" y="44" width="488" height="54" rx="8"/>
+  <text class="b" x="152" y="66">Kaplan et al.（OpenAI）</text>
+  <text class="s" x="152" y="86">首次系統性提出 N、D、C 三變數冪律關係</text>
+  <rect class="box" x="12" y="118" width="116" height="28" rx="14"/>
+  <rect class="acc" x="12" y="118" width="116" height="28" rx="14"/>
+  <text class="b" x="70" y="137" text-anchor="middle">2022</text>
+  <rect class="acc" x="140" y="106" width="488" height="54" rx="8"/>
+  <text class="b" x="152" y="128">Chinchilla（DeepMind）</text>
+  <text class="s" x="152" y="148">推翻 Kaplan 的配比：先前模型參數過多、資料過少</text>
+  <rect class="box" x="12" y="180" width="116" height="28" rx="14"/>
+  <rect class="acc" x="12" y="180" width="116" height="28" rx="14"/>
+  <text class="b" x="70" y="199" text-anchor="middle">2022</text>
+  <rect class="box" x="140" y="168" width="488" height="54" rx="8"/>
+  <text class="b" x="152" y="190">Emergent Abilities（Google）</text>
+  <text class="s" x="152" y="210">某些能力跨過規模門檻後才「突現」</text>
+  <rect class="box" x="12" y="242" width="116" height="28" rx="14"/>
+  <rect class="acc" x="12" y="242" width="116" height="28" rx="14"/>
+  <text class="b" x="70" y="261" text-anchor="middle">2023–24</text>
+  <rect class="box" x="140" y="230" width="488" height="54" rx="8"/>
+  <text class="b" x="152" y="252">LLaMA 系列（Meta）</text>
+  <text class="s" x="152" y="272">刻意用遠超 Chinchilla-optimal 的資料訓練小模型，換推論效率</text>
+  <rect class="box" x="12" y="304" width="116" height="28" rx="14"/>
+  <rect class="acc" x="12" y="304" width="116" height="28" rx="14"/>
+  <text class="b" x="70" y="323" text-anchor="middle">2024</text>
+  <rect class="good" x="140" y="292" width="488" height="54" rx="8"/>
+  <text class="b" x="152" y="314">Inference／Test-time Scaling</text>
+  <text class="s" x="152" y="334">scaling 焦點從訓練期轉向推論期</text>
+  <rect class="box" x="12" y="366" width="116" height="28" rx="14"/>
+  <rect class="acc" x="12" y="366" width="116" height="28" rx="14"/>
+  <text class="b" x="70" y="385" text-anchor="middle">2024–25</text>
+  <rect class="box" x="140" y="354" width="488" height="54" rx="8"/>
+  <text class="b" x="152" y="376">Data-constrained scaling</text>
+  <text class="s" x="152" y="396">高品質資料見頂後如何持續 scaling（如 Muennighoff et al.）</text>
+</svg>

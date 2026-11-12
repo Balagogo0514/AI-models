@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 490" role="img" aria-labelledby="t d">
+  <title id="t">Scaling Law 的七個適用範圍：不只是預訓練</title>
+  <desc id="d">預訓練 scaling 看 N、D、C 與 pretraining loss 的冪律；推論期 scaling 看回答當下投入的運算，是目前業界最活躍的；Post-training 與 RL scaling 效果常較早飽和且依賴 verifier 品質；Fine-tuning 與 SFT scaling 通常比預訓練更快飽和；Downstream task scaling 因 loss 平滑下降不保證特定任務同步提升而引發突現能力爭議；Long-context scaling 通常呈二次方或近似線性；多模態 scaling 的冪律指數可能與純文字不同。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="488.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">Scaling 的對象與特性</text>
+  <rect class="hd" x="12" y="44" width="616" height="26" rx="6"/>
+  <text class="b" x="20" y="62">階段</text>
+  <text class="b" x="152" y="62">Scaling 的對象</text>
+  <text class="b" x="430" y="62">特性</text>
+  <rect class="box" x="12" y="76" width="616" height="52" rx="8"/>
+  <text class="b" x="20" y="107">預訓練</text>
+  <text x="152" y="107">N、D、C 對 pretraining loss 的冪律</text>
+  <text class="s" x="430" y="107">最經典；邊際效益開始遞減</text>
+  <rect class="good" x="12" y="134" width="616" height="52" rx="8"/>
+  <text class="b" x="20" y="165">推論期</text>
+  <text x="152" y="165">回答當下投入的運算（CoT、採樣、搜尋）</text>
+  <text class="s" x="430" y="165">目前業界最活躍</text>
+  <rect class="box" x="12" y="192" width="616" height="52" rx="8"/>
+  <text class="b" x="20" y="223">Post-training／RL</text>
+  <text x="152" y="223">RLHF、RLAIF 等對齊階段的運算投入</text>
+  <text class="s" x="430" y="223">常較早飽和；依賴 verifier 品質</text>
+  <rect class="box" x="12" y="250" width="616" height="52" rx="8"/>
+  <text class="b" x="20" y="281">Fine-tuning／SFT</text>
+  <text x="152" y="281">微調 token 數與下游任務表現</text>
+  <text class="s" x="430" y="281">通常比預訓練更快飽和</text>
+  <rect class="bad" x="12" y="308" width="616" height="52" rx="8"/>
+  <text class="b" x="20" y="339">Downstream task</text>
+  <text x="152" y="339">loss 平滑下降不保證特定任務同步提升</text>
+  <text class="s" x="430" y="339">Emergent Abilities 爭議的根源</text>
+  <rect class="box" x="12" y="366" width="616" height="52" rx="8"/>
+  <text class="b" x="20" y="397">Long-context</text>
+  <text x="152" y="397">context 長度對訓練／推論運算的影響</text>
+  <text class="s" x="430" y="397">二次方或近似線性</text>
+  <rect class="box" x="12" y="424" width="616" height="52" rx="8"/>
+  <text class="b" x="20" y="455">多模態</text>
+  <text x="152" y="455">文字、圖像、影片混合訓練的最佳配比</text>
+  <text class="s" x="430" y="455">冪律指數可能與純文字不同</text>
+</svg>

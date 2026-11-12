@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 472" role="img" aria-labelledby="t d">
+  <title id="t">同樣運算量：Gopher 280B／300B tokens 對 Chinchilla 70B／1.4T tokens</title>
+  <desc id="d">兩個模型使用相同運算量。Gopher 是舊的參數優先路線：280B 參數、300B 訓練 tokens。Chinchilla 是新配比：70B 參數、1.4T 訓練 tokens。Chinchilla 參數量只有四分之一，但在多數 benchmark 上顯著超越 Gopher，證明先前一代大模型嚴重欠訓練。Chinchilla 的 compute-optimal 配比是 N_opt 與 D_opt 都正比於 C 的 0.5 次方，經驗法則每個參數約需 20 個訓練 token。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="470.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">同運算量，不同配比</text>
+  <rect class="bad" x="12" y="44" width="300" height="186" rx="10"/>
+  <text class="b" x="26" y="68">Gopher（舊路線：參數優先）</text>
+  <text class="s" x="26" y="90">運算量：相同</text>
+  <text class="s" x="26" y="118">參數量</text>
+  <rect class="bout" x="26" y="124" width="190.0" height="18" rx="3"/>
+  <text class="b" x="224.0" y="138">280B</text>
+  <text class="s" x="26" y="170">訓練 tokens</text>
+  <rect class="bin" x="26" y="176" width="40.7" height="18" rx="3"/>
+  <text class="b" x="74.71428571428571" y="190">300B</text>
+  <text class="mono" x="26" y="218">D/N ≈ 1.1</text>
+  <rect class="good" x="328" y="44" width="300" height="186" rx="10"/>
+  <text class="b" x="342" y="68">Chinchilla（新配比）</text>
+  <text class="s" x="342" y="90">運算量：相同</text>
+  <text class="s" x="342" y="118">參數量</text>
+  <rect class="bout" x="342" y="124" width="47.5" height="18" rx="3"/>
+  <text class="b" x="397.5" y="138">70B</text>
+  <text class="s" x="342" y="170">訓練 tokens</text>
+  <rect class="bin" x="342" y="176" width="190.0" height="18" rx="3"/>
+  <text class="b" x="540.0" y="190">1.4T</text>
+  <text class="mono" x="342" y="218">D/N = 20</text>
+  <text class="b" x="320" y="258" text-anchor="middle">結果：參數量僅 1/4 的 Chinchilla，在多數 benchmark 上顯著超越 Gopher</text>
+  <text class="s" x="320" y="280" text-anchor="middle">→ 先前一代大模型「嚴重欠訓練」，把過多運算浪費在參數而非資料</text>
+  <rect class="acc" x="12" y="306" width="616" height="82" rx="10"/>
+  <text class="b" x="24" y="330">Compute-optimal 配比（給定運算預算 C）</text>
+  <text class="monob" x="24" y="354">N_opt ∝ C^0.5　　D_opt ∝ C^0.5　　→　D ≈ 20N</text>
+  <text class="s" x="24" y="374">參數與資料應同比例增長</text>
+  <rect class="box" x="12" y="400" width="616" height="54" rx="10"/>
+  <text class="s" x="24" y="422">Kaplan 的舊結論（後來證明有誤）：固定運算下應優先放大參數，資料可相對少</text>
+  <text class="s" x="24" y="442">原因：Kaplan 團隊的方法論未正確處理 learning rate schedule</text>
+</svg>

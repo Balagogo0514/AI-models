@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 470" role="img" aria-labelledby="t d">
+  <title id="t">推論期 scaling：多花推論運算換更好答案，但報酬遞減</title>
+  <desc id="d">左圖示意準確率隨推論期運算量上升，起初快速上升，之後趨於平緩，呈報酬遞減。右側列出四類技術：Chain-of-Thought 多想幾步再回答；Self-consistency 同一問題多次採樣再多數決；Best-of-N 與樹狀搜尋用 reward model 評分挑最佳；專用推理模型把推論運算轉成可控的 effort level。Claude Code 的 effort 指令 low、medium、high、xhigh、max 就是這個理論的應用。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="468.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">推論期 scaling</text>
+  <line class="ln" x1="34" y1="232" x2="284" y2="232" marker-end="url(#a)"/>
+  <line class="ln" x1="34" y1="232" x2="34" y2="58" marker-end="url(#a)"/>
+  <text class="s" x="284" y="248" text-anchor="end">推論期運算 →</text>
+  <text class="s" x="40" y="68">準確率</text>
+  <path class="curve" d="M38.0,222.0 L44.0,210.8 L50.0,200.4 L56.0,190.9 L62.0,182.0 L68.0,173.9 L74.0,166.4 L80.0,159.4 L86.0,153.0 L92.0,147.1 L98.0,141.6 L104.0,136.6 L110.0,131.9 L116.0,127.6 L122.0,123.7 L128.0,120.0 L134.0,116.6 L140.0,113.5 L146.0,110.6 L152.0,108.0 L158.0,105.5 L164.0,103.3 L170.0,101.2 L176.0,99.2 L182.0,97.4 L188.0,95.8 L194.0,94.3 L200.0,92.9 L206.0,91.6 L212.0,90.4 L218.0,89.3 L224.0,88.3 L230.0,87.3 L236.0,86.5 L242.0,85.7 L248.0,84.9 L254.0,84.2 L260.0,83.6 L266.0,83.0 L272.0,82.5 L278.0,82.0"/>
+  <text class="s" x="160" y="268" text-anchor="middle">近似對數線性，再趨於平台期</text>
+  <text class="s" x="160" y="283" text-anchor="middle">示意圖，非實測</text>
+  <rect class="box" x="316" y="50" width="312" height="50" rx="8"/>
+  <text class="b" x="328" y="71">Chain-of-Thought</text>
+  <text class="s" x="328" y="90">多想幾步再回答，用 token 換推理深度</text>
+  <rect class="box" x="316" y="106" width="312" height="50" rx="8"/>
+  <text class="b" x="328" y="127">Self-consistency／多次採樣</text>
+  <text class="s" x="328" y="146">同題多個答案，多數決或 verifier 挑選</text>
+  <rect class="box" x="316" y="162" width="312" height="50" rx="8"/>
+  <text class="b" x="328" y="183">Best-of-N／樹狀搜尋</text>
+  <text class="s" x="328" y="202">多條路徑，用 reward model 評分選最佳</text>
+  <rect class="acc" x="316" y="218" width="312" height="50" rx="8"/>
+  <text class="b" x="328" y="239">專用推理模型</text>
+  <text class="s" x="328" y="258">學會何時該想更久，變成可控 effort</text>
+  <rect class="good" x="12" y="292" width="616" height="62" rx="10"/>
+  <text class="b" x="24" y="316">核心發現：推論期運算與能力之間也存在類似冪律的關係</text>
+  <text class="s" x="24" y="338">同一個模型允許它想更久，效果可媲美訓練一個大幾倍的模型，成本結構不同</text>
+  <rect class="box" x="12" y="366" width="616" height="52" rx="10"/>
+  <text class="b" x="24" y="388">Claude Code 的 /effort（low／medium／high／xhigh／max）</text>
+  <text class="s" x="24" y="408">就是讓使用者在推論成本與答案品質之間動態取捨</text>
+  <text class="s" x="320" y="442" text-anchor="middle">例：Self-consistency 採樣路徑 1→40，準確率持續上升但邊際效益遞減</text>
+  <text class="s" x="320" y="460" text-anchor="middle">例：o1 在 AIME 上準確率隨推論期運算近似 log-linear 成長（官方曲線）</text>
+</svg>

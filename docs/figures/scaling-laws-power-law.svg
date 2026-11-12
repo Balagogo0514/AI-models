@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 470" role="img" aria-labelledby="t d">
+  <title id="t">冪律關係：線性座標是遞減曲線，log-log 座標是一條直線</title>
+  <desc id="d">左圖在線性座標上畫出 loss 隨規模增加而下降，起初快、後來愈來愈慢；右圖同一條曲線換成 log-log 座標，變成一條向右下傾斜的直線，直線的斜率就是指數 alpha。公式為 L(x) 約等於 (x_c / x) 的 alpha 次方，x 可以是參數量 N、資料量 D 或運算量 C。下方列出 Kaplan 2020 的三個指數：L(N) 正比於 N 的負 0.076 次方，L(D) 為負 0.095，L(C) 為負 0.050。圖為示意，不是實測數據。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="468.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">冪律：loss 隨規模平滑下降</text>
+  <text class="b" x="165" y="56" text-anchor="middle">線性座標</text>
+  <text class="b" x="485" y="56" text-anchor="middle">log-log 座標</text>
+  <line class="ln" x1="40" y1="220" x2="290" y2="220" marker-end="url(#a)"/>
+  <line class="ln" x1="40" y1="220" x2="40" y2="66" marker-end="url(#a)"/>
+  <text class="s" x="290" y="236" text-anchor="end">規模 x →</text>
+  <text class="s" x="46" y="76">loss</text>
+  <line class="ln" x1="360" y1="220" x2="610" y2="220" marker-end="url(#a)"/>
+  <line class="ln" x1="360" y1="220" x2="360" y2="66" marker-end="url(#a)"/>
+  <text class="s" x="610" y="236" text-anchor="end">log 規模 →</text>
+  <text class="s" x="366" y="76">log loss</text>
+  <path class="curve" d="M40.0,76.0 L46.0,100.6 L52.0,117.6 L58.0,130.0 L64.0,139.5 L70.0,146.9 L76.0,153.0 L82.0,158.0 L88.0,162.1 L94.0,165.7 L100.0,168.8 L106.0,171.4 L112.0,173.8 L118.0,175.9 L124.0,177.7 L130.0,179.4 L136.0,180.9 L142.0,182.2 L148.0,183.5 L154.0,184.6 L160.0,185.6 L166.0,186.6 L172.0,187.5 L178.0,188.3 L184.0,189.1 L190.0,189.8 L196.0,190.4 L202.0,191.1 L208.0,191.6 L214.0,192.2 L220.0,192.7 L226.0,193.2 L232.0,193.7 L238.0,194.1 L244.0,194.5 L250.0,194.9 L256.0,195.3 L262.0,195.6 L268.0,196.0 L274.0,196.3 L280.0,196.6"/>
+  <path class="curve" d="M372.0,86.0 L596.0,196.0"/>
+  <text class="s" x="165" y="248" text-anchor="middle">起初下降快，之後報酬遞減</text>
+  <text class="s" x="485" y="248" text-anchor="middle">直線的斜率就是指數 α</text>
+  <rect class="acc" x="120" y="264" width="400" height="44" rx="10"/>
+  <text class="monob" x="320" y="292" text-anchor="middle">L(x) ≈ (x_c / x)^α</text>
+  <text class="s" x="320" y="328" text-anchor="middle">x：規模變數（參數量 N、資料量 D、運算量 C）　α：scaling 指數　x_c：常數</text>
+  <text class="b" x="320" y="360" text-anchor="middle">Kaplan et al.（2020）報告的三個指數</text>
+  <rect class="box" x="12" y="372" width="200" height="58" rx="8"/>
+  <text class="monob" x="112" y="394" text-anchor="middle">L(N) ∝ N^-0.076</text>
+  <text class="s" x="112" y="416" text-anchor="middle">固定資料與運算，模型越大 loss 越低</text>
+  <rect class="box" x="220" y="372" width="200" height="58" rx="8"/>
+  <text class="monob" x="320" y="394" text-anchor="middle">L(D) ∝ D^-0.095</text>
+  <text class="s" x="320" y="416" text-anchor="middle">固定模型與運算，資料越多 loss 越低</text>
+  <rect class="box" x="428" y="372" width="200" height="58" rx="8"/>
+  <text class="monob" x="528" y="394" text-anchor="middle">L(C) ∝ C^-0.050</text>
+  <text class="s" x="528" y="416" text-anchor="middle">固定其他條件，算力越多 loss 越低</text>
+  <text class="s" x="320" y="454" text-anchor="middle">示意圖，非實測數據；在已測試的規模範圍內幾乎沒有明顯天花板</text>
+</svg>

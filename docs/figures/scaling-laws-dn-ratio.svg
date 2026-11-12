@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 470" role="img" aria-labelledby="t d">
+  <title id="t">各代表模型的訓練 tokens 與參數量比例 D/N（對數座標）</title>
+  <desc id="d">以對數座標比較各模型的訓練 token 數除以參數量：Megatron-Turing NLG 約 0.5、Gopher 約 1.1、GPT-3 與 Jurassic-1 Jumbo 約 1.7，這些是 Kaplan 時代的參數優先路線；Chinchilla 的經驗法則為 20；LLaMA 3 405B 約 37；LLaMA 7B 約 140，刻意遠超 compute-optimal 換取推論時更小更省錢。數值為本文表格所列的近似值。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="468.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">D/N 比例：Kaplan 時代到 Chinchilla 之後</text>
+  <line class="rule" x1="190.0" y1="48" x2="190.0" y2="392"/>
+  <text class="s" x="190.0" y="410" text-anchor="middle">0.1</text>
+  <line class="rule" x1="298.0" y1="48" x2="298.0" y2="392"/>
+  <text class="s" x="298.0" y="410" text-anchor="middle">1</text>
+  <line class="rule" x1="406.0" y1="48" x2="406.0" y2="392"/>
+  <text class="s" x="406.0" y="410" text-anchor="middle">10</text>
+  <line class="rule" x1="514.0" y1="48" x2="514.0" y2="392"/>
+  <text class="s" x="514.0" y="410" text-anchor="middle">100</text>
+  <text class="s" x="320" y="430" text-anchor="middle">D/N（每個參數對應的訓練 token 數，對數刻度）</text>
+  <line class="dash" x1="438.5" y1="44" x2="438.5" y2="394"/>
+  <text class="at" x="442.51123953171" y="56">Chinchilla 經驗法則 ≈ 20</text>
+  <text x="12" y="88">Megatron-Turing NLG（530B）</text>
+  <rect class="bout" x="190" y="74" width="75.5" height="20" rx="3"/>
+  <text class="b" x="273.48876046829" y="89">約 0.5</text>
+  <text x="12" y="134">Gopher（280B）</text>
+  <rect class="bout" x="190" y="120" width="112.5" height="20" rx="3"/>
+  <text class="b" x="310.4704099970883" y="135">約 1.1</text>
+  <text x="12" y="180">GPT-3（175B）</text>
+  <rect class="bout" x="190" y="166" width="132.9" height="20" rx="3"/>
+  <text class="b" x="330.8884835088536" y="181">約 1.7</text>
+  <text x="12" y="226">Jurassic-1 Jumbo（178B）</text>
+  <rect class="bout" x="190" y="212" width="132.9" height="20" rx="3"/>
+  <text class="b" x="330.8884835088536" y="227">約 1.7</text>
+  <text x="12" y="272">Chinchilla（70B）</text>
+  <rect class="bin" x="190" y="258" width="248.5" height="20" rx="3"/>
+  <text class="b" x="446.51123953171" y="273">20</text>
+  <text x="12" y="318">LLaMA 3（405B）</text>
+  <rect class="bin" x="190" y="304" width="277.4" height="20" rx="3"/>
+  <text class="b" x="475.36578619923546" y="319">約 37</text>
+  <text x="12" y="364">LLaMA（7B）</text>
+  <rect class="bin" x="190" y="350" width="339.8" height="20" rx="3"/>
+  <text class="b" x="537.7818278532498" y="365">約 140</text>
+  <text class="s" x="24" y="452">深色：Kaplan 時代的參數優先（D/N 約 0.5–1.7）　淺色：Chinchilla 之後（偏向加大資料量）</text>
+</svg>
