@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 560" role="img" aria-labelledby="t d">
+  <title id="t">Codex 的追蹤入口：subagent、Cloud 任務、背景 terminal、codex exec、先前 session、狀態與完成通知</title>
+  <desc id="d">session 內的 subagent 用 /agent 切換 thread，可要求 steer、stop、close。Cloud 任務用 codex cloud list 與 status。背景 terminal 用 /ps 檢視、/stop 停止，指背景 terminals，不是 subagent 或 cloud task。自己的 codex exec 程序看你的腳本與 log，用 --json 事件流與 -o 寫檔。先前的 session 用 resume、fork、archive、unarchive。目前 session 狀態與用量用 /status。完成通知未見已驗證的主動通知機制，非互動程序以 exit code 與輸出檔判斷。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="558.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">想看什麼，用哪個</text>
+  <rect class="acc" x="12" y="44" width="270" height="66" rx="10"/>
+  <text x="24" y="82.0">session 內的 subagent</text>
+  <line class="ln" x1="282" y1="77.0" x2="316" y2="77.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="44" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="71.0">/agent</text>
+  <text class="s" x="330" y="93.0">切換 thread；steer／stop／close 🔎</text>
+  <rect class="acc" x="12" y="118" width="270" height="66" rx="10"/>
+  <text x="24" y="156.0">Cloud 任務</text>
+  <line class="ln" x1="282" y1="151.0" x2="316" y2="151.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="118" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="145.0">codex cloud list／status</text>
+  <text class="s" x="330" y="167.0">追蹤與取回見 4.2 ✅</text>
+  <rect class="acc" x="12" y="192" width="270" height="66" rx="10"/>
+  <text x="24" y="230.0">背景 terminal</text>
+  <line class="ln" x1="282" y1="225.0" x2="316" y2="225.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="192" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="219.0">/ps　/stop</text>
+  <text class="s" x="330" y="241.0">指背景 terminals，不是 subagent 或 cloud task ✅</text>
+  <rect class="acc" x="12" y="266" width="270" height="66" rx="10"/>
+  <text x="24" y="304.0">自己的 codex exec 程序</text>
+  <line class="ln" x1="282" y1="299.0" x2="316" y2="299.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="266" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="293.0">你的腳本與 log</text>
+  <text class="s" x="330" y="315.0">--json 事件流；-o 寫檔 ✅</text>
+  <rect class="acc" x="12" y="340" width="270" height="66" rx="10"/>
+  <text x="24" y="378.0">先前的 session</text>
+  <line class="ln" x1="282" y1="373.0" x2="316" y2="373.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="340" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="367.0">resume／fork／archive</text>
+  <text class="s" x="330" y="389.0">codex resume --last 等 ✅</text>
+  <rect class="acc" x="12" y="414" width="270" height="66" rx="10"/>
+  <text x="24" y="452.0">目前 session 狀態與用量</text>
+  <line class="ln" x1="282" y1="447.0" x2="316" y2="447.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="414" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="441.0">/status</text>
+  <text class="s" x="330" y="463.0">設定、token usage 等 ✅</text>
+  <rect class="acc" x="12" y="488" width="270" height="66" rx="10"/>
+  <text x="24" y="526.0">完成通知</text>
+  <line class="ln" x1="282" y1="521.0" x2="316" y2="521.0" marker-end="url(#a)"/>
+  <rect class="bad" x="318" y="488" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="515.0">未見已驗證機制 ⚠️</text>
+  <text class="s" x="330" y="537.0">非互動以 exit code 與輸出檔判斷</text>
+</svg>

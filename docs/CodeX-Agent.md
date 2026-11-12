@@ -3,7 +3,7 @@
 > 本文是 `Claude-Agent.md` 的 OpenAI Codex 對應版：聚焦「工作流程與選型」——何時用哪種平行工作方式、如何同時審查不同部分、如何追蹤與彙整。
 > 指令與旗標的完整清單請見 `CodeX-CLI.md`；Agents SDK 與 coredump 分析架構請見 `OpenAI-Python-Agent.md`。
 >
-> 狀態：初版完成（五節與附錄 A 皆已填）。更新日期：2026-11-03
+> 狀態：初版完成（五節與附錄 A 皆已填）。更新日期：2026-11-03（2026-11-12 新增 11 張圖示）
 
 ---
 
@@ -48,6 +48,8 @@
 與 Claude Code 的重要差異先說在前：**Codex 沒有「Agent View」那種統一管理多個背景 session 的內建畫面**（本地文件與官方摘要中都找不到對應功能）；要並行追蹤多個獨立任務，主要靠 Codex Cloud 的 task 清單，或自己用 shell 管理多個 `codex exec` 程序。
 
 前三者（1.1–1.3）是 CLI 直接可用的平行工作方式；1.4 偏桌面 App；1.5 屬於「用 API / SDK 自己蓋編排」的層級，一般的互動式 code review 用不到。
+
+![Codex 多 agent 的五種層次：Subagents、Codex Cloud、多個 codex exec、Desktop App、mcp-server 與 Agents SDK，比較誰決定、跑在哪裡、隔離，並標示證據來源](figures/codex-agent-overview.svg)
 
 ### 1.1 Subagents（agent thread，session 內委派）
 
@@ -127,6 +129,8 @@
 
 > **與 Claude Code 對照**：Claude 的 subagent 可設 `isolation: worktree` 自動開 worktree；Codex 沒有已驗證的對應設定，要隔離檔案得**自己建 worktree** 並用 `-C` 指向它。Claude 的 Workflows（腳本編排大量 agent）在 Codex 裡沒有內建對應，同類需求要走 1.3（自己寫腳本）或 1.5（Agents SDK）。
 
+![Sandbox 與 Worktree 是不同的隔離：Sandbox 加 approval 管權限，Worktree 管平行工作改哪份檔案；唯讀審查只需要 read-only sandbox](figures/codex-agent-sandbox-worktree.svg)
+
 下表把第 1 節的三種 CLI 層級方式，依八個角度整體對照（Desktop App、`mcp-server` ＋ Agents SDK 屬桌面／API 層級，不列入）：
 
 | 方式 | 誰決定下一步 | 中間結果放哪 | 檔案隔離 | 可否重播 | 規模 | 如何追蹤 | 適合情境 |
@@ -148,6 +152,8 @@ Codex 的 code review 入口比較分散：本機有單次審查指令，「多 
 > **速選**：開發途中快速看 → **3.1 本機 `/review`／`codex review`**；同一 session 內分檔唯讀並行審 → **3.2 Subagents**；多個獨立耗時審查要並行追蹤 → **3.3 Codex Cloud**；接 CI、精確控制輸出 → **3.4 多個 `codex exec`**；PR 全自動審 → **3.5 GitHub `@codex review`**。
 
 > **與 Claude Code 的差異**：Codex 沒有已驗證的「一鍵啟動雲端多 reviewer 並獨立驗證每個 finding」指令（對應 Claude 的 `/code-review ultra`）。要多 agent 審查，得自己用 3.2–3.4 組合；若要降低誤報，可仿照 Claude 附錄的做法，另派一個獨立驗證 agent 複核（見附錄 A）。
+
+![Codex 的 code review 入口：本機單次 review、Subagents、Codex Cloud、多個 codex exec、GitHub at codex review；沒有已驗證的一鍵雲端多 reviewer 指令](figures/codex-agent-review-paths.svg)
 
 ### 3.1 本機單次審查：`/review`、`codex review`、`codex exec review`
 
@@ -186,6 +192,8 @@ Codex 的 code review 入口比較分散：本機有單次審查指令，「多 
 - **成本**：token 用量高於單 agent，大任務先小範圍試跑。🔎
 - **適合**：分工清楚、各檔案相對獨立的審查；或想把結果留在主 session 一起討論。
 
+![Subagents 審查流程：你明確要求才 spawn，主 Codex 啟動多個唯讀 subagent thread，回報後由主 Codex 彙整；可用 /agent 管理](figures/codex-agent-subagent-flow.svg)
+
 ### 3.3 Codex Cloud 並行提交多個審查任務 ✅
 
 當有**多個彼此獨立、耗時**的審查，想提交後不用一直開著電腦時用。
@@ -217,7 +225,11 @@ Codex 的 code review 入口比較分散：本機有單次審查指令，「多 
 - **要點**：`--sandbox read-only` 保證不改檔；`-a never` 讓 CI 不會卡在提示；`-o` 把結果寫檔；要固定輸出格式可加 `--output-schema <FILE>`；要事件流用 `--json`。
 - **適合**：CI 批次審查、需要精確控制「每個程序審什麼、輸出什麼格式」。
 
+![多個 codex exec 平行審查：腳本用 xargs 平行啟動唯讀的 codex exec，輸出落地成檔，檢查 exit code，彙整成帳本，再由全新的 codex exec 獨立驗證](figures/codex-agent-exec-parallel.svg)
+
 ### 3.5 GitHub 端：`@codex review` 🔎
+
+![GitHub 端 at codex review 流程：前置設定，PR 留言觸發，eyes reaction 接手，貼出標 P0 與 P1 的 review，後續可用 at codex fix 啟動雲端任務](figures/codex-agent-github-review.svg)
 
 - **做什麼**：在 PR 頂層留言 `@codex review`，Codex 以 eyes reaction 表示接手，並貼出標準的 GitHub review。
 - **前置條件**：需先設定好 Codex cloud，並在 Codex 設定中對該 repo 開啟 Code review。
@@ -260,6 +272,8 @@ Codex 的 code review 入口比較分散：本機有單次審查指令，「多 
 平行工作最怕「派出去就看不到了」。Codex 沒有 Claude 那種統一的 Agent View 畫面（見第 1 節），所以**追蹤入口依做法而分散**，彙整多半要自己動手。標記 ✅🔎⚠️ 意義見文首。
 
 ### 4.1 追蹤入口一覽
+
+![Codex 的追蹤入口：subagent 用 /agent，Cloud 任務用 codex cloud list 與 status，背景 terminal 用 /ps，codex exec 看腳本與 log，先前 session 用 resume 與 fork，狀態用 /status，完成通知未見已驗證機制](figures/codex-agent-tracking.svg)
 
 | 想看什麼 | 用哪個 |
 |------|------|
@@ -342,6 +356,8 @@ codex apply <TASK_ID>                                # 不經 cloud 子命令，
 
 ### 5.1 一句話選型
 
+![Codex 一句話選型：單一任務不用多 agent；同 session 唯讀分工用 Subagents；獨立耗時審查用 Codex Cloud；接 CI 用多個 codex exec；多 agent 寫碼要自建 worktree；PR 自動審用 at codex review；自建編排用 mcp-server 加 Agents SDK](figures/codex-agent-chooser.svg)
+
 - 任務**單一、可快速說清楚** → 不要用多 agent，一個 session 直接做。
 - **同一 session 內分檔唯讀審查** → Subagents（要明確要求才會 spawn）。
 - **多個獨立、耗時的審查並行、不想盯電腦** → Codex Cloud。
@@ -386,6 +402,8 @@ codex apply <TASK_ID>                                # 不經 cloud 子命令，
 - **別為了省錢自行降級模型**：模型選擇是使用者的決定；要省成本，先調整 reasoning effort、善用漏斗，再考慮換模型。（可用 `/model` 切換模型與 reasoning effort ✅）
 
 ### 5.5 與 Claude Code 的主要差異（做多 agent 審查時）
+
+![做多 agent 審查時 Codex 與 Claude Code 的主要差異：一鍵雲端多 reviewer、多背景 session 總覽、subagent 檔案隔離、腳本編排、完成通知、自動清 worktree、設定中心](figures/codex-agent-vs-claude.svg)
 
 | 面向 | Claude Code | Codex |
 |------|------|------|
@@ -432,6 +450,8 @@ codex apply <TASK_ID>                                # 不經 cloud 子命令，
 ### A.3 Codex 的多 Agent 分工
 
 目標：把「靜態可見的配對錯誤」平行掃完，把「需要執行期證據的問題」交給有資料的 agent，並用**獨立驗證**壓低誤報。
+
+![fastpath 除錯的 Codex 多 agent 分工：子系統稽核員、耗時的獨立審查、instrumentation 實作、重現 harness 建置、log 與 core 分析、競爭假說調查、獨立驗證員，各自的機制與是否改檔](figures/codex-agent-fastpath-roles.svg)
 
 | 角色 | 用哪種機制（對應本文章節）| 做什麼 | 是否改檔 |
 |------|------|------|------|
@@ -518,6 +538,8 @@ Codex 沒有統一看板（見第 4 節），所以**帳本是必要的**。在 
 - Subagents 需明確要求才會 spawn、且同時最多 `max_threads` 個（預設 6）。🔎
 
 ### A.7 建議的實際流程
+
+![fastpath 除錯的 Codex 建議流程：先讓錯誤即時現形，再平行稽核與建重現 harness，帳本與全新 codex exec 驗證，用 git bisect 鎖定 commit，最後先寫失敗的測試再修](figures/codex-agent-fastpath-flow.svg)
 
 1. 人／agent（獨立 worktree）上 A.2 的 fail-fast instrumentation。
 2. 同時平行：子系統稽核員跑 A.4 checklist（靜態）＋ 重現 harness 建置。
