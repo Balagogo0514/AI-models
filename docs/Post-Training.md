@@ -344,23 +344,7 @@ Pretraining
 
 用開源模型整合企業自己的知識，通常先做 RAG（檢索增強）。夠不夠，不要憑感覺，拿評測集做錯誤分析，看答錯的題目屬於哪一類。
 
-```mermaid
-flowchart TD
-    A["評測集上答錯的題目<br/>先做錯誤分析、歸類"] --> B{"失敗屬於哪一類？"}
-    B -->|檢索失敗| C["修檢索：切塊、embedding、<br/>混合檢索、reranker"]
-    C --> C2["微調幫不上忙"]
-    B -->|有證據卻答錯| D["換更強模型、改 prompt、<br/>加驗證步驟"]
-    D --> D2["穩定重現再考慮微調"]
-    B -->|格式風格不符| E["SFT / LoRA<br/>固定格式、語氣與術語"]
-    E --> E2["微調最划算"]
-    B -->|數字、結構化資料| F["text-to-SQL、API 工具<br/>不走向量檢索"]
-    B -->|跨文件、全局問題| G["Agentic RAG、GraphRAG、<br/>分層摘要"]
-    C2 --> Z["RAG 加微調搭配：<br/>微調管行為與格式，RAG 管事實"]
-    D2 --> Z
-    E2 --> Z
-    F --> Z
-    G --> Z
-```
+![圖：RAG 不夠時，依失敗類型決定對策](figures/post-training-rag-failure-triage.svg)
 
 ### 失敗類型與對策
 
@@ -386,14 +370,7 @@ flowchart TD
 
 RAG 不夠時，RL 通常不是第一步。合理的順序是：先修檢索與資料品質，再用 SFT 處理格式與術語，回答偏好還不夠時用 DPO 這類離線偏好優化，**有可驗證的 reward 時**才上 RL。
 
-```mermaid
-flowchart TD
-    A["修檢索與資料品質<br/>檢索失敗：微調與 RL 都幫不上"] -->|仍不夠| B["SFT<br/>格式、語氣、術語"]
-    B -->|回答偏好還不夠| C["DPO 等離線偏好優化<br/>比線上 RL 便宜、穩定"]
-    C --> D{"有可驗證的 reward 嗎？"}
-    D -->|有| E["做 RL<br/>RAG 行為 RL、Text-to-SQL／工具 RL、搜尋型 Agent RL"]
-    D -->|沒有| F["先補評測集與評分標準<br/>不要硬上 RL"]
-```
+![圖：RAG 不夠時的順序——先修檢索，再 SFT，再 DPO；有可驗證的 reward 才做 RL](figures/post-training-rl-order.svg)
 
 ### 可以做的 RL（依實用性排序）
 
@@ -450,16 +427,7 @@ RAG 一定需要一個**生成答案的語言模型**，但**不一定要開源*
 
 三個角色可以混搭，例如 embedding 與 reranker 用開源自架，生成用商用 API。
 
-```mermaid
-flowchart TD
-    A{"資料能送到外部嗎？"} -->|不能| B["開源／開放權重自架<br/>地端或私有雲"]
-    A -->|可以| C{"有 GPU 與維運能力嗎？"}
-    C -->|沒有| D["商用 API"]
-    C -->|有| E{"需要微調，或呼叫量極大？"}
-    E -->|是| F["開源自架<br/>先算清楚總成本"]
-    E -->|否| G["先用商用 API 驗證<br/>模型做成可替換"]
-    A -.->|資料有分級| H["混合路由：敏感文件走自架<br/>一般文件走 API"]
-```
+![圖：RAG 的生成模型——開源自架還是商用 API](figures/post-training-open-vs-api.svg)
 
 ### 傾向用開源（開放權重）模型的條件
 

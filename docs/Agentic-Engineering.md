@@ -14,24 +14,9 @@
 | Guard | 不交給模型任意決定的政策邊界 | 是否可執行工具？是否超出成本、權限或風險上限？ |
 | Terminal state | 明確結束條件 | 已完成、需要人工、預算耗盡或不可恢復失敗時要怎麼結束？ |
 
-### Mermaid 流程圖
+### 流程圖
 
-```mermaid
-flowchart TD
-    A[接收任務] --> B[載入 / 建立 State]
-    B --> C[Plan：判斷下一個最小工作單位]
-    C --> D{Guard 檢查<br/>權限、預算、風險、迭代次數}
-    D -- 不通過 --> E[暫停 / 請求人工核准 / 結束]
-    D -- 通過 --> F[Act：呼叫受控工具或子 Agent]
-    F --> G[Observe：收集工具結果]
-    G --> H[Validate：schema、證據與品質檢查]
-    H --> I{是否完成？}
-    I -- 是 --> J[產出可稽核結果]
-    I -- 否 --> K{是否需要升級或重試？}
-    K -- 重試 --> C
-    K -- 升級 --> L[切換專家 / 請求人工 / 增加核准預算]
-    L --> C
-```
+![圖：Graph Engineering 流程——Plan、Guard、Act、Observe、Validate 與重試／升級迴圈](figures/agentic-engineering-graph-flow.svg)
 
 ### Loop Engineering 與 Graph Engineering 比較
 
