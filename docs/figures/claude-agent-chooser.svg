@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 560" role="img" aria-labelledby="t d">
+  <title id="t">一句話選型：單一任務、分工審查、並行無關任務、協作討論、大規模掃描、合併前深度審查</title>
+  <desc id="d">任務單一、可快速說清楚時不要用多 agent。分工審查或改同一個 repo 的不同檔案用 Subagents。多個彼此無關、要總覽的任務用 Agent View。要 agent 互相討論與交叉驗證用 Agent teams。大規模、可機械拆解用 Workflows 或 batch。合併前對重大變更深度審查用 code-review ultra。四者都可搭配 worktree 做檔案隔離。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="558.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">一句話選型</text>
+  <rect class="acc" x="12" y="44" width="270" height="66" rx="10"/>
+  <text x="24" y="82.0">任務單一、可快速說清楚</text>
+  <line class="ln" x1="282" y1="77.0" x2="316" y2="77.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="44" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="71.0">不要用多 agent</text>
+  <text class="s" x="330" y="93.0">一個 session 直接做</text>
+  <rect class="acc" x="12" y="118" width="270" height="66" rx="10"/>
+  <text x="24" y="156.0">分工審查，或改同一 repo 的不同檔案</text>
+  <line class="ln" x1="282" y1="151.0" x2="316" y2="151.0" marker-end="url(#a)"/>
+  <rect class="good" x="318" y="118" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="145.0">Subagents</text>
+  <text class="s" x="330" y="167.0">必要時各開 worktree</text>
+  <rect class="acc" x="12" y="192" width="270" height="66" rx="10"/>
+  <text x="24" y="230.0">多個彼此無關的任務，要總覽</text>
+  <line class="ln" x1="282" y1="225.0" x2="316" y2="225.0" marker-end="url(#a)"/>
+  <rect class="good" x="318" y="192" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="219.0">Agent View</text>
+  <text class="s" x="330" y="241.0">各自獨立的背景 session</text>
+  <rect class="acc" x="12" y="266" width="270" height="66" rx="10"/>
+  <text x="24" y="304.0">要 agent 互相討論、交叉驗證</text>
+  <line class="ln" x1="282" y1="299.0" x2="316" y2="299.0" marker-end="url(#a)"/>
+  <rect class="good" x="318" y="266" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="293.0">Agent teams</text>
+  <text class="s" x="330" y="315.0">預設不隔離，靠分工避免衝突</text>
+  <rect class="acc" x="12" y="340" width="270" height="66" rx="10"/>
+  <text x="24" y="378.0">大規模、可機械拆解</text>
+  <line class="ln" x1="282" y1="373.0" x2="316" y2="373.0" marker-end="url(#a)"/>
+  <rect class="good" x="318" y="340" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="367.0">Workflows／/batch</text>
+  <text class="s" x="330" y="389.0">腳本編排；結果彙整成報告</text>
+  <rect class="acc" x="12" y="414" width="270" height="66" rx="10"/>
+  <text x="24" y="452.0">合併前對重大變更深度審查</text>
+  <line class="ln" x1="282" y1="447.0" x2="316" y2="447.0" marker-end="url(#a)"/>
+  <rect class="bad" x="318" y="414" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="441.0">/code-review ultra</text>
+  <text class="s" x="330" y="463.0">雲端多 reviewer ＋獨立驗證</text>
+  <text class="s" x="320" y="548" text-anchor="middle">四者都可搭配 worktree 做檔案隔離</text>
+</svg>

@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 410" role="img" aria-labelledby="t d">
+  <title id="t">Agent View 的 session 狀態與 PR 狀態顏色</title>
+  <desc id="d">Agent View 每列一個 session，狀態有 Working 正在執行、Needs input 等你回應、Idle 等待下一個指令、Completed 成功完成、Failed 錯誤結束、Stopped 被手動停止、以及 loop 睡眠中顯示執行次數與下次觸發倒數。PR 狀態顏色：黃表示等 CI 或 review 或 CI 失敗，綠表示通過且無阻擋，紫表示已合併，灰表示 draft 或已關閉。選一列按 Space 可 peek。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="408.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">Agent View：狀態與顏色</text>
+  <text class="b" x="24" y="60">session 狀態</text>
+  <rect class="acc" x="12" y="70" width="330" height="34" rx="6"/>
+  <text class="b" x="22" y="92">Working</text>
+  <text class="s" x="140" y="92">正在執行工具或生成回應</text>
+  <rect class="bad" x="12" y="110" width="330" height="34" rx="6"/>
+  <text class="b" x="22" y="132">Needs input</text>
+  <text class="s" x="140" y="132">等你回應問題或授權</text>
+  <rect class="box" x="12" y="150" width="330" height="34" rx="6"/>
+  <text class="b" x="22" y="172">Idle</text>
+  <text class="s" x="140" y="172">等待下一個指令</text>
+  <rect class="good" x="12" y="190" width="330" height="34" rx="6"/>
+  <text class="b" x="22" y="212">Completed</text>
+  <text class="s" x="140" y="212">成功完成</text>
+  <rect class="bad" x="12" y="230" width="330" height="34" rx="6"/>
+  <text class="b" x="22" y="252">Failed</text>
+  <text class="s" x="140" y="252">錯誤結束</text>
+  <rect class="box" x="12" y="270" width="330" height="34" rx="6"/>
+  <text class="b" x="22" y="292">Stopped</text>
+  <text class="s" x="140" y="292">被手動停止</text>
+  <rect class="dash" x="12" y="310" width="330" height="34" rx="6"/>
+  <text class="b" x="22" y="332">/loop 睡眠中</text>
+  <text class="s" x="140" y="332">顯示執行次數與下次觸發倒數</text>
+  <text class="b" x="366" y="60">PR 狀態顏色</text>
+  <rect class="box" x="366" y="70" width="262" height="34" rx="6"/>
+  <rect x="376" y="78" width="18" height="18" rx="4" fill="#d4a72c"/>
+  <text class="b" x="404" y="92">黃</text>
+  <text class="s" x="430" y="92">等 CI／review，或 CI 失敗</text>
+  <rect class="box" x="366" y="110" width="262" height="34" rx="6"/>
+  <rect x="376" y="118" width="18" height="18" rx="4" fill="#2f9e6b"/>
+  <text class="b" x="404" y="132">綠</text>
+  <text class="s" x="430" y="132">通過且無阻擋</text>
+  <rect class="box" x="366" y="150" width="262" height="34" rx="6"/>
+  <rect x="376" y="158" width="18" height="18" rx="4" fill="#8b5cf6"/>
+  <text class="b" x="404" y="172">紫</text>
+  <text class="s" x="430" y="172">已合併</text>
+  <rect class="box" x="366" y="190" width="262" height="34" rx="6"/>
+  <rect x="376" y="198" width="18" height="18" rx="4" fill="#8b94a3"/>
+  <text class="b" x="404" y="212">灰</text>
+  <text class="s" x="430" y="212">draft 或已關閉</text>
+  <rect class="dash" x="366" y="240" width="262" height="110" rx="8"/>
+  <text class="b" x="378" y="264">選一列按 Space：peek 面板</text>
+  <text class="s" x="378" y="288">看最新輸出、待決問題、已開 PR</text>
+  <text class="s" x="378" y="308">可直接輸入回覆，不必 attach</text>
+  <text class="s" x="378" y="328">篩選：a:&lt;name&gt;、s:&lt;state&gt;、#&lt;number&gt;</text>
+  <text class="s" x="320" y="372" text-anchor="middle">每列一個 session；完整快捷鍵見 Claude-Code-CLI 第十四章</text>
+</svg>

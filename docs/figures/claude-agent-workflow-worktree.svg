@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440" role="img" aria-labelledby="t d">
+  <title id="t">Workflow 與 Worktree 是不同層次：一個管協調，一個管檔案隔離，常一起用</title>
+  <desc id="d">上層是工作協調層：Workflow 是 Claude 寫的編排腳本，決定誰做什麼、什麼順序、結果怎麼彙整，比喻是工頭。下層是檔案系統與版本控制層：Worktree 是 git 功能，獨立工作目錄加 branch，讓平行工作不互相覆蓋，比喻是每個工人的工作檯。一個 workflow 編排的多個 agent 可以各自在一個 worktree 裡工作。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="438.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">Workflow（協調）與 Worktree（隔離）</text>
+  <rect class="acc" x="12" y="44" width="616" height="132" rx="12"/>
+  <text class="b at" x="24" y="68">協調層：Workflow（工頭）</text>
+  <text x="24" y="90">Claude 寫的編排腳本：誰做什麼、什麼順序、結果怎麼彙整</text>
+  <text class="s" x="24" y="112">用的人：/deep-research、/batch、ultracode effort</text>
+  <text class="s" x="24" y="132">產物：彙整後的結果（報告、多個 PR）</text>
+  <rect class="box" x="70" y="146" width="120" height="22" rx="6"/>
+  <text x="130" y="162" text-anchor="middle">agent A</text>
+  <line class="ln" x1="130" y1="169" x2="130" y2="206" marker-end="url(#a)"/>
+  <rect class="box" x="260" y="146" width="120" height="22" rx="6"/>
+  <text x="320" y="162" text-anchor="middle">agent B</text>
+  <line class="ln" x1="320" y1="169" x2="320" y2="206" marker-end="url(#a)"/>
+  <rect class="box" x="450" y="146" width="120" height="22" rx="6"/>
+  <text x="510" y="162" text-anchor="middle">agent C</text>
+  <line class="ln" x1="510" y1="169" x2="510" y2="206" marker-end="url(#a)"/>
+  <rect class="good" x="12" y="208" width="616" height="132" rx="12"/>
+  <text class="b gt" x="24" y="232">隔離層：Worktree（每個工人的工作檯）</text>
+  <text x="24" y="254">git 功能：獨立工作目錄 ＋ branch，共用同一份 repo 歷史</text>
+  <text class="s" x="24" y="276">用的人：claude --worktree、subagent 的 isolation: worktree、/batch 每個單元</text>
+  <text class="s" x="24" y="296">產物：.claude/worktrees/&lt;name&gt;/ 目錄與一條 branch</text>
+  <rect class="box" x="70" y="308" width="120" height="24" rx="6"/>
+  <text x="130" y="325" text-anchor="middle">worktree A</text>
+  <rect class="box" x="260" y="308" width="120" height="24" rx="6"/>
+  <text x="320" y="325" text-anchor="middle">worktree B</text>
+  <rect class="box" x="450" y="308" width="120" height="24" rx="6"/>
+  <text x="510" y="325" text-anchor="middle">worktree C</text>
+  <rect class="dash" x="12" y="356" width="616" height="72" rx="8"/>
+  <text class="b" x="24" y="380">兩者正交：一個管「誰做什麼」，一個管「改的檔案不互相覆蓋」</text>
+  <text class="s" x="24" y="402">純審查是唯讀，通常不需要 worktree；要「審完順手改」才各開一個</text>
+</svg>

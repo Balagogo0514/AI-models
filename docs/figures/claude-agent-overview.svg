@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">Claude Code 多 agent 的六種機制：誰決定下一步、跑在哪裡、檔案與 context 是否隔離</title>
+  <desc id="d">前四種是 Claude Code 內建：Subagents 由主 session 的 Claude 逐 turn 委派，在同一 session 內，各有獨立 context window，檔案預設不隔離。Agent View 由你手動派發獨立的完整背景 session，每個 session 各取得一個 worktree。Agent teams 由 lead agent 指派，在本機 session，預設不隔離，共用 task list 並互傳訊息。Workflows 由腳本決定下一步，在背景執行，最多同時 16 個、單次最多 1,000 個 agent。後兩種是 API 層級：Managed Agents 由 Anthropic 雲端託管，Agent SDK 把 Claude Code 核心包成函式庫在你自己的程式裡跑。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">六種機制：誰決定、跑在哪、隔離什麼</text>
+  <rect class="hd" x="12" y="44" width="616" height="26" rx="6"/>
+  <text class="b" x="20" y="62">機制</text>
+  <text class="b" x="134" y="62">誰決定下一步</text>
+  <text class="b" x="310" y="62">跑在哪裡</text>
+  <text class="b" x="462" y="62">隔離與規模</text>
+  <rect class="acc" x="12" y="76" width="616" height="58" rx="8"/>
+  <text class="b" x="20" y="110">Subagents</text>
+  <text x="134" y="100">主 session 的 Claude</text>
+  <text x="134" y="119">逐 turn 委派</text>
+  <text x="310" y="110">同一個 session 內</text>
+  <text x="462" y="100">獨立 context</text>
+  <text x="462" y="119">檔案預設不隔離</text>
+  <rect class="acc" x="12" y="140" width="616" height="58" rx="8"/>
+  <text class="b" x="20" y="174">Agent View</text>
+  <text x="134" y="164">你手動派發</text>
+  <text x="134" y="183">各 session 自己的 Claude</text>
+  <text x="310" y="174">本機背景 session</text>
+  <text x="462" y="164">每個 session</text>
+  <text x="462" y="183">各一個 worktree</text>
+  <rect class="acc" x="12" y="204" width="616" height="58" rx="8"/>
+  <text class="b" x="20" y="238">Agent teams</text>
+  <text x="134" y="228">lead agent</text>
+  <text x="134" y="247">指派與協調</text>
+  <text x="310" y="238">本機 session</text>
+  <text x="462" y="228">預設不隔離</text>
+  <text x="462" y="247">共用 task list、互傳訊息</text>
+  <rect class="acc" x="12" y="268" width="616" height="58" rx="8"/>
+  <text class="b" x="20" y="302">Workflows</text>
+  <text x="134" y="292">編排腳本</text>
+  <text x="134" y="311">（非逐 turn）</text>
+  <text x="310" y="292">背景（雲端</text>
+  <text x="310" y="311">workflow runtime）</text>
+  <text x="462" y="292">同時最多 16</text>
+  <text x="462" y="311">單次最多 1,000 個 agent</text>
+  <rect class="dash" x="12" y="332" width="616" height="58" rx="8"/>
+  <text class="b" x="20" y="366">Managed Agents</text>
+  <text x="134" y="356">Anthropic</text>
+  <text x="134" y="375">代跑 agent 迴圈</text>
+  <text x="310" y="356">Anthropic 雲端</text>
+  <text x="310" y="375">（API）</text>
+  <text x="462" y="356">持久化、有版本</text>
+  <text x="462" y="375">的 agent 設定</text>
+  <rect class="dash" x="12" y="396" width="616" height="58" rx="8"/>
+  <text class="b" x="20" y="430">Agent SDK</text>
+  <text x="134" y="430">你的程式</text>
+  <text x="310" y="420">你自己的基礎設施</text>
+  <text x="310" y="439">（API）</text>
+  <text x="462" y="420">Claude Code 核心</text>
+  <text x="462" y="439">包成函式庫</text>
+  <text class="s" x="320" y="470" text-anchor="middle">前四種內建、直接可用；後兩種是 API 層級，用來自建應用</text>
+  <text class="s" x="320" y="492" text-anchor="middle">做 code review 主要看 Subagents 與 Agent View，另有內建的 /code-review ultra</text>
+</svg>
