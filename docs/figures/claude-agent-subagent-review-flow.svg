@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 470" role="img" aria-labelledby="t d">
+  <title id="t">手動派 subagent 分檔審查：同一回合並行啟動、各自回報、主 Claude 彙整</title>
+  <desc id="d">在 session 內要求平行派三個 subagent 分別審 a.ts、b.ts、c.ts。主 Claude 在同一回合並行啟動，不是排隊。每個 subagent 有獨立 context，可用自訂 reviewer，工具限定 Read、Grep、Glob，純審查唯讀通常不需要 worktree。各自跑完回報給主 session，主 Claude 收攏、去重、排序，形成一份整體結論。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="468.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">分檔派 subagent 審查</text>
+  <rect class="acc" x="190" y="44" width="260" height="60" rx="10"/>
+  <text class="b" x="320" y="70" text-anchor="middle">主 session（Claude）</text>
+  <text class="s" x="320" y="90" text-anchor="middle">同一回合並行啟動，不是排隊</text>
+  <line class="ln" x1="320" y1="105" x2="114" y2="148" marker-end="url(#a)"/>
+  <rect class="good" x="24" y="150" width="180" height="92" rx="10"/>
+  <text class="b" x="114" y="176" text-anchor="middle">subagent A</text>
+  <text x="114" y="198" text-anchor="middle">審 a.ts</text>
+  <text class="s" x="114" y="222" text-anchor="middle">獨立 context window</text>
+  <line class="ln" x1="114" y1="243" x2="320" y2="284" marker-end="url(#a)"/>
+  <line class="ln" x1="320" y1="105" x2="318" y2="148" marker-end="url(#a)"/>
+  <rect class="good" x="228" y="150" width="180" height="92" rx="10"/>
+  <text class="b" x="318" y="176" text-anchor="middle">subagent B</text>
+  <text x="318" y="198" text-anchor="middle">審 b.ts</text>
+  <text class="s" x="318" y="222" text-anchor="middle">獨立 context window</text>
+  <line class="ln" x1="318" y1="243" x2="320" y2="284" marker-end="url(#a)"/>
+  <line class="ln" x1="320" y1="105" x2="522" y2="148" marker-end="url(#a)"/>
+  <rect class="good" x="432" y="150" width="180" height="92" rx="10"/>
+  <text class="b" x="522" y="176" text-anchor="middle">subagent C</text>
+  <text x="522" y="198" text-anchor="middle">審 c.ts</text>
+  <text class="s" x="522" y="222" text-anchor="middle">獨立 context window</text>
+  <line class="ln" x1="522" y1="243" x2="320" y2="284" marker-end="url(#a)"/>
+  <rect class="acc" x="190" y="286" width="260" height="60" rx="10"/>
+  <text class="b" x="320" y="312" text-anchor="middle">主 Claude 彙整</text>
+  <text class="s" x="320" y="332" text-anchor="middle">收攏、去重、排序</text>
+  <line class="ln" x1="320" y1="347" x2="320" y2="366" marker-end="url(#a)"/>
+  <rect class="box" x="190" y="368" width="260" height="44" rx="10"/>
+  <text class="b" x="320" y="395" text-anchor="middle">一份整體結論</text>
+  <text class="s" x="320" y="438" text-anchor="middle">自訂 reviewer：.claude/agents/*.md，tools: Read, Grep, Glob（唯讀）</text>
+  <text class="s" x="320" y="458" text-anchor="middle">prompt 要講清楚範圍與準則；審完要順手修才用 isolation: worktree</text>
+</svg>

@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440" role="img" aria-labelledby="t d">
+  <title id="t">平行工作的追蹤入口：subagent、背景 session、背景 task、workflow 與通知</title>
+  <desc id="d">要看 session 內執行中的 subagent 用 /agents 的 Running 分頁。要看背景 session 包含 Agent View 派發的用 claude agents 管理畫面。要看背景 task 用 /tasks，別名 /bashes。要看 workflow 進度用 /workflows 進度檢視器。完成或待回應時 task 通知會主動回到 session，不必一直盯。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="438.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">想看什麼，用哪個</text>
+  <rect class="acc" x="12" y="44" width="270" height="64" rx="10"/>
+  <text x="24" y="81.0">session 內執行中的 subagent</text>
+  <line class="ln" x1="282" y1="76.0" x2="316" y2="76.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="44" width="310" height="64" rx="10"/>
+  <text class="b" x="330" y="70.0">/agents</text>
+  <text class="s" x="330" y="92.0">Running 分頁</text>
+  <rect class="acc" x="12" y="118" width="270" height="64" rx="10"/>
+  <text x="24" y="155.0">背景 session（含 Agent View 派發）</text>
+  <line class="ln" x1="282" y1="150.0" x2="316" y2="150.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="118" width="310" height="64" rx="10"/>
+  <text class="b" x="330" y="144.0">claude agents</text>
+  <text class="s" x="330" y="166.0">管理畫面</text>
+  <rect class="acc" x="12" y="192" width="270" height="64" rx="10"/>
+  <text x="24" y="229.0">背景 task</text>
+  <line class="ln" x1="282" y1="224.0" x2="316" y2="224.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="192" width="310" height="64" rx="10"/>
+  <text class="b" x="330" y="218.0">/tasks</text>
+  <text class="s" x="330" y="240.0">別名 /bashes</text>
+  <rect class="acc" x="12" y="266" width="270" height="64" rx="10"/>
+  <text x="24" y="303.0">workflow 進度</text>
+  <line class="ln" x1="282" y1="298.0" x2="316" y2="298.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="266" width="310" height="64" rx="10"/>
+  <text class="b" x="330" y="292.0">/workflows</text>
+  <text class="s" x="330" y="314.0">進度檢視器：暫停、恢復、停單一 agent</text>
+  <rect class="acc" x="12" y="340" width="270" height="64" rx="10"/>
+  <text x="24" y="377.0">完成或待回應</text>
+  <line class="ln" x1="282" y1="372.0" x2="316" y2="372.0" marker-end="url(#a)"/>
+  <rect class="good" x="318" y="340" width="310" height="64" rx="10"/>
+  <text class="b" x="330" y="366.0">task 通知</text>
+  <text class="s" x="330" y="388.0">主動回到 session，不必一直盯</text>
+</svg>

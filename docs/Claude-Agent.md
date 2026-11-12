@@ -3,7 +3,7 @@
 > 本文聚焦「工作流程與選型」：何時用哪種平行工作方式、如何同時審查不同部分、如何追蹤與彙整。
 > 指令與參數的完整清單請見 `Claude-Code-CLI.md`（第十四章 Multi-agent 使用方法）。
 >
-> 狀態：初版完成（五節皆已填）。更新日期：2026-11-02
+> 狀態：初版完成（五節皆已填）。更新日期：2026-11-02（2026-11-12 新增 10 張圖示）
 
 ---
 
@@ -12,6 +12,8 @@
 「多 agent」在 Claude Code 裡其實有好幾種不同機制，差別在於**誰決定下一步**、**跑在哪裡**、以及**檔案與 context 是否隔離**。以下先逐一介紹，第 2 節再用一張表整體對照。
 
 前四種是 Claude Code 內建、直接可用的平行工作方式；後兩種（Managed Agents、Agent SDK）屬於「用 API 自己蓋 agent」的層級，一般的互動式 code review 用不到，只在你要做產品整合時才需要。
+
+![Claude Code 多 agent 的六種機制：Subagents、Agent View、Agent teams、Workflows 為內建；Managed Agents 與 Agent SDK 為 API 層級；比較誰決定下一步、跑在哪裡、隔離與規模](figures/claude-agent-overview.svg)
 
 ### 1.1 Subagents（session 內委派）
 
@@ -87,6 +89,8 @@
 >
 > 比喻：**Workflow = 工頭**（分派任務、收攏結果）；**Worktree = 每個工人的工作檯**（東西不混在一起）。一個 workflow 編排的多個 agent，可以各自在一個 worktree 裡改檔案——workflow 負責協調，worktree 負責隔離。
 
+![Workflow 與 Worktree 是不同層次：Workflow 是協調層的編排腳本，Worktree 是檔案隔離層的 git 功能，一個 workflow 編排的多個 agent 可各自在一個 worktree 工作](figures/claude-agent-workflow-worktree.svg)
+
 下表把第 1 節的四種內建方式，依八個角度整體對照（Managed Agents / Agent SDK 屬 API 自建層級，不列入）：
 
 | 方式 | 誰決定下一步 | 中間結果放哪 | 檔案隔離 | 可否重播 | 規模 | 如何追蹤 | 適合情境 |
@@ -105,6 +109,8 @@
 「多個 agent 同時審查不同部分、而且能追蹤」有三條路：內建的雲端深度審查、手動分檔派 subagent、以及搭配 Agent View 做並行追蹤。先給結論，再逐一說明。
 
 > **速選**：合併前對重大變更深度把關 → **3.1 `/code-review ultra`**；想自己控制「誰審哪個檔案」並行跑 → **3.2 手動派 subagent**；多個獨立審查任務要用統一畫面盯著 → **3.3 Agent View**。
+
+![多 agent code review 的三條路：code-review ultra 雲端深度審查、手動派多個 subagent 分檔審查、Agent View 並行追蹤，各自的做法、追蹤方式與適用情境](figures/claude-agent-review-paths.svg)
 
 ### 3.1 `/code-review ultra`（雲端多 reviewer，內建首選）
 
@@ -130,6 +136,8 @@
 - **隔離**：純審查是**唯讀**，通常**不需要** worktree；只有當你要 agent 同時「審完順手改／修」時，才讓每個 agent 各開一個 `isolation: worktree` 避免改檔衝突。
 - **追蹤**：`/agents` 看執行中的 subagent；背景任務完成會通知；也可用 `/tasks`。
 - **適合**：分工清楚、各檔案相對獨立的審查；或想把審查結果**留在主 session** 一起討論。
+
+![手動分檔派 subagent 審查：主 session 同一回合並行啟動三個 subagent 各審一個檔案，各自回報，主 Claude 收攏、去重、排序成一份整體結論](figures/claude-agent-subagent-review-flow.svg)
 
 ### 3.3 搭配 Agent View 做並行追蹤
 
@@ -173,6 +181,8 @@
 
 **GitHub 端（Team / Enterprise）**：Code Review GitHub App 會自動審 PR，PR 頂層留言 `@claude review`（審查並訂閱後續 push）或 `@claude review once`（只審一次）可手動觸發；findings 分 🔴 Important、🟡 Nit、🟣 Pre-existing 三類，可用 repo 根目錄的 `REVIEW.md` 調整審查行為。
 
+![依情境選 review 指令：快速看用 code-review 或 review；重大變更用 code-review ultra；安全用 security-review；整理程式碼用 simplify；自動修用 fix 或 autofix-pr；PR 全自動審用 GitHub App](figures/claude-agent-review-commands.svg)
+
 **依情境選擇**
 
 | 情境 | 建議 |
@@ -193,6 +203,8 @@
 平行工作最怕「派出去就看不到了」。依方式不同，追蹤入口也不同。
 
 ### 4.1 追蹤入口一覽
+
+![平行工作的追蹤入口：subagent 用 /agents，背景 session 用 claude agents，背景 task 用 /tasks，workflow 用 /workflows，完成或待回應有 task 通知](figures/claude-agent-tracking.svg)
 
 | 想看什麼 | 用哪個 |
 |------|------|
@@ -215,6 +227,8 @@
 | Failed（紅） | 錯誤結束 |
 | Stopped（灰） | 被手動停止 |
 | `/loop` 睡眠中（`✢`） | 顯示執行次數與下次觸發倒數 |
+
+![Agent View 的 session 狀態（Working、Needs input、Idle、Completed、Failed、Stopped、loop 睡眠中）與 PR 狀態顏色（黃、綠、紫、灰），以及 Space 開啟 peek 面板](figures/claude-agent-agentview-states.svg)
 
 - 選一列按 `Space` 開 **peek 面板**：看最新輸出、待決問題、已開 PR，可**直接輸入回覆**而不必 attach。
 - **PR 狀態顏色**：黃＝等 CI／review 或 CI 失敗；綠＝通過且無阻擋；紫＝已合併；灰＝draft 或已關閉。
@@ -244,6 +258,8 @@ Subagent 建立的 worktree 超過 `cleanupPeriodDays` 天、且無未提交變�
 ## 5. 實務建議與陷阱
 
 ### 5.1 一句話選型
+
+![一句話選型：任務單一不用多 agent；分工審查用 Subagents；並行無關任務用 Agent View；協作討論用 Agent teams；大規模掃描用 Workflows；合併前深度審查用 code-review ultra](figures/claude-agent-chooser.svg)
 
 - 任務**單一、可快速說清楚** → 不要用多 agent，一個 session 直接做。
 - **分工審查 / 改同一個 repo 的不同檔案** → Subagents（必要時各開 worktree）。
@@ -302,6 +318,8 @@ Subagent 建立的 worktree 超過 `cleanupPeriodDays` 天、且無未提交變�
 
 目標：把「靜態可見的配對錯誤」平行掃完、把「需要執行期證據的問題」交給有資料的 agent，並用**獨立驗證**壓低誤報。
 
+![fastpath 除錯的多 agent 分工：子系統稽核員、全樹模式掃描、instrumentation 實作、重現 harness 建置、log 與 core 分析、競爭假說調查、獨立驗證員，各自用到的機制與是否改檔](figures/claude-agent-fastpath-roles.svg)
+
 | 角色 | 方式（對應本文章節）| 做什麼 | 是否改檔 |
 |------|------|------|------|
 | **子系統稽核員 ×N** | Subagents（§3.2），每個認領一個子系統（mbuf / FIB / neighbour / route / ACL…）| 依同一份 checklist（A.4）掃「`get` 無對應 `put`」「錯誤路徑漏 `put`」「跨 core 共享物件的保護」| 否（唯讀）|
@@ -356,6 +374,8 @@ Subagent 建立的 worktree 超過 `cleanupPeriodDays` 天、且無未提交變�
 > 關於「Claude 似乎已解決很多深度難解的 bug」：它在有明確線索與可驗證回饋時（可重現、有 log / core、能跑測試）通常很有幫助，但並非每個 bug 都能被解開，尤其是缺乏執行期證據的競態。比較可靠的使用方式是把它當成**平行的稽核與假說驗證工具**，而不是單靠它「猜」出根因。
 
 ### A.7 建議的實際流程
+
+![fastpath 除錯的建議流程：先讓錯誤即時現形，再平行稽核與建重現 harness，填入帳本並獨立驗證，用 git bisect 鎖定 commit，最後先寫失敗的測試再修](figures/claude-agent-fastpath-flow.svg)
 
 1. 人 / agent（worktree）上 A.2 的 fail-fast instrumentation。
 2. 同時平行：子系統稽核員跑 A.4 checklist（靜態）＋ 重現 harness 建置。
