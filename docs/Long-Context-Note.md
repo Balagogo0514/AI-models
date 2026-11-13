@@ -46,7 +46,7 @@ Liu et al.（2024）以多文件問答與 key-value retrieval 進行控制實驗
 標準自注意力對某位置 `i` 的權重可寫成：
 
 $$
-\alpha_i = \operatorname{softmax}\left(
+\alpha_i = \mathrm{softmax}\left(
   \frac{q^\top k_i}{\sqrt{d}} + b(\text{position})
 \right)
 $$
