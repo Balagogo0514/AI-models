@@ -7,8 +7,8 @@
 ## 先看結論
 
 - **非技術背景**：先看吳恩達的 *AI for Everyone*（不需寫程式），了解 AI 能做什麼、怎麼導入與對社會的影響。
-- **想建立直覺**：先看 3Blue1Brown 的神經網路系列，再看 Karpathy 的 *Neural Networks: Zero to Hero*。
-- **想自己動手**：Karpathy 的系列 → Raschka 的 *Build a Large Language Model (From Scratch)* → Stanford CS336。
+- **想建立直覺**：先看 3Blue1Brown 的神經網路系列，再看 Karpathy 的 [*Neural Networks: Zero to Hero*](https://karpathy.ai/zero-to-hero.html)；想先聽概念，可看他的 [*Intro to Large Language Models*](https://www.youtube.com/watch?v=zjkBMFhNj_g) 演講。
+- **想自己動手**：Karpathy 的[系列](https://karpathy.ai/zero-to-hero.html) → Raschka 的 *Build a Large Language Model (From Scratch)* → Stanford CS336。
 - **想用 LLM 做應用或 Agent**：Chip Huyen 的 *AI Engineering*、Hugging Face 的 Agents Course、Anthropic 的 *Building effective agents*，再讀各家官方文件。
 - **偏好中文**：台大李宏毅老師的課程是最常被推薦的起點，影片主頁見第 6 節的 [YouTube 頻道](https://www.youtube.com/@HungyiLeeNTU/videos)。
 - **想讀研究**：從第 4 節的論文清單開始，每個主題都對應到本筆記庫的一份文件。
@@ -52,6 +52,10 @@
 | 資源 | 內容 | 狀態 |
 |---|---|---|
 | [Karpathy：*Neural Networks: Zero to Hero*](https://karpathy.ai/zero-to-hero.html)（[GitHub](https://github.com/karpathy/nn-zero-to-hero)） | 從反向傳播一路寫到 GPT，含 *Let's build GPT: from scratch, in code, spelled out* | ✅ |
+| [Karpathy 個人網站](https://karpathy.ai) | 他的教學影片與專案入口；站上列有他的 YouTube 頻道，內容分成技術向與一般大眾向兩條線 | ✅ |
+| [Karpathy YouTube 頻道](https://www.youtube.com/@AndrejKarpathy) | 影片主頁；網址取自第三方連結與他個人網站所列的頻道，我沒有開啟頻道頁面，訂閱數各來源差異大，不列數字 | 🔎 |
+| [Karpathy：*[1hr Talk] Intro to Large Language Models*](https://www.youtube.com/watch?v=zjkBMFhNj_g) | 約 1 小時、2023 年 11 月的一般大眾演講；以 Llama 2 70B 為例，講預訓練與微調，以及 jailbreak、prompt injection 等安全風險。適合想先建立概念、不急著寫程式的人 | 🔎（影片網址取自轉錄網站） |
+| [Karpathy：*Deep Dive into LLMs like ChatGPT*](https://www.youtube.com/watch?v=7xTGNNLPyMI) | 約 3 小時 31 分、2025 年初的一般大眾深度講解；涵蓋推論與後訓練（SFT、RLHF）。上傳日期各來源說法不一（2 月 5 日或 27 日），以影片頁面為準 | 🔎（影片網址取自搜尋結果） |
 | [Stanford CS336：*Language Modeling from Scratch*](https://stanford-cs336.github.io/spring2025/) | Percy Liang 與 Tatsunori Hashimoto 開設；錄影免費上 YouTube；作業需要 GPU | 🔎 |
 | Stanford CS224N：*NLP with Deep Learning* | NLP 與深度學習，偏進階 | 🔎 |
 | Hugging Face：LLM Course（[Hugging Face Learn](https://huggingface.co/learn)） | transformers、微調、部署 | 🔎 |
@@ -155,7 +159,7 @@
 ## 10. 驗證說明與限制
 
 - 驗證日期是 2026-11-16。我用網路搜尋核對各資源是否存在；沙箱連不到 `arxiv.org`，也沒有開啟多數課程官方頁面，所以標 🔎 的項目只能保證「有二手來源提到它存在」。
-- 沒有核對的內容：各課程目前的版本與時數、書籍最新版次、Hugging Face LLM Course 的官方頁面、*AI for Everyone* 目前的價格與註冊方式、李宏毅 YouTube 頻道頁面本身與各課程的單一播放清單網址、五篇 🔎 論文的 arXiv 編號。
+- 沒有核對的內容：各課程目前的版本與時數、書籍最新版次、Hugging Face LLM Course 的官方頁面、*AI for Everyone* 目前的價格與註冊方式、Karpathy 頻道頁面與兩支演講影片的網址與上傳日期、李宏毅 YouTube 頻道頁面本身與各課程的單一播放清單網址、五篇 🔎 論文的 arXiv 編號。
 - 這份清單不評價資源品質，也沒有涵蓋所有主題（例如電腦視覺、語音、強化學習專書）；它對應的是本筆記庫涵蓋的範圍。
 - 若發現連結失效或內容有誤，請在該項目標示 ⚠️ 並改為官方連結。
 
@@ -163,7 +167,8 @@
 
 ## 11. 官方來源
 
-- Karpathy：<https://karpathy.ai/zero-to-hero.html>、<https://github.com/karpathy/nn-zero-to-hero>
+- Karpathy：<https://karpathy.ai>、<https://karpathy.ai/zero-to-hero.html>、<https://github.com/karpathy/nn-zero-to-hero>
+- Karpathy 的 YouTube（網址取自二手來源，未開啟）：<https://www.youtube.com/@AndrejKarpathy>、<https://www.youtube.com/watch?v=zjkBMFhNj_g>、<https://www.youtube.com/watch?v=7xTGNNLPyMI>
 - Stanford CS336（2025 春季存檔）：<https://stanford-cs336.github.io/spring2025/>
 - DeepLearning.AI：*AI for Everyone*：<https://www.deeplearning.ai/courses/ai-for-everyone>、<https://www.coursera.org/learn/ai-for-everyone>
 - Hugging Face Agents Course：<https://huggingface.co/learn/agents-course>
