@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 470" role="img" aria-labelledby="t d">
-  <title id="t">依學習目標選資源：六種常見目標與優先資源</title>
-  <desc id="d">想看懂 LLM 在做什麼，先看 3Blue1Brown 神經網路系列，再看 Karpathy 的 Zero to Hero；想自己從零實作，依序看 Karpathy、Raschka 的書、Stanford CS336；想用 LLM 做應用，看 Chip Huyen 的 AI Engineering 與 Hands-On Large Language Models，再讀各家官方文件；想做 Agent，看 Hugging Face Agents Course、Anthropic 的 Building effective agents 與 Claude Code 與 Codex 文件；想讀研究，用本文的論文清單搭配 Lil&#x27;Log；偏好中文，看李宏毅課程與本筆記庫。這是依目的所做的歸納。</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 536" role="img" aria-labelledby="t d">
+  <title id="t">依學習目標選資源：七種常見目標與優先資源</title>
+  <desc id="d">非技術背景、想先了解 AI 能做什麼與怎麼導入，先看吳恩達的 AI for Everyone；想看懂 LLM 在做什麼，先看 3Blue1Brown 神經網路系列，再看 Karpathy 的 Zero to Hero；想自己從零實作，依序看 Karpathy、Raschka 的書、Stanford CS336；想用 LLM 做應用，看 Chip Huyen 的 AI Engineering 與 Hands-On Large Language Models，再讀各家官方文件；想做 Agent，看 Hugging Face Agents Course、Anthropic 的 Building effective agents 與 Claude Code 與 Codex 文件；想讀研究，用本文的論文清單搭配 Lil&#x27;Log；偏好中文，看李宏毅課程與本筆記庫。這是依目的所做的歸納。</desc>
   <style>
     svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
     @media (prefers-color-scheme: dark) {
@@ -32,43 +32,49 @@
     .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
   </style>
   <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
-  <rect class="frame" x="0.6" y="0.6" width="638.8" height="468.8" rx="12"/>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="534.8" rx="12"/>
   <text class="t" x="320" y="28" text-anchor="middle">我想…… → 先看</text>
   <rect class="acc" x="12" y="44" width="270" height="58" rx="10"/>
-  <text x="24" y="78.0">看懂 LLM 在做什麼（零基礎）</text>
+  <text x="24" y="78.0">非技術背景，想懂 AI 能做什麼</text>
   <line class="ln" x1="282" y1="73.0" x2="316" y2="73.0" marker-end="url(#a)"/>
   <rect class="box" x="318" y="44" width="310" height="58" rx="10"/>
-  <text class="b" x="330" y="67.0">3Blue1Brown → Karpathy</text>
-  <text class="s" x="330" y="89.0">先建立直覺，再看程式碼</text>
+  <text class="b" x="330" y="67.0">吳恩達：AI for Everyone</text>
+  <text class="s" x="330" y="89.0">無需寫程式；約 7 小時、4 週</text>
   <rect class="acc" x="12" y="108" width="270" height="58" rx="10"/>
-  <text x="24" y="142.0">自己從零實作一個 LLM</text>
+  <text x="24" y="142.0">看懂 LLM 在做什麼（零基礎）</text>
   <line class="ln" x1="282" y1="137.0" x2="316" y2="137.0" marker-end="url(#a)"/>
-  <rect class="good" x="318" y="108" width="310" height="58" rx="10"/>
-  <text class="b" x="330" y="131.0">Karpathy → Raschka 書 → CS336</text>
-  <text class="s" x="330" y="153.0">由淺到深；CS336 作業需要 GPU</text>
+  <rect class="box" x="318" y="108" width="310" height="58" rx="10"/>
+  <text class="b" x="330" y="131.0">3Blue1Brown → Karpathy</text>
+  <text class="s" x="330" y="153.0">先建立直覺，再看程式碼</text>
   <rect class="acc" x="12" y="172" width="270" height="58" rx="10"/>
-  <text x="24" y="206.0">用 LLM 做應用</text>
+  <text x="24" y="206.0">自己從零實作一個 LLM</text>
   <line class="ln" x1="282" y1="201.0" x2="316" y2="201.0" marker-end="url(#a)"/>
-  <rect class="box" x="318" y="172" width="310" height="58" rx="10"/>
-  <text class="b" x="330" y="195.0">Chip Huyen、Hands-On LLMs</text>
-  <text class="s" x="330" y="217.0">再讀各家官方 API 文件</text>
+  <rect class="good" x="318" y="172" width="310" height="58" rx="10"/>
+  <text class="b" x="330" y="195.0">Karpathy → Raschka 書 → CS336</text>
+  <text class="s" x="330" y="217.0">由淺到深；CS336 作業需要 GPU</text>
   <rect class="acc" x="12" y="236" width="270" height="58" rx="10"/>
-  <text x="24" y="270.0">做 Agent</text>
+  <text x="24" y="270.0">用 LLM 做應用</text>
   <line class="ln" x1="282" y1="265.0" x2="316" y2="265.0" marker-end="url(#a)"/>
   <rect class="box" x="318" y="236" width="310" height="58" rx="10"/>
-  <text class="b" x="330" y="259.0">HF Agents Course＋Anthropic 文章</text>
-  <text class="s" x="330" y="281.0">再讀 Claude Code、Codex 文件</text>
+  <text class="b" x="330" y="259.0">Chip Huyen、Hands-On LLMs</text>
+  <text class="s" x="330" y="281.0">再讀各家官方 API 文件</text>
   <rect class="acc" x="12" y="300" width="270" height="58" rx="10"/>
-  <text x="24" y="334.0">讀研究、追前沿</text>
+  <text x="24" y="334.0">做 Agent</text>
   <line class="ln" x1="282" y1="329.0" x2="316" y2="329.0" marker-end="url(#a)"/>
   <rect class="box" x="318" y="300" width="310" height="58" rx="10"/>
-  <text class="b" x="330" y="323.0">第 4 節論文清單＋Lil&#x27;Log</text>
-  <text class="s" x="330" y="345.0">搭配 Epoch AI 看趨勢</text>
+  <text class="b" x="330" y="323.0">HF Agents Course＋Anthropic 文章</text>
+  <text class="s" x="330" y="345.0">再讀 Claude Code、Codex 文件</text>
   <rect class="acc" x="12" y="364" width="270" height="58" rx="10"/>
-  <text x="24" y="398.0">偏好中文資源</text>
+  <text x="24" y="398.0">讀研究、追前沿</text>
   <line class="ln" x1="282" y1="393.0" x2="316" y2="393.0" marker-end="url(#a)"/>
   <rect class="box" x="318" y="364" width="310" height="58" rx="10"/>
-  <text class="b" x="330" y="387.0">李宏毅課程＋本筆記庫</text>
-  <text class="s" x="330" y="409.0">第 6 節有清單</text>
-  <text class="s" x="320" y="456" text-anchor="middle">這是依目的所做的歸納；各資源的驗證狀態見第 10 節</text>
+  <text class="b" x="330" y="387.0">第 4 節論文清單＋Lil&#x27;Log</text>
+  <text class="s" x="330" y="409.0">搭配 Epoch AI 看趨勢</text>
+  <rect class="acc" x="12" y="428" width="270" height="58" rx="10"/>
+  <text x="24" y="462.0">偏好中文資源</text>
+  <line class="ln" x1="282" y1="457.0" x2="316" y2="457.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="428" width="310" height="58" rx="10"/>
+  <text class="b" x="330" y="451.0">李宏毅課程＋本筆記庫</text>
+  <text class="s" x="330" y="473.0">第 6 節有清單</text>
+  <text class="s" x="320" y="520" text-anchor="middle">這是依目的所做的歸納；各資源的驗證狀態見第 10 節</text>
 </svg>

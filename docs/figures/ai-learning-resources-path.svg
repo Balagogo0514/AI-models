@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
   <title id="t">AI 學習路徑：從基礎直覺到 LLM 原理，再到研究與 Agent 應用</title>
-  <desc id="d">四個階段由上而下。第一階段基礎直覺：3Blue1Brown 神經網路系列、李宏毅機器學習、fast.ai、Dive into Deep Learning。第二階段 LLM 原理與動手實作：Karpathy Neural Networks Zero to Hero、Raschka 的 Build a Large Language Model From Scratch、Stanford CS336、The Illustrated Transformer。第三階段訓練、評測與研究：論文清單、Stanford CS224N、Lil&#x27;Log、Epoch AI，對應本筆記庫的 Scaling-Laws、Post-Training、Transformer-Attention。第四階段應用與 Agent：Chip Huyen 的 AI Engineering、Hugging Face Agents Course、Anthropic Building effective agents、各家官方文件，對應 Agentic-Engineering、Claude-Agent、CodeX-Agent。已有程式基礎者可從第二階段開始，只想用 Agent 可直接從第四階段開始，這是依目的所做的歸納。</desc>
+  <desc id="d">四個階段由上而下。第一階段基礎直覺：吳恩達的 AI for Everyone（非技術入門）、3Blue1Brown 神經網路系列、李宏毅機器學習、fast.ai、Dive into Deep Learning。第二階段 LLM 原理與動手實作：Karpathy Neural Networks Zero to Hero、Raschka 的 Build a Large Language Model From Scratch、Stanford CS336、The Illustrated Transformer。第三階段訓練、評測與研究：論文清單、Stanford CS224N、Lil&#x27;Log、Epoch AI，對應本筆記庫的 Scaling-Laws、Post-Training、Transformer-Attention。第四階段應用與 Agent：Chip Huyen 的 AI Engineering、Hugging Face Agents Course、Anthropic Building effective agents、各家官方文件，對應 Agentic-Engineering、Claude-Agent、CodeX-Agent。已有程式基礎者可從第二階段開始，只想用 Agent 可直接從第四階段開始，這是依目的所做的歸納。</desc>
   <style>
     svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
     @media (prefers-color-scheme: dark) {
@@ -39,8 +39,8 @@
   <text class="b" x="36" y="75" text-anchor="middle">1</text>
   <text class="b" x="62" y="72">基礎直覺</text>
   <text class="s" x="62" y="90">神經網路、反向傳播、訓練在做什麼</text>
-  <text x="62" y="110">3Blue1Brown 神經網路系列　李宏毅 機器學習</text>
-  <text x="62" y="126">fast.ai　Dive into Deep Learning（d2l.ai）</text>
+  <text x="62" y="110">吳恩達：AI for Everyone（非技術入門）　3Blue1Brown 神經網路系列</text>
+  <text x="62" y="126">李宏毅 機器學習　fast.ai　Dive into Deep Learning（d2l.ai）</text>
   <path class="ln" d="M320.0,143.0 L320.0,151.0" marker-end="url(#a)"/>
   <rect class="acc" x="12" y="152" width="616" height="98" rx="10"/>
   <rect class="acc" x="22" y="164" width="28" height="28" rx="14"/>
