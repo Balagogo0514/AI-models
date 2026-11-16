@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 604" role="img" aria-labelledby="t d">
+  <title id="t">論文閱讀清單對應本筆記庫的哪份文件</title>
+  <desc id="d">七個主題：Transformer 基礎讀 Attention Is All You Need，對應 Transformer-Attention；Scaling 讀 Kaplan 2020 與 Chinchilla 2022，對應 Scaling-Laws；後訓練讀 InstructGPT、DPO、LoRA，對應 Post-Training；長上下文讀 Lost in the Middle，對應 Long-Context-Note；注意力與 serving 讀 FlashAttention、GQA、DeepSeek-V2 的 MLA，對應 Transformer-Attention；推理與 Agent 讀 Chain-of-Thought、ReAct、DeepSeek-R1，對應 Scaling-Laws 與 Agentic-Engineering；RAG 讀 Lewis 等 2020 的 RAG 論文，對應 Post-Training 與 Enterprise-AI-Integration。實心點表示已查到 arXiv 編號或本庫已引用，空心點表示只有標題與作者，arXiv 編號尚未核對。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="602.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">論文 → 本庫文件</text>
+  <rect class="hd" x="12" y="44" width="616" height="26" rx="6"/>
+  <text class="b" x="20" y="62">主題</text>
+  <text class="b" x="138" y="62">論文</text>
+  <text class="b" x="470" y="62">本庫對應</text>
+  <rect class="box" x="12" y="78" width="616" height="44" rx="8"/>
+  <text class="b" x="20" y="104.0">Transformer 基礎</text>
+  <circle class="dotf" cx="150" cy="97.0" r="5"/>
+  <text x="162" y="101.0">Attention Is All You Need（2017）</text>
+  <rect class="good" x="466" y="85.0" width="154" height="30" rx="8"/>
+  <text x="543" y="104.0" text-anchor="middle">Transformer-Attention</text>
+  <rect class="box" x="12" y="128" width="616" height="64" rx="8"/>
+  <text class="b" x="20" y="164.0">Scaling</text>
+  <circle class="dotf" cx="150" cy="150.0" r="5"/>
+  <text x="162" y="154.0">Kaplan et al.（2020）</text>
+  <circle class="dotf" cx="150" cy="170.0" r="5"/>
+  <text x="162" y="174.0">Chinchilla（2022）</text>
+  <rect class="good" x="466" y="145.0" width="154" height="30" rx="8"/>
+  <text x="543" y="164.0" text-anchor="middle">Scaling-Laws</text>
+  <rect class="box" x="12" y="198" width="616" height="84" rx="8"/>
+  <text class="b" x="20" y="244.0">後訓練</text>
+  <circle class="dote" cx="150" cy="220.0" r="5"/>
+  <text x="162" y="224.0">InstructGPT（2022）</text>
+  <circle class="dote" cx="150" cy="240.0" r="5"/>
+  <text x="162" y="244.0">DPO（2023）</text>
+  <circle class="dote" cx="150" cy="260.0" r="5"/>
+  <text x="162" y="264.0">LoRA（2021）</text>
+  <rect class="good" x="466" y="225.0" width="154" height="30" rx="8"/>
+  <text x="543" y="244.0" text-anchor="middle">Post-Training</text>
+  <rect class="box" x="12" y="288" width="616" height="44" rx="8"/>
+  <text class="b" x="20" y="314.0">長上下文</text>
+  <circle class="dotf" cx="150" cy="307.0" r="5"/>
+  <text x="162" y="311.0">Lost in the Middle（2023）</text>
+  <rect class="good" x="466" y="295.0" width="154" height="30" rx="8"/>
+  <text x="543" y="314.0" text-anchor="middle">Long-Context-Note</text>
+  <rect class="box" x="12" y="338" width="616" height="84" rx="8"/>
+  <text class="b" x="20" y="384.0">注意力與 serving</text>
+  <circle class="dotf" cx="150" cy="360.0" r="5"/>
+  <text x="162" y="364.0">FlashAttention</text>
+  <circle class="dotf" cx="150" cy="380.0" r="5"/>
+  <text x="162" y="384.0">GQA</text>
+  <circle class="dotf" cx="150" cy="400.0" r="5"/>
+  <text x="162" y="404.0">DeepSeek-V2（MLA）</text>
+  <rect class="good" x="466" y="365.0" width="154" height="30" rx="8"/>
+  <text x="543" y="384.0" text-anchor="middle">Transformer-Attention</text>
+  <rect class="box" x="12" y="428" width="616" height="84" rx="8"/>
+  <text class="b" x="20" y="474.0">推理與 Agent</text>
+  <circle class="dote" cx="150" cy="450.0" r="5"/>
+  <text x="162" y="454.0">Chain-of-Thought（2022）</text>
+  <circle class="dote" cx="150" cy="470.0" r="5"/>
+  <text x="162" y="474.0">ReAct（2022）</text>
+  <circle class="dotf" cx="150" cy="490.0" r="5"/>
+  <text x="162" y="494.0">DeepSeek-R1（2025）</text>
+  <rect class="good" x="466" y="451.0" width="154" height="38" rx="8"/>
+  <text x="543" y="466.0" text-anchor="middle">Scaling-Laws</text>
+  <text x="543" y="480.0" text-anchor="middle">Agentic-Engineering</text>
+  <rect class="box" x="12" y="518" width="616" height="44" rx="8"/>
+  <text class="b" x="20" y="544.0">RAG</text>
+  <circle class="dotf" cx="150" cy="537.0" r="5"/>
+  <text x="162" y="541.0">Lewis et al.：RAG（2020）</text>
+  <rect class="good" x="466" y="521.0" width="154" height="38" rx="8"/>
+  <text x="543" y="536.0" text-anchor="middle">Post-Training</text>
+  <text x="543" y="550.0" text-anchor="middle">Enterprise-AI-Integration</text>
+  <circle class="dotf" cx="24" cy="576" r="5"/>
+  <text class="s" x="36" y="580">已查到 arXiv 編號，或本庫文件已引用</text>
+  <circle class="dote" cx="260" cy="576" r="5"/>
+  <text class="s" x="272" y="580">僅標題與作者；arXiv 編號尚未核對</text>
+</svg>
