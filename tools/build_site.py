@@ -47,6 +47,9 @@ CATS = [
         ("CodeX-Agent", "Codex 的 Subagents、Cloud、codex exec 平行與 code review 做法"),
         ("OpenAI-Python-Agent", "以 Python 控制的 coredump 自動分析流程設計"),
     ]),
+    ("學習資源", [
+        ("AI-Learning-Resources", "學習路徑、課程、書籍、論文清單、官方文件與中文資源，標示每項的驗證狀態"),
+    ]),
 ]
 
 # 這些頁面沿用手工設計的 HTML（含 SVG 圖），來源在 tools/site/<名稱>.src.html。

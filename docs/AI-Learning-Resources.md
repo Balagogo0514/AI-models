@@ -1,0 +1,169 @@
+# AI 學習資源
+
+> 資料日期：2026-11-16  
+> 範圍：整理學習 AI 模型、LLM 與 Agent 的課程、書籍、論文、官方文件與持續追蹤的來源，並對應到本筆記庫的文件。  
+> 讀法：每個資源都標示驗證狀態——**✅** 表示我查到官方頁面、出版方頁面，或本庫文件已引用；**🔎** 表示只有二手來源確認它存在，連結與內容請自行核對。課程、書籍與網站會更新，請以官方頁面為準。
+
+## 先看結論
+
+- **想建立直覺**：先看 3Blue1Brown 的神經網路系列，再看 Karpathy 的 *Neural Networks: Zero to Hero*。
+- **想自己動手**：Karpathy 的系列 → Raschka 的 *Build a Large Language Model (From Scratch)* → Stanford CS336。
+- **想用 LLM 做應用或 Agent**：Chip Huyen 的 *AI Engineering*、Hugging Face 的 Agents Course、Anthropic 的 *Building effective agents*，再讀各家官方文件。
+- **偏好中文**：台大李宏毅老師的課程是最常被推薦的起點。
+- **想讀研究**：從第 4 節的論文清單開始，每個主題都對應到本筆記庫的一份文件。
+- 這份清單是「入口」，不是完整書目；我沒有逐一上完或讀完每個資源，品質判斷不在範圍內。
+
+---
+
+## 1. 學習路徑
+
+![圖：AI 學習路徑——基礎直覺、LLM 原理與實作、訓練與研究、應用與 Agent 四個階段](figures/ai-learning-resources-path.svg)
+
+| 階段 | 目標 | 對應本庫文件 |
+|---|---|---|
+| 1 基礎直覺 | 神經網路、反向傳播、訓練在做什麼 | — |
+| 2 LLM 原理與實作 | tokenizer、Transformer、從零訓練小型 GPT | [Transformer-Attention](Transformer-Attention.md) |
+| 3 訓練、評測與研究 | scaling、後訓練、注意力、長上下文 | [Scaling-Laws](Scaling-Laws.md)、[Post-Training](Post-Training.md)、[Long-Context-Note](Long-Context-Note.md) |
+| 4 應用與 Agent | RAG、tool use、Agent 工程、開發工具 | [Agentic-Engineering](Agentic-Engineering.md)、[Claude-Agent](Claude-Agent.md)、[CodeX-Agent](CodeX-Agent.md) |
+
+> 「有程式基礎可從階段 2 開始、只想用 Agent 可直接到階段 4」是我依目的做的歸納，不是任何課程或官方的建議。
+
+---
+
+## 2. 基礎：機器學習與深度學習
+
+| 資源 | 形式 | 適合 | 狀態 |
+|---|---|---|---|
+| 3Blue1Brown：神經網路系列 | YouTube 影片 | 零基礎，重視視覺直覺 | 🔎 |
+| 李宏毅：機器學習（2021） | 台大課程影片 | 想用中文系統學基礎 | 🔎 |
+| fast.ai：*Practical Deep Learning for Coders* | 免費課程 | 先寫程式、再回頭理解原理 | 🔎 |
+| [*Dive into Deep Learning*（d2l.ai）](https://d2l.ai) | 免費互動式教科書 | 想要程式碼與理論並行的教材 | 🔎 |
+
+這一節的項目都是從課程彙整文章確認存在，我沒有開啟各官方頁面；課程版本、時數請自行核對。
+
+---
+
+## 3. LLM 原理與動手實作
+
+### 3.1 課程與影片
+
+| 資源 | 內容 | 狀態 |
+|---|---|---|
+| [Karpathy：*Neural Networks: Zero to Hero*](https://karpathy.ai/zero-to-hero.html)（[GitHub](https://github.com/karpathy/nn-zero-to-hero)） | 從反向傳播一路寫到 GPT，含 *Let's build GPT: from scratch, in code, spelled out* | ✅ |
+| [Stanford CS336：*Language Modeling from Scratch*](https://stanford-cs336.github.io/spring2025/) | Percy Liang 與 Tatsunori Hashimoto 開設；錄影免費上 YouTube；作業需要 GPU | 🔎 |
+| Stanford CS224N：*NLP with Deep Learning* | NLP 與深度學習，偏進階 | 🔎 |
+| Hugging Face：LLM Course（[Hugging Face Learn](https://huggingface.co/learn)） | transformers、微調、部署 | 🔎 |
+| [Hugging Face：Agents Course](https://huggingface.co/learn/agents-course) | 免費；涵蓋 smolagents、LlamaIndex、LangGraph；需要免費的 Hugging Face 帳號 | ✅ |
+
+> Karpathy 系列的影片編號各來源說法不一（例如 tokenizer 是第幾講），請直接看官方頁面或播放清單，不要依編號找。
+
+### 3.2 書與文章
+
+| 資源 | 內容 | 狀態 |
+|---|---|---|
+| [Sebastian Raschka：*Build a Large Language Model (From Scratch)*](https://www.manning.com/books/build-a-large-language-model-from-scratch) | Manning，2024 年 9 月；從設計、預訓練到微調，一步步自己做一個 LLM | ✅ |
+| [Jay Alammar、Maarten Grootendorst：*Hands-On Large Language Models*](https://www.oreilly.com/library/view/hands-on-large-language/9781098150952/) | O'Reilly，2024 年 9 月；以視覺化方式講如何運用預訓練模型做分類、RAG、多模態 | ✅ |
+| Chip Huyen：*AI Engineering*（O'Reilly） | 在既有基礎模型上做應用：評測、prompt、RAG 與 agents、微調、資料集工程、推論最佳化 | 🔎（出版年份各來源不一，請以 O'Reilly 頁面為準） |
+| [Jay Alammar：*The Illustrated Transformer*](https://jalammar.github.io/illustrated-transformer/) | 2018 年的圖解文章，一步步拆解 self-attention 與 encoder-decoder | 🔎 |
+
+---
+
+## 4. 論文閱讀清單（對應本筆記庫）
+
+![圖：七個主題的代表論文，以及對應的本筆記庫文件](figures/ai-learning-resources-papers.svg)
+
+| 主題 | 論文 | 本庫對應 | 狀態 |
+|---|---|---|---|
+| Transformer 基礎 | [Attention Is All You Need](https://arxiv.org/abs/1706.03762)（2017） | [Transformer-Attention](Transformer-Attention.md) | ✅ |
+| Scaling | [Scaling Laws for Neural Language Models](https://arxiv.org/abs/2001.08361)（Kaplan et al., 2020） | [Scaling-Laws](Scaling-Laws.md) | ✅ |
+| Scaling | [Training Compute-Optimal Large Language Models](https://arxiv.org/abs/2203.15556)（Hoffmann et al., 2022；Chinchilla） | [Scaling-Laws](Scaling-Laws.md) | ✅ |
+| 資料見頂 | [Will we run out of data?](https://epoch.ai/blog/will-we-run-out-of-data)（Epoch AI, 2024；arXiv 2211.04325） | [Scaling-Laws](Scaling-Laws.md) §八 | ✅ |
+| 後訓練 | *Training language models to follow instructions with human feedback*（Ouyang et al., 2022；InstructGPT） | [Post-Training](Post-Training.md) | 🔎 |
+| 後訓練 | *Direct Preference Optimization*（Rafailov et al., 2023；DPO） | [Post-Training](Post-Training.md) | 🔎 |
+| 後訓練 | *LoRA: Low-Rank Adaptation of Large Language Models*（Hu et al., 2021） | [Post-Training](Post-Training.md) | 🔎 |
+| 長上下文 | *Lost in the Middle*（Liu et al., 2023；[arXiv 2307.03172](https://arxiv.org/abs/2307.03172)） | [Long-Context-Note](Long-Context-Note.md) | ✅ |
+| 注意力與 serving | [FlashAttention](https://arxiv.org/abs/2205.14135)、[GQA](https://arxiv.org/abs/2305.13245)、[DeepSeek-V2（MLA）](https://arxiv.org/abs/2405.04434) | [Transformer-Attention](Transformer-Attention.md) | ✅ |
+| 推理與 Agent | *Chain-of-Thought Prompting Elicits Reasoning in Large Language Models*（Wei et al., 2022） | [Scaling-Laws](Scaling-Laws.md) §七 | 🔎 |
+| 推理與 Agent | *ReAct: Synergizing Reasoning and Acting in Language Models*（Yao et al., 2022） | [Agentic-Engineering](Agentic-Engineering.md) | 🔎 |
+| 推理與 Agent | [DeepSeek-R1](https://arxiv.org/abs/2501.12948)（2025） | [Scaling-Laws](Scaling-Laws.md) §七 | ✅ |
+| RAG | [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401)（Lewis et al., 2020） | [Post-Training](Post-Training.md)、[Enterprise-AI-Integration](Enterprise-AI-Integration.md) | ✅ |
+
+標 🔎 的論文我只確認標題、作者與年份，**沒有核對 arXiv 編號**（沙箱連不到 arxiv.org），所以不放連結；請用標題在 arXiv 搜尋。標 ✅ 的連結，一部分是我用搜尋核對過標題與編號，一部分是本庫其他文件已經引用的來源。
+
+---
+
+## 5. Agent 與開發工具：官方文件
+
+| 資源 | 內容 | 本庫對應 | 狀態 |
+|---|---|---|---|
+| [Anthropic：Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)（2024-12-19） | 區分 workflow 與 agent，建議先用簡單模式、不要一開始就上重型框架 | [Agentic-Engineering](Agentic-Engineering.md) | ✅ |
+| [Anthropic：Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) | context 工程與長時程 agent 的做法 | [Claude-Context](Claude-Context.md) | ✅（本庫已引用） |
+| [Claude Code 文件](https://code.claude.com/docs/en/features-overview.md) | 功能總覽、skills、plugins、MCP、context window 等 | [Claude-Code-CLI](Claude-Code-CLI.md) | ✅（本庫已引用） |
+| [Model Context Protocol 文件](https://modelcontextprotocol.io/docs/getting-started/intro) | MCP 的官方介紹與規格；文件有依協議版本分開的副本，引用時要註明版本 | [Claude-Code-CLI](Claude-Code-CLI.md) | ✅ |
+| [OpenAI API：Agents 指南](https://developers.openai.com/api/docs/guides/agents) | OpenAI 的 agent 開發指南 | [OpenAI-Python-Agent](OpenAI-Python-Agent.md) | ✅（本庫已引用） |
+| [Codex 文件](https://developers.openai.com/codex/cli) | Codex CLI、sandbox、subagents 等 | [CodeX-CLI](CodeX-CLI.md)、[CodeX-Agent](CodeX-Agent.md) | ✅（本庫已引用） |
+
+---
+
+## 6. 中文與繁體中文資源
+
+| 資源 | 說明 | 狀態 |
+|---|---|---|
+| 李宏毅：生成式人工智慧導論（2024） | 台大課程；內容大致分為生成式 AI 能做什麼、模型內部如何運作、如何訓練、如何微調。課程資料見[2024 春季第一堂簡報](https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0223/0223_course.pdf)；影片請到他的 YouTube 頻道搜尋（我沒有找到可確認的播放清單網址） | ✅（課程）／🔎（影片） |
+| 李宏毅：機器學習（2021） | 搜尋結果建議與生成式 AI 導論搭配觀看 | 🔎 |
+| 動手學深度學習（*Dive into Deep Learning* 的中文版） | d2l 的中文版本 | 🔎 |
+| 本筆記庫 | 繁體中文、含圖示，主題見網站首頁或 GitHub 的 README 索引 | ✅ |
+
+---
+
+## 7. 持續追蹤：部落格、電子報與資料
+
+| 來源 | 內容 | 狀態 |
+|---|---|---|
+| [Lilian Weng：Lil'Log](https://lilianweng.github.io) | 長篇技術整理，常被引用為某個主題的入門總覽 | 🔎 |
+| [Sebastian Raschka：Ahead of AI](https://magazine.sebastianraschka.com) | Substack 電子報，談 LLM 與研究進展 | 🔎 |
+| [Jay Alammar 的部落格](https://jalammar.github.io) | 圖解文章 | 🔎 |
+| [Epoch AI](https://epoch.ai/blog/will-we-run-out-of-data) | 訓練運算、資料與趨勢的研究；本庫 Scaling-Laws 引用它 | ✅ |
+| [Anthropic Engineering](https://www.anthropic.com/engineering/building-effective-agents) | Anthropic 的工程文章，含 agent 與 context 工程 | ✅ |
+
+---
+
+## 8. 依目標選資源
+
+![圖：六種學習目標與優先資源](figures/ai-learning-resources-choose.svg)
+
+> 這一節是我依各資源的定位做的歸納，不是官方建議。
+
+---
+
+## 9. 怎麼學比較有效
+
+以下是建議，不是研究結論：
+
+1. **每個階段都要有動手的產出**：例如跟著 Karpathy 寫出一個能生成文字的小模型，比只看影片更能暴露不懂的地方。
+2. **論文先讀摘要、結論與圖表**，需要時再回頭讀方法；先讀本庫對應文件，再讀原文，可以少走彎路。
+3. **數字以原文為準**：價格、模型規格、基準分數會變，本庫文件都標有資料日期。
+4. **區分官方資訊與二手整理**：本文的「✅／🔎」就是為了讓你知道哪些我確認過、哪些要自己再核對。
+
+---
+
+## 10. 驗證說明與限制
+
+- 驗證日期是 2026-11-16。我用網路搜尋核對各資源是否存在；沙箱連不到 `arxiv.org`，也沒有開啟多數課程官方頁面，所以標 🔎 的項目只能保證「有二手來源提到它存在」。
+- 沒有核對的內容：各課程目前的版本與時數、書籍最新版次、Hugging Face LLM Course 的官方頁面、李宏毅課程的 YouTube 播放清單網址、五篇 🔎 論文的 arXiv 編號。
+- 這份清單不評價資源品質，也沒有涵蓋所有主題（例如電腦視覺、語音、強化學習專書）；它對應的是本筆記庫涵蓋的範圍。
+- 若發現連結失效或內容有誤，請在該項目標示 ⚠️ 並改為官方連結。
+
+---
+
+## 11. 官方來源
+
+- Karpathy：<https://karpathy.ai/zero-to-hero.html>、<https://github.com/karpathy/nn-zero-to-hero>
+- Stanford CS336（2025 春季存檔）：<https://stanford-cs336.github.io/spring2025/>
+- Hugging Face Agents Course：<https://huggingface.co/learn/agents-course>
+- Manning：<https://www.manning.com/books/build-a-large-language-model-from-scratch>
+- O'Reilly：<https://www.oreilly.com/library/view/hands-on-large-language/9781098150952/>
+- Anthropic：<https://www.anthropic.com/engineering/building-effective-agents>、<https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents>
+- Model Context Protocol：<https://modelcontextprotocol.io/docs/getting-started/intro>
+- 李宏毅 2024 春季課程資料：<https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0223/0223_course.pdf>
+- Epoch AI：<https://epoch.ai/blog/will-we-run-out-of-data>
