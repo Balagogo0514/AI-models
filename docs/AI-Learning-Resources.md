@@ -6,6 +6,7 @@
 
 ## 先看結論
 
+- **非技術背景**：先看吳恩達的 *AI for Everyone*（不需寫程式），了解 AI 能做什麼、怎麼導入與對社會的影響。
 - **想建立直覺**：先看 3Blue1Brown 的神經網路系列，再看 Karpathy 的 *Neural Networks: Zero to Hero*。
 - **想自己動手**：Karpathy 的系列 → Raschka 的 *Build a Large Language Model (From Scratch)* → Stanford CS336。
 - **想用 LLM 做應用或 Agent**：Chip Huyen 的 *AI Engineering*、Hugging Face 的 Agents Course、Anthropic 的 *Building effective agents*，再讀各家官方文件。
@@ -34,12 +35,13 @@
 
 | 資源 | 形式 | 適合 | 狀態 |
 |---|---|---|---|
+| [吳恩達：*AI for Everyone*](https://www.deeplearning.ai/courses/ai-for-everyone)（[Coursera 頁面](https://www.coursera.org/learn/ai-for-everyone)） | DeepLearning.AI 在 Coursera 開的入門課；DeepLearning.AI 頁面標示約 6 小時 54 分、35 支影片，共 4 週，第 3 週談在公司裡建 AI、第 4 週談 AI 與社會 | 非技術背景的人、想了解 AI 導入與策略的管理者；不需寫程式 | ✅ |
 | 3Blue1Brown：神經網路系列 | YouTube 影片 | 零基礎，重視視覺直覺 | 🔎 |
 | 李宏毅：機器學習（2021） | 台大課程影片 | 想用中文系統學基礎 | 🔎 |
 | fast.ai：*Practical Deep Learning for Coders* | 免費課程 | 先寫程式、再回頭理解原理 | 🔎 |
 | [*Dive into Deep Learning*（d2l.ai）](https://d2l.ai) | 免費互動式教科書 | 想要程式碼與理論並行的教材 | 🔎 |
 
-這一節的項目都是從課程彙整文章確認存在，我沒有開啟各官方頁面；課程版本、時數請自行核對。
+*AI for Everyone* 是搜尋結果直接回傳 DeepLearning.AI 與 Coursera 的課程頁，但我沒有開啟頁面，時數與影片數取自搜尋結果摘要；價格與是否有免費註冊方式會變，請以官方頁面為準。這一節其餘項目都是從課程彙整文章確認存在，我沒有開啟各官方頁面；課程版本、時數請自行核對。
 
 ---
 
@@ -133,7 +135,7 @@
 
 ## 8. 依目標選資源
 
-![圖：六種學習目標與優先資源](figures/ai-learning-resources-choose.svg)
+![圖：七種學習目標與優先資源](figures/ai-learning-resources-choose.svg)
 
 > 這一節是我依各資源的定位做的歸納，不是官方建議。
 
@@ -153,7 +155,7 @@
 ## 10. 驗證說明與限制
 
 - 驗證日期是 2026-11-16。我用網路搜尋核對各資源是否存在；沙箱連不到 `arxiv.org`，也沒有開啟多數課程官方頁面，所以標 🔎 的項目只能保證「有二手來源提到它存在」。
-- 沒有核對的內容：各課程目前的版本與時數、書籍最新版次、Hugging Face LLM Course 的官方頁面、李宏毅 YouTube 頻道頁面本身與各課程的單一播放清單網址、五篇 🔎 論文的 arXiv 編號。
+- 沒有核對的內容：各課程目前的版本與時數、書籍最新版次、Hugging Face LLM Course 的官方頁面、*AI for Everyone* 目前的價格與註冊方式、李宏毅 YouTube 頻道頁面本身與各課程的單一播放清單網址、五篇 🔎 論文的 arXiv 編號。
 - 這份清單不評價資源品質，也沒有涵蓋所有主題（例如電腦視覺、語音、強化學習專書）；它對應的是本筆記庫涵蓋的範圍。
 - 若發現連結失效或內容有誤，請在該項目標示 ⚠️ 並改為官方連結。
 
@@ -163,6 +165,7 @@
 
 - Karpathy：<https://karpathy.ai/zero-to-hero.html>、<https://github.com/karpathy/nn-zero-to-hero>
 - Stanford CS336（2025 春季存檔）：<https://stanford-cs336.github.io/spring2025/>
+- DeepLearning.AI：*AI for Everyone*：<https://www.deeplearning.ai/courses/ai-for-everyone>、<https://www.coursera.org/learn/ai-for-everyone>
 - Hugging Face Agents Course：<https://huggingface.co/learn/agents-course>
 - Manning：<https://www.manning.com/books/build-a-large-language-model-from-scratch>
 - O'Reilly：<https://www.oreilly.com/library/view/hands-on-large-language/9781098150952/>
