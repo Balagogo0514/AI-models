@@ -9,7 +9,7 @@
 - **想建立直覺**：先看 3Blue1Brown 的神經網路系列，再看 Karpathy 的 *Neural Networks: Zero to Hero*。
 - **想自己動手**：Karpathy 的系列 → Raschka 的 *Build a Large Language Model (From Scratch)* → Stanford CS336。
 - **想用 LLM 做應用或 Agent**：Chip Huyen 的 *AI Engineering*、Hugging Face 的 Agents Course、Anthropic 的 *Building effective agents*，再讀各家官方文件。
-- **偏好中文**：台大李宏毅老師的課程是最常被推薦的起點。
+- **偏好中文**：台大李宏毅老師的課程是最常被推薦的起點，影片主頁見第 6 節的 [YouTube 頻道](https://www.youtube.com/@HungyiLeeNTU/videos)。
 - **想讀研究**：從第 4 節的論文清單開始，每個主題都對應到本筆記庫的一份文件。
 - 這份清單是「入口」，不是完整書目；我沒有逐一上完或讀完每個資源，品質判斷不在範圍內。
 
@@ -109,8 +109,11 @@
 
 | 資源 | 說明 | 狀態 |
 |---|---|---|
-| 李宏毅：生成式人工智慧導論（2024） | 台大課程；內容大致分為生成式 AI 能做什麼、模型內部如何運作、如何訓練、如何微調。課程資料見[2024 春季第一堂簡報](https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0223/0223_course.pdf)；影片請到他的 YouTube 頻道搜尋（我沒有找到可確認的播放清單網址） | ✅（課程）／🔎（影片） |
-| 李宏毅：機器學習（2021） | 搜尋結果建議與生成式 AI 導論搭配觀看 | 🔎 |
+| [李宏毅 YouTube 頻道](https://www.youtube.com/@HungyiLeeNTU/videos) | 課程影片的主頁：機器學習、深度學習、人類語言處理、生成式 AI 等；有教學講義與錄影可搭配觀看。網址來自 2024 年的 AI YouTuber 彙整文章，我沒有開啟頻道頁面，訂閱數與影片數各來源差異大，不列數字 | 🔎 |
+| [李宏毅個人網頁（台大）](https://speech.ee.ntu.edu.tw/~hylee/index.php) | 各學期課程網頁、投影片與作業的入口；課程資料大多放在 `speech.ee.ntu.edu.tw/~hylee/` 之下 | ✅ |
+| 李宏毅：生成式人工智慧導論（2024 春季） | 台大課程；內容大致分為生成式 AI 能做什麼、模型內部如何運作、如何訓練、如何微調。課程網頁為 [genai/2024-spring.php](https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php)，也可直接看[第一堂簡報](https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0223/0223_course.pdf)；影片在上面的 YouTube 頻道（我沒有找到可確認的單一播放清單網址） | ✅（課程簡報）／🔎（課程網頁、影片） |
+| 李宏毅：生成式人工智慧與機器學習導論（2025 秋季） | 較新的一學期；搜尋結果列出課程網頁 [GenAI-ML/2025-fall.php](https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php)，並有一份介紹語言模型運作原理的講義；我沒有開啟課程網頁，課程內容與是否有公開錄影請自行確認 | 🔎 |
+| 李宏毅：機器學習（2021／2022／2023） | 搜尋結果建議與生成式 AI 導論搭配觀看；2022 與 2023 的課程資料也在上面的個人網頁底下（如 `ml/ml2022-course-data/`、`ml/2023-spring.php`） | 🔎 |
 | 動手學深度學習（*Dive into Deep Learning* 的中文版） | d2l 的中文版本 | 🔎 |
 | 本筆記庫 | 繁體中文、含圖示，主題見網站首頁或 GitHub 的 README 索引 | ✅ |
 
@@ -150,7 +153,7 @@
 ## 10. 驗證說明與限制
 
 - 驗證日期是 2026-11-16。我用網路搜尋核對各資源是否存在；沙箱連不到 `arxiv.org`，也沒有開啟多數課程官方頁面，所以標 🔎 的項目只能保證「有二手來源提到它存在」。
-- 沒有核對的內容：各課程目前的版本與時數、書籍最新版次、Hugging Face LLM Course 的官方頁面、李宏毅課程的 YouTube 播放清單網址、五篇 🔎 論文的 arXiv 編號。
+- 沒有核對的內容：各課程目前的版本與時數、書籍最新版次、Hugging Face LLM Course 的官方頁面、李宏毅 YouTube 頻道頁面本身與各課程的單一播放清單網址、五篇 🔎 論文的 arXiv 編號。
 - 這份清單不評價資源品質，也沒有涵蓋所有主題（例如電腦視覺、語音、強化學習專書）；它對應的是本筆記庫涵蓋的範圍。
 - 若發現連結失效或內容有誤，請在該項目標示 ⚠️ 並改為官方連結。
 
@@ -165,5 +168,7 @@
 - O'Reilly：<https://www.oreilly.com/library/view/hands-on-large-language/9781098150952/>
 - Anthropic：<https://www.anthropic.com/engineering/building-effective-agents>、<https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents>
 - Model Context Protocol：<https://modelcontextprotocol.io/docs/getting-started/intro>
+- 李宏毅個人網頁：<https://speech.ee.ntu.edu.tw/~hylee/index.php>
 - 李宏毅 2024 春季課程資料：<https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0223/0223_course.pdf>
+- 李宏毅 YouTube 頻道（網址取自二手彙整，未開啟）：<https://www.youtube.com/@HungyiLeeNTU/videos>
 - Epoch AI：<https://epoch.ai/blog/will-we-run-out-of-data>
