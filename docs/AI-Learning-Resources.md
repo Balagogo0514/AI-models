@@ -1,6 +1,6 @@
 # AI 學習資源
 
-> 資料日期：2026-11-16（第 5.2 節「模型廠商」與第 7 節「大學課程」為 2026-11-17）  
+> 資料日期：2026-11-16（第 3.4 節「Hugging Face」、第 5.2 節「模型廠商」與第 7 節「大學課程」為 2026-11-17）  
 > 範圍：整理學習 AI 模型、LLM 與 Agent 的課程、書籍、論文、大學公開課、官方文件與持續追蹤的來源，並對應到本筆記庫的文件。  
 > 讀法：每個資源都標示驗證狀態——**✅** 表示我查到官方頁面、出版方頁面，或本庫文件已引用；**🔎** 表示只有二手來源確認它存在，連結與內容請自行核對。課程、書籍與網站會更新，請以官方頁面為準。
 
@@ -10,7 +10,7 @@
 - **想建立直覺**：先看 3Blue1Brown 的[神經網路系列](https://www.3blue1brown.com/neural-networks)，再看 Karpathy 的 [*Neural Networks: Zero to Hero*](https://karpathy.ai/zero-to-hero.html)；想先聽概念，可看他的 [*Intro to Large Language Models*](https://www.youtube.com/watch?v=zjkBMFhNj_g) 演講；更多影片見他的 [YouTube 頻道](https://www.youtube.com/@AndrejKarpathy)。
 - **想自己動手**：Karpathy 的[系列](https://karpathy.ai/zero-to-hero.html)（影片在他的 [YouTube 頻道](https://www.youtube.com/@AndrejKarpathy)） → Raschka 的 *Build a Large Language Model (From Scratch)* → Stanford CS336。
 - **想看各家模型的官方文件與範例**：Claude、OpenAI、Gemini、DeepSeek 的入口都在第 5.2 節。
-- **想用 LLM 做應用或 Agent**：Chip Huyen 的 *AI Engineering*、Hugging Face 的 Agents Course、Anthropic 的 *Building effective agents*，再讀各家官方文件。
+- **想用 LLM 做應用或 Agent**：Chip Huyen 的 *AI Engineering*、Hugging Face 的 [Agents Course](https://huggingface.co/learn/agents-course)、Anthropic 的 *Building effective agents*，再讀各家官方文件。
 - **偏好中文**：台大李宏毅老師的課程是最常被推薦的起點，影片主頁見第 6 節的 [YouTube 頻道](https://www.youtube.com/@HungyiLeeNTU/videos)。
 - **想上大學公開課**：史丹佛、MIT、清華、北大、浙大的課程，每門都附連結，見第 7 節。
 - **想讀研究**：從第 4 節的論文清單開始，每個主題都對應到本筆記庫的一份文件。
@@ -69,8 +69,6 @@
 | [Karpathy：*Deep Dive into LLMs like ChatGPT*](https://www.youtube.com/watch?v=7xTGNNLPyMI) | 約 3 小時 31 分、2025 年初的一般大眾深度講解；涵蓋推論與後訓練（SFT、RLHF）。上傳日期各來源說法不一（2 月 5 日或 27 日），以影片頁面為準 | 🔎（影片網址取自搜尋結果） |
 | [Stanford CS336：*Language Modeling from Scratch*](https://stanford-cs336.github.io/spring2025/) | Percy Liang 與 Tatsunori Hashimoto 開設；錄影免費上 YouTube；作業需要 GPU | 🔎 |
 | Stanford CS224N：*NLP with Deep Learning* | NLP 與深度學習，偏進階 | 🔎 |
-| Hugging Face：LLM Course（[Hugging Face Learn](https://huggingface.co/learn)） | transformers、微調、部署 | 🔎 |
-| [Hugging Face：Agents Course](https://huggingface.co/learn/agents-course) | 免費；涵蓋 smolagents、LlamaIndex、LangGraph；需要免費的 Hugging Face 帳號 | ✅ |
 
 > Karpathy 系列的影片編號各來源說法不一（例如 tokenizer 是第幾講），請直接看官方頁面或播放清單，不要依編號找。
 
@@ -97,6 +95,24 @@
 > 如果你記得的是「3D 方塊一層一層飛過去、可以看每一層的矩陣大小」，那最像 **LLM Visualization**；如果是「輸入一段文字、看 GPT-2 每個 head 的注意力與最後的機率」，那最像 **Transformer Explainer**。我是依描述推測，不確定是哪一個。
 >
 > 這些網站我**沒有開啟**：說明取自搜尋結果的摘要，LLM Visualization 的網址是搜尋結果直接指名的網站，LM Transparency Tool 的 GitHub 網址與展示頁取自轉述。對應的原理可以回頭看本庫的 [Transformer-Attention](Transformer-Attention.md)。
+
+### 3.4 Hugging Face 學習資源
+
+Hugging Face 把課程集中在 [Hugging Face Learn](https://huggingface.co/learn)；多數是免費、開源的課程，學習時通常需要一個免費的 Hugging Face 帳號。
+
+![圖：依目標選 Hugging Face 的課程](figures/ai-learning-resources-hf-courses.svg)
+
+| 資源 | 內容 | 連結 | 狀態 |
+|---|---|---|---|
+| Hugging Face Learn（入口） | 課程目錄；搜尋結果顯示它列有 LLM、Agents、Diffusion、Audio、Deep RL、Computer Vision、smol course、Robotics（LeRobot）、ML for 3D 等課程與 Open-Source AI Cookbook | [huggingface.co/learn](https://huggingface.co/learn) | ✅ |
+| LLM Course | 用 Hugging Face 的函式庫處理 LLM，涵蓋用 Transformers 訓練、微調與部署；一個來源說有 12 章 | 在 Learn 入口內（我沒有看到官方頁面的網址） | 🔎 |
+| Agents Course | 免費；涵蓋 smolagents、LlamaIndex、LangGraph；需要免費的 Hugging Face 帳號；搜尋結果說結業證書免費 | [huggingface.co/learn/agents-course](https://huggingface.co/learn/agents-course) | ✅ |
+| smol course | 對齊小型語言模型的免費開放課程，以 SmolLM3 與 SmolVLM2 為例，技巧也可用在其他小型 LLM／VLM；社群貼文說 v2 有排行榜與認證，細節請以官方為準 | [huggingface.co/learn/smol-course](https://huggingface.co/learn/smol-course)、[GitHub](https://github.com/huggingface/smol-course) | 🔎 |
+| MCP Course | 教 Model Context Protocol 的理論、設計與實作，來源說有測驗與影片；**各來源對它有沒有列在 Learn 目錄說法不一** | 在 Learn 入口內（我沒有看到網址） | 🔎 |
+| Diffusion／Audio／Deep RL／Computer Vision 課程 | 分別是擴散模型與 Diffusers、用 Transformers 處理音訊（語音辨識、音訊分類、語音合成）、深度強化學習、電腦視覺；後兩者我只看到名稱，沒有看到內容描述 | 在 Learn 入口內 | 🔎 |
+| Open-Source AI Cookbook | 實作專案與範例集，適合已經有具體專案想做的時候 | 在 Learn 入口內（我沒有看到網址） | 🔎 |
+
+> 搜尋結果裡有一個頁面把 Agents Course 描述成電腦視覺相關，應該是第三方的複製錯誤，我沒有採用。這一節我**沒有開啟任何頁面**；課程是否持續更新、章節數與是否仍開放，請以 Learn 入口為準。我也沒有查到 Transformers 文件、Hugging Face 部落格與 Papers 頁面的可確認網址，所以沒有列。
 
 ---
 
@@ -293,7 +309,7 @@
 ## 11. 驗證說明與限制
 
 - 驗證日期是 2026-11-16。我用網路搜尋核對各資源是否存在；沙箱連不到 `arxiv.org`，也沒有開啟多數課程官方頁面，所以標 🔎 的項目只能保證「有二手來源提到它存在」。
-- 沒有核對的內容：各課程目前的版本與時數、書籍最新版次、Hugging Face LLM Course 的官方頁面、*AI for Everyone* 目前的價格與註冊方式、Karpathy 頻道頁面與兩支演講影片的網址與上傳日期、各互動視覺化網站目前是否可用與內容、Let's build GPT 影片頁面本身與兩個 GitHub 專案的目前狀態、3Blue1Brown 第 6、7 章與 LLM 簡介的確切網址和頻道頁面、李宏毅 YouTube 頻道頁面本身與各課程的單一播放清單網址、五篇 🔎 論文的 arXiv 編號。
+- 沒有核對的內容：各課程目前的版本與時數、書籍最新版次、Hugging Face LLM Course 與 MCP Course 的官方頁面、smol course 的目前版本、*AI for Everyone* 目前的價格與註冊方式、Karpathy 頻道頁面與兩支演講影片的網址與上傳日期、各互動視覺化網站目前是否可用與內容、Let's build GPT 影片頁面本身與兩個 GitHub 專案的目前狀態、3Blue1Brown 第 6、7 章與 LLM 簡介的確切網址和頻道頁面、李宏毅 YouTube 頻道頁面本身與各課程的單一播放清單網址、五篇 🔎 論文的 arXiv 編號。
 - 這份清單不評價資源品質，也沒有涵蓋所有主題（例如電腦視覺、語音、強化學習專書）；它對應的是本筆記庫涵蓋的範圍。
 - **第 7 節（大學課程）的補充**：驗證日期是 2026-11-17。我**沒有開啟任何課程頁面**，簡介取自搜尋結果的摘要。標 🔎 的有 CS231n、CS229、CS25 的網址（各課程慣用的位置，沒有在搜尋結果直接看到）與清華 AI 素養網站（官網新聞轉述）。沒有核對的還有：各課程的開課學期與是否仍開放、哪些有完整錄影、教師名單、CS224N 官方 YouTube 播放清單、CS231n 目前一期是否公開錄影、浙大《機器學習》的主講人。
 - **第 7 節這次沒查到、因此沒有列的課程**：北大的深度學習與大模型課程、清華與浙大專門的大模型公開課、MIT 6.034 與 6.036。這不代表它們不存在；其他知名學校（例如 Berkeley、CMU、Harvard 的 CS50 AI）也沒有涵蓋，要擴充請指定學校。
@@ -310,7 +326,7 @@
 - DeepLearning.AI：*AI for Everyone*：<https://www.deeplearning.ai/courses/ai-for-everyone>、<https://www.coursera.org/learn/ai-for-everyone>
 - 3Blue1Brown：<https://www.3blue1brown.com/neural-networks>、<https://www.3blue1brown.com/lessons/gpt>；頻道（網址取自二手來源，未開啟）：<https://www.youtube.com/@3blue1brown>
 - 互動視覺化：<https://bbycroft.net/llm>、<https://github.com/bbycroft/llm-viz>、<https://poloclub.github.io/transformer-explainer/>、<https://github.com/poloclub/transformer-explainer>、<https://ojs.aaai.org/index.php/AAAI/article/view/35347>、<https://github.com/jessevig/bertviz>、<https://github.com/facebookresearch/llm-transparency-tool>、<https://aclanthology.org/2024.acl-demos.6.pdf>
-- Hugging Face Agents Course：<https://huggingface.co/learn/agents-course>
+- Hugging Face：<https://huggingface.co/learn>、<https://huggingface.co/learn/agents-course>、<https://huggingface.co/learn/smol-course>、<https://github.com/huggingface/smol-course>
 - Manning：<https://www.manning.com/books/build-a-large-language-model-from-scratch>
 - O'Reilly：<https://www.oreilly.com/library/view/hands-on-large-language/9781098150952/>
 - Anthropic：<https://www.anthropic.com/engineering/building-effective-agents>、<https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents>
