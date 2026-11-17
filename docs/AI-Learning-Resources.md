@@ -10,7 +10,7 @@
 - **想建立直覺**：先看 3Blue1Brown 的[神經網路系列](https://www.3blue1brown.com/neural-networks)，再看 Karpathy 的 [*Neural Networks: Zero to Hero*](https://karpathy.ai/zero-to-hero.html)；想先聽概念，可看他的 [*Intro to Large Language Models*](https://www.youtube.com/watch?v=zjkBMFhNj_g) 演講。
 - **想自己動手**：Karpathy 的[系列](https://karpathy.ai/zero-to-hero.html) → Raschka 的 *Build a Large Language Model (From Scratch)* → Stanford CS336。
 - **想用 LLM 做應用或 Agent**：Chip Huyen 的 *AI Engineering*、Hugging Face 的 Agents Course、Anthropic 的 *Building effective agents*，再讀各家官方文件。
-- **偏好中文**：台大李宏毅老師的課程是最常被推薦的起點，影片主頁見第 6 節的 [YouTube 頻道](https://www.youtube.com/@HungyiLeeNTU/videos)；上海交大也有公開的講義與實作教程，同樣在第 6 節。
+- **偏好中文**：台大李宏毅老師的課程是最常被推薦的起點，影片主頁見第 6 節的 [YouTube 頻道](https://www.youtube.com/@HungyiLeeNTU/videos)。
 - **想讀研究**：從第 4 節的論文清單開始，每個主題都對應到本筆記庫的一份文件。
 - 這份清單是「入口」，不是完整書目；我沒有逐一上完或讀完每個資源，品質判斷不在範圍內。
 
@@ -53,7 +53,8 @@
 
 | 資源 | 內容 | 狀態 |
 |---|---|---|
-| [Karpathy：*Neural Networks: Zero to Hero*](https://karpathy.ai/zero-to-hero.html)（[GitHub](https://github.com/karpathy/nn-zero-to-hero)） | 從反向傳播一路寫到 GPT，含 *Let's build GPT: from scratch, in code, spelled out* | ✅ |
+| [Karpathy：*Neural Networks: Zero to Hero*](https://karpathy.ai/zero-to-hero.html)（[GitHub](https://github.com/karpathy/nn-zero-to-hero)） | 從反向傳播一路寫到 GPT，含 [*Let's build GPT*](https://www.youtube.com/watch?v=kCc8FmEb1nY)（下一列） | ✅ |
+| [Karpathy：*Let's build GPT: from scratch, in code, spelled out*](https://www.youtube.com/watch?v=kCc8FmEb1nY) | Zero to Hero 系列裡寫出 GPT 的那一講，約 1 小時 56 分，2023-01-17 發佈；從空檔案開始，照 *Attention Is All You Need* 與 GPT-2／GPT-3 的做法，在 Tiny Shakespeare（約 1 MB 文字）上訓練字元層級的小型 Transformer。影片說明附有 Colab 筆記本（我沒有查到可確認的網址，請到影片說明找）、[ng-video-lecture](https://github.com/karpathy/ng-video-lecture)（這一講的程式碼）與 [nanoGPT](https://github.com/karpathy/nanoGPT)（完整版）兩個 GitHub 專案；建議先看前面的 makemore 系列再看這一講 | 🔎（影片網址取自第三方網站；GitHub 專案取自搜尋結果對影片說明的轉述） |
 | [Karpathy 個人網站](https://karpathy.ai) | 他的教學影片與專案入口；站上列有他的 YouTube 頻道，內容分成技術向與一般大眾向兩條線 | ✅ |
 | [Karpathy YouTube 頻道](https://www.youtube.com/@AndrejKarpathy) | 影片主頁；網址取自第三方連結與他個人網站所列的頻道，我沒有開啟頻道頁面，訂閱數各來源差異大，不列數字 | 🔎 |
 | [Karpathy：*[1hr Talk] Intro to Large Language Models*](https://www.youtube.com/watch?v=zjkBMFhNj_g) | 約 1 小時、2023 年 11 月的一般大眾演講；以 Llama 2 70B 為例，講預訓練與微調，以及 jailbreak、prompt injection 等安全風險。適合想先建立概念、不急著寫程式的人 | 🔎（影片網址取自轉錄網站） |
@@ -123,11 +124,6 @@
 | 李宏毅：生成式人工智慧與機器學習導論（2025 秋季） | 較新的一學期；搜尋結果列出課程網頁 [GenAI-ML/2025-fall.php](https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php)，並有一份介紹語言模型運作原理的講義；我沒有開啟課程網頁，課程內容與是否有公開錄影請自行確認 | 🔎 |
 | 李宏毅：機器學習（2021／2022／2023） | 搜尋結果建議與生成式 AI 導論搭配觀看；2022 與 2023 的課程資料也在上面的個人網頁底下（如 `ml/ml2022-course-data/`、`ml/2023-spring.php`） | 🔎 |
 | 動手學深度學習（*Dive into Deep Learning* 的中文版） | d2l 的中文版本 | 🔎 |
-| 上海交大：《動手學大模型》（*Dive into LLMs*） | 由上海交通大學《自然語言處理前沿技術》（NIS8021）、《人工智能安全技術》（NIS3353）的講義拓展而來，授課教師為張倬勝；定位為免費、公益性質的實作教程，附教程文檔與 Slides。我只看到第三方的 [Gitee 鏡像](https://gitee.com/hbwei/dive-into-llms)，沒有核對官方（GitHub）專案網址；影片請到 B 站搜尋「動手學大模型」或「張倬勝」，我沒有確認是否有錄影 | 🔎 |
-| 上海交大 NLP 課程組講義（cs2916） | 公開在 `gair-nlp.github.io/cs2916` 的投影片，例如[第 1 講（part 1）](https://gair-nlp.github.io/cs2916/assets/files/lecture-01-part1-9be930f9852f269ab8c9267df3ae97e8.pdf)；搜尋結果顯示另有一講涵蓋機器翻譯、Transformer 與大模型（作者林洲漢）。只有投影片，沒有確認錄影 | 🔎 |
-| 上海交大約翰·霍普克羅夫特中心（John Hopcroft Center）課程頁 | 有[機器學習（CS420，張偉楠；2019 春季頁面）](https://jhc.sjtu.edu.cn/courses/2019/0305/18.html)與[人工智能（李帥；2021 秋季頁面）](https://jhc.sjtu.edu.cn/courses/2021/1112/44.html)等課程頁；李帥的 VE445 機器學習[第 1 講投影片](https://shuaili8.github.io/Teaching/VE445/L1_intro_light.pdf)也公開。這些是舊學期的課程頁與講義，內容可能已更新，我沒有確認有公開錄影 | ✅（頁面存在）／🔎（內容與時效） |
-
-> 上海交大的公開資源，我查到的以**課程網站與講義、實作教程**為主；沒有查到官方的 MOOC 課程或可確認的完整錄影。要找影片，建議到中國大學 MOOC（icourse163.org）搜尋「上海交通大學」，或到各教師的個人網頁確認；我沒有在這個環境開啟這些網站。
 | 本筆記庫 | 繁體中文、含圖示，主題見網站首頁或 GitHub 的 README 索引 | ✅ |
 
 ---
@@ -166,7 +162,7 @@
 ## 10. 驗證說明與限制
 
 - 驗證日期是 2026-11-16。我用網路搜尋核對各資源是否存在；沙箱連不到 `arxiv.org`，也沒有開啟多數課程官方頁面，所以標 🔎 的項目只能保證「有二手來源提到它存在」。
-- 沒有核對的內容：各課程目前的版本與時數、書籍最新版次、Hugging Face LLM Course 的官方頁面、*AI for Everyone* 目前的價格與註冊方式、Karpathy 頻道頁面與兩支演講影片的網址與上傳日期、3Blue1Brown 第 6、7 章與 LLM 簡介的確切網址和頻道頁面、上海交大各項資源是否有公開錄影、《動手學大模型》官方專案網址、李宏毅 YouTube 頻道頁面本身與各課程的單一播放清單網址、五篇 🔎 論文的 arXiv 編號。
+- 沒有核對的內容：各課程目前的版本與時數、書籍最新版次、Hugging Face LLM Course 的官方頁面、*AI for Everyone* 目前的價格與註冊方式、Karpathy 頻道頁面與兩支演講影片的網址與上傳日期、Let's build GPT 影片頁面本身與兩個 GitHub 專案的目前狀態、3Blue1Brown 第 6、7 章與 LLM 簡介的確切網址和頻道頁面、李宏毅 YouTube 頻道頁面本身與各課程的單一播放清單網址、五篇 🔎 論文的 arXiv 編號。
 - 這份清單不評價資源品質，也沒有涵蓋所有主題（例如電腦視覺、語音、強化學習專書）；它對應的是本筆記庫涵蓋的範圍。
 - 若發現連結失效或內容有誤，請在該項目標示 ⚠️ 並改為官方連結。
 
@@ -175,7 +171,7 @@
 ## 11. 官方來源
 
 - Karpathy：<https://karpathy.ai>、<https://karpathy.ai/zero-to-hero.html>、<https://github.com/karpathy/nn-zero-to-hero>
-- Karpathy 的 YouTube（網址取自二手來源，未開啟）：<https://www.youtube.com/@AndrejKarpathy>、<https://www.youtube.com/watch?v=zjkBMFhNj_g>、<https://www.youtube.com/watch?v=7xTGNNLPyMI>
+- Karpathy 的 YouTube（網址取自二手來源，未開啟）：<https://www.youtube.com/@AndrejKarpathy>、<https://www.youtube.com/watch?v=kCc8FmEb1nY>（Let's build GPT）、<https://www.youtube.com/watch?v=zjkBMFhNj_g>、<https://www.youtube.com/watch?v=7xTGNNLPyMI>
 - Stanford CS336（2025 春季存檔）：<https://stanford-cs336.github.io/spring2025/>
 - DeepLearning.AI：*AI for Everyone*：<https://www.deeplearning.ai/courses/ai-for-everyone>、<https://www.coursera.org/learn/ai-for-everyone>
 - 3Blue1Brown：<https://www.3blue1brown.com/neural-networks>、<https://www.3blue1brown.com/lessons/gpt>；頻道（網址取自二手來源，未開啟）：<https://www.youtube.com/@3blue1brown>
@@ -184,7 +180,6 @@
 - O'Reilly：<https://www.oreilly.com/library/view/hands-on-large-language/9781098150952/>
 - Anthropic：<https://www.anthropic.com/engineering/building-effective-agents>、<https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents>
 - Model Context Protocol：<https://modelcontextprotocol.io/docs/getting-started/intro>
-- 上海交大：<https://jhc.sjtu.edu.cn/courses/2019/0305/18.html>、<https://jhc.sjtu.edu.cn/courses/2021/1112/44.html>、<https://shuaili8.github.io/Teaching/VE445/L1_intro_light.pdf>、<https://gair-nlp.github.io/cs2916/assets/files/lecture-01-part1-9be930f9852f269ab8c9267df3ae97e8.pdf>、Gitee 鏡像 <https://gitee.com/hbwei/dive-into-llms>
 - 李宏毅個人網頁：<https://speech.ee.ntu.edu.tw/~hylee/index.php>
 - 李宏毅 2024 春季課程資料：<https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0223/0223_course.pdf>
 - 李宏毅 YouTube 頻道（網址取自二手彙整，未開啟）：<https://www.youtube.com/@HungyiLeeNTU/videos>
