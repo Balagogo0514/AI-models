@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 470" role="img" aria-labelledby="t d">
+  <title id="t">依目標選大學課程：六種常見目標與優先課程</title>
+  <desc id="d">想系統學機器學習與深度學習用英文課，看史丹佛 CS229、CS231n 與 MIT 6.S191；想學 NLP 與 LLM，看史丹佛 CS224N 與 CS336；想補線性代數與機器學習的數學，看 MIT OCW 的 18.06SC 與 18.065；想用中文系統學，看浙大的機器學習與人工智能：模型與算法，以及清華在學堂在線的課程；想先了解 AI 全貌，看北大的人工智能原理與浙大的人工智能：模型與算法；想找大模型的中文公開課，這次沒有查到北大、清華、浙大的專門課程。這是依目的所做的歸納。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="468.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">我想…… → 先看</text>
+  <rect class="acc" x="12" y="44" width="270" height="58" rx="10"/>
+  <text x="24" y="78">系統學 ML／深度學習（英文）</text>
+  <line class="ln" x1="282" y1="73" x2="316" y2="73" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="44" width="310" height="58" rx="10"/>
+  <text class="b" x="330" y="68">Stanford CS229、CS231n</text>
+  <text x="330" y="86">MIT 6.S191</text>
+  <rect class="acc" x="12" y="110" width="270" height="58" rx="10"/>
+  <text x="24" y="144">學 NLP 與 LLM</text>
+  <line class="ln" x1="282" y1="139" x2="316" y2="139" marker-end="url(#a)"/>
+  <rect class="good" x="318" y="110" width="310" height="58" rx="10"/>
+  <text class="b" x="330" y="146">Stanford CS224N、CS336</text>
+  <rect class="acc" x="12" y="176" width="270" height="58" rx="10"/>
+  <text x="24" y="210">補線性代數與 ML 數學</text>
+  <line class="ln" x1="282" y1="205" x2="316" y2="205" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="176" width="310" height="58" rx="10"/>
+  <text class="b" x="330" y="212">MIT OCW：18.06SC、18.065</text>
+  <rect class="acc" x="12" y="242" width="270" height="58" rx="10"/>
+  <text x="24" y="276">用中文系統學</text>
+  <line class="ln" x1="282" y1="271" x2="316" y2="271" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="242" width="310" height="58" rx="10"/>
+  <text class="b" x="330" y="266">浙大：機器學習、模型與算法</text>
+  <text x="330" y="284">清華：學堂在線課程</text>
+  <rect class="acc" x="12" y="308" width="270" height="58" rx="10"/>
+  <text x="24" y="342">先了解 AI 全貌</text>
+  <line class="ln" x1="282" y1="337" x2="316" y2="337" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="308" width="310" height="58" rx="10"/>
+  <text class="b" x="330" y="332">北大：人工智能原理</text>
+  <text x="330" y="350">浙大：人工智能：模型與算法</text>
+  <rect class="acc" x="12" y="374" width="270" height="58" rx="10"/>
+  <text x="24" y="408">找大模型的中文公開課</text>
+  <line class="ln" x1="282" y1="403" x2="316" y2="403" marker-end="url(#a)"/>
+  <rect class="bad" x="318" y="374" width="310" height="58" rx="10"/>
+  <text class="b" x="330" y="398">這次沒查到北大、清華、浙大</text>
+  <text x="330" y="416">的專門課程</text>
+  <text class="s" x="320" y="450" text-anchor="middle">這是依目的所做的歸納；各課程的驗證狀態見第 9 節</text>
+</svg>
