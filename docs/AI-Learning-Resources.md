@@ -1,6 +1,6 @@
 # AI 學習資源
 
-> 資料日期：2026-11-16（第 3.4 節「Hugging Face」、第 5.3 節「Google Gemini」、第 5.4 節「OpenAI」、第 5.2 節「模型廠商」與第 7 節「大學課程」為 2026-11-17）  
+> 資料日期：2026-11-16（第 3.4 節「Hugging Face」、第 5.3 節「Google Gemini」、第 5.4 節「OpenAI」、第 5.5 節「DeepSeek」、第 5.2 節「模型廠商」與第 7 節「大學課程」為 2026-11-17）  
 > 範圍：整理學習 AI 模型、LLM 與 Agent 的課程、書籍、論文、大學公開課、官方文件與持續追蹤的來源，並對應到本筆記庫的文件。  
 > 讀法：每個資源都標示驗證狀態——**✅** 表示我查到官方頁面、出版方頁面，或本庫文件已引用；**🔎** 表示只有二手來源確認它存在，連結與內容請自行核對。課程、書籍與網站會更新，請以官方頁面為準。
 
@@ -10,6 +10,7 @@
 - **想建立直覺**：先看 3Blue1Brown 的[神經網路系列](https://www.3blue1brown.com/neural-networks)，再看 Karpathy 的 [*Neural Networks: Zero to Hero*](https://karpathy.ai/zero-to-hero.html)；想先聽概念，可看他的 [*Intro to Large Language Models*](https://www.youtube.com/watch?v=zjkBMFhNj_g) 演講；更多影片見他的 [YouTube 頻道](https://www.youtube.com/@AndrejKarpathy)。
 - **想自己動手**：Karpathy 的[系列](https://karpathy.ai/zero-to-hero.html)（影片在他的 [YouTube 頻道](https://www.youtube.com/@AndrejKarpathy)） → Raschka 的 *Build a Large Language Model (From Scratch)* → Stanford CS336。
 - **想看各家模型的官方文件與範例**：Claude、OpenAI、Gemini、DeepSeek 的入口都在第 5.2 節。
+- **想學 DeepSeek**：API 文件、技術報告與入門影片，見第 5.5 節。
 - **想學 OpenAI**：Academy、prompt 指南與 Cookbook，見第 5.4 節。
 - **想學 Google Gemini**：Cookbook、prompt 設計策略、Google Skills 與 Coursera 課程，見第 5.3 節。
 - **想用 LLM 做應用或 Agent**：Chip Huyen 的 *AI Engineering*、Hugging Face 的 [Agents Course](https://huggingface.co/learn/agents-course)、Anthropic 的 *Building effective agents*，再讀各家官方文件。
@@ -172,7 +173,7 @@ Hugging Face 把課程集中在 [Hugging Face Learn](https://huggingface.co/lear
 | Gemini | [Gemini API 文件](https://ai.google.dev/gemini-api/docs) | 官方 API 文件；網址取自 Cookbook README 指向 `ai.google.dev` 的說法，沒有在搜尋結果直接看到 `/gemini-api/docs` | [Transformer-Attention](Transformer-Attention.md)（Gemini 1.0 的 MQA） | 🔎 |
 | Gemini | [Gemini API Cookbook（ai.google.dev）](https://ai.google.dev/gemini-api/cookbook)、[google-gemini/cookbook（GitHub）](https://github.com/google-gemini/cookbook) | 官方範例集；快速入門涵蓋 Batch API、Live API、grounding 等。GitHub 上有不少 fork，請用 `google-gemini/cookbook` 這個官方倉庫 | — | ✅ |
 | Gemini | [Google AI Studio](https://aistudio.google.com) | 用 Google 帳號登入、建立 API key 的入口；網址取自搜尋摘要的文字，沒有直接出現在結果 | — | 🔎 |
-| DeepSeek | [DeepSeek API 文件](https://api-docs.deepseek.com) | 官方 API 文件；第三方指南列出此網址，並說 OpenAI SDK 可改用自訂 base URL；我沒有確認，請以官方頁面為準 | — | 🔎 |
+| DeepSeek | [DeepSeek API 文件](https://api-docs.deepseek.com/) | 官方 API 文件，入門頁是 *Your First API Call*；細節見 5.5 節 | — | ✅ |
 | DeepSeek | [github.com/deepseek-ai](https://github.com/deepseek-ai) | 開源模型、工具與範例專案的 GitHub 組織；網址取自第三方指南 | — | 🔎 |
 | DeepSeek | 技術報告：[DeepSeek-V2（MLA）](https://arxiv.org/abs/2405.04434)、[DeepSeek-V3](https://arxiv.org/abs/2412.19437)、[DeepSeek-R1](https://arxiv.org/abs/2501.12948) | V3 為 MoE，總參數 671B、每 token 啟用約 37B；R1 以強化學習強化推理 | [Transformer-Attention](Transformer-Attention.md)（MLA）、[Scaling-Laws](Scaling-Laws.md)（MoE、R1） | ✅ |
 
@@ -210,6 +211,22 @@ Hugging Face 把課程集中在 [Hugging Face Learn](https://huggingface.co/lear
 | 模型與定價頁 | 開發者文件裡的模型與價格；本庫的 [OpenAI-Model](OpenAI-Model.md) 整理了模型與價格並標有資料日期 | [模型](https://developers.openai.com/api/docs/models)、[定價](https://developers.openai.com/api/docs/pricing) | ✅ |
 
 > 這一節**沒有查到**：OpenAI 與 DeepLearning.AI 合作的短課（只有第三方的列表）、OpenAI Agents SDK 的專門課程、新版 prompt 指南在 `developers.openai.com` 的網址。這不代表它們不存在。我**沒有開啟任何頁面**；OpenAI Academy 的課程數、是否收費與註冊方式，請以官方頁面為準。
+
+### 5.5 DeepSeek 學習資源
+
+5.2 節列了 DeepSeek 的文件、GitHub 組織與三篇技術報告；這一節補學習用資源。
+
+![圖：依目標選 DeepSeek 的學習資源](figures/ai-learning-resources-deepseek.svg)
+
+| 資源 | 內容 | 連結 | 狀態 |
+|---|---|---|---|
+| DeepSeek API 文件 | 官方文件，入門頁是 *Your First API Call*，範例採 OpenAI 格式（base URL `https://api.deepseek.com`）；搜尋摘要也提到有 Anthropic 格式（`https://api.deepseek.com/anthropic`），要先在終端機設好環境變數 `DEEPSEEK_API_KEY`。**模型名稱各來源不一致**：官方頁面列的是 `deepseek-flash` 或 `deepseek-v4-pro`，較舊的教學用 `deepseek-chat` 與 `deepseek-reasoner`；寫程式前請看官方的模型清單與 changelog | [api-docs.deepseek.com](https://api-docs.deepseek.com/) | ✅（頁面）／🔎（細節取自摘要） |
+| 技術報告 | DeepSeek-V2（MLA）、V3（MoE，總參數 671B、每 token 啟用約 37B）、R1（以強化學習強化推理），對應本庫 [Transformer-Attention](Transformer-Attention.md)（MLA）與 [Scaling-Laws](Scaling-Laws.md)（MoE、R1） | [V2](https://arxiv.org/abs/2405.04434)、[V3](https://arxiv.org/abs/2412.19437)、[R1](https://arxiv.org/abs/2501.12948) | ✅ |
+| GitHub 組織 | 開源模型、工具與範例專案；網址取自第三方指南，這次沒查到各專案（如 V3、R1）的 README | [github.com/deepseek-ai](https://github.com/deepseek-ai) | 🔎 |
+| freeCodeCamp：DeepSeek-R1 入門課 | freeCodeCamp 的 YouTube 課程，由 Andrew Brown（ExamPro）開發、給初學者，約 1.5 小時，涵蓋模型架構、訓練方法與實際使用；下面連到說明它的文章，沒有看到影片本身的網址 | [How to use DeepSeek-R1](https://www.freecodecamp.org/news/how-to-use-deepseek-r1/) | ✅（文章）／🔎（影片網址） |
+| Skillsoft：*Introduction to DeepSeek-R1 and Reasoning Models* | 說明什麼是推理模型、與一般 LLM 的差別，以及 R1 怎麼做出來；我沒有確認是否收費 | [Skillsoft 課程頁](https://skillsoft.com/course/introduction-to-deepseek-r1-and-reasoning-models-e61eac94-67a1-49a1-a346-1d6f1c697c10) | ✅（頁面） |
+
+> 這一節**沒有查到**：Hugging Face 的 Open-R1 專案頁、DeepLearning.AI 的 DeepSeek 課程、DeepSeek 在 Hugging Face 的頁面、各專案的 GitHub README。這不代表它們不存在。搜尋結果有不少 Udemy、Coursera、UDAO 的第三方課程（有講 GRPO 的理論課，也有用 Ollama 在本機跑 R1 的實作課），我沒有採用，因為無法判斷品質與時效。我**沒有開啟任何頁面**；模型版本更新很快，教學與課程可能對應較舊的模型，使用前先確認。
 
 ---
 
@@ -348,9 +365,10 @@ Hugging Face 把課程集中在 [Hugging Face Learn](https://huggingface.co/lear
 - 這份清單不評價資源品質，也沒有涵蓋所有主題（例如電腦視覺、語音、強化學習專書）；它對應的是本筆記庫涵蓋的範圍。
 - **第 7 節（大學課程）的補充**：驗證日期是 2026-11-17。我**沒有開啟任何課程頁面**，簡介取自搜尋結果的摘要。標 🔎 的有 CS231n、CS229、CS25 的網址（各課程慣用的位置，沒有在搜尋結果直接看到）與清華 AI 素養網站（官網新聞轉述）。沒有核對的還有：各課程的開課學期與是否仍開放、哪些有完整錄影、教師名單、CS224N 官方 YouTube 播放清單、CS231n 目前一期是否公開錄影、浙大《機器學習》的主講人。
 - **第 7 節這次沒查到、因此沒有列的課程**：北大的深度學習與大模型課程、清華與浙大專門的大模型公開課、MIT 6.034 與 6.036。這不代表它們不存在；其他知名學校（例如 Berkeley、CMU、Harvard 的 CS50 AI）也沒有涵蓋，要擴充請指定學校。
-- **第 5.2 節（模型廠商）的補充**：驗證日期是 2026-11-17；我**沒有開啟任何網站**。標 🔎 的有 Claude Cookbook、Gemini API 文件、Google AI Studio、DeepSeek API 文件與 GitHub 組織的網址；Anthropic Academy 的課程數、`anthropics/courses` 的時效、DeepSeek 的 API 模型名稱與 base URL 也都沒有核對。沒查到的項目見該節最後一段。
+- **第 5.2 節（模型廠商）的補充**：驗證日期是 2026-11-17；我**沒有開啟任何網站**。標 🔎 的有 Claude Cookbook、Gemini API 文件、Google AI Studio 與 DeepSeek GitHub 組織的網址；Anthropic Academy 的課程數、`anthropics/courses` 的時效、DeepSeek 的 API 模型名稱各來源說法不一（見 5.5 節）。沒查到的項目見該節最後一段。
 - **第 5.3 節（Google Gemini）的補充**：我**沒有開啟任何頁面**；Google AI Studio 的網址取自搜尋摘要（🔎）；Google Skills 站內的課程網址沒有查到，所以只連到官方部落格。沒有核對的還有：各課程是否仍開放、是否收費、有沒有中文、GEAR 方案的細節。
 - **第 5.4 節（OpenAI）的補充**：我**沒有開啟任何頁面**；OpenAI Academy 平台網址（`academy.openai.com`）取自搜尋摘要（🔎），官方幫助中心頁面是搜尋結果直接回傳的（✅）。沒有核對的還有：Academy 的課程數與註冊方式、哪些課有結業證書、新版 prompt 指南的網址。
+- **第 5.5 節（DeepSeek）的補充**：我**沒有開啟任何頁面**；API 文件頁面是搜尋結果直接回傳的（✅），base URL 與模型名稱取自搜尋摘要，且各來源不一致；GitHub 組織網址取自第三方指南（🔎）；freeCodeCamp 課程只連到說明它的文章。沒有核對的還有：Skillsoft 課程是否收費、課程對應的模型版本。
 - 若發現連結失效或內容有誤，請在該項目標示 ⚠️ 並改為官方連結。
 
 ---
@@ -387,3 +405,4 @@ Hugging Face 把課程集中在 [Hugging Face Learn](https://huggingface.co/lear
 - 模型廠商（第 5.2 節）：<https://platform.claude.com/docs/en/>、<https://platform.claude.com/docs/en/api/overview>、<https://platform.claude.com/docs/zh-TW/api/overview>、<https://anthropic.skilljar.com/>、<https://anthropic.com/learn>、<https://github.com/anthropics/courses>、<https://github.com/anthropics/claude-cookbooks>（網址未直接見於搜尋結果）、<https://developers.openai.com>、<https://developers.openai.com/api/docs/models>、<https://developers.openai.com/api/docs/pricing>、<https://cookbook.openai.com>、<https://developers.openai.com/cookbook>、<https://ai.google.dev/gemini-api/docs>、<https://ai.google.dev/gemini-api/cookbook>、<https://github.com/google-gemini/cookbook>、<https://aistudio.google.com>、<https://api-docs.deepseek.com>、<https://github.com/deepseek-ai>
 - Google Gemini 學習（第 5.3 節）：<https://ai.google.dev/gemini-api/docs/prompting-strategies>、<https://cloud.google.com/blog/topics/training-certifications/new-gemini-courses-for-financial-services-and-legal-teams>、<https://cloud.google.com/learn/training/machinelearning-ai>、<https://www.coursera.org/courses?query=gemini>
 - OpenAI 學習（第 5.4 節）：<https://help.openai.com/en/articles/20001270-openai-academy-courses>、<https://academy.openai.com>（網址取自搜尋摘要）、<https://help.openai.com/en/articles/6654000-prompt-engineering-guide>
+- DeepSeek 學習（第 5.5 節）：<https://api-docs.deepseek.com/>、<https://www.freecodecamp.org/news/how-to-use-deepseek-r1/>、<https://skillsoft.com/course/introduction-to-deepseek-r1-and-reasoning-models-e61eac94-67a1-49a1-a346-1d6f1c697c10>
