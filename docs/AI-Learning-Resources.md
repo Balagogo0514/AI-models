@@ -1,6 +1,6 @@
 # AI 學習資源
 
-> 資料日期：2026-11-16（第 7 節「大學課程」為 2026-11-17）  
+> 資料日期：2026-11-16（第 5.2 節「模型廠商」與第 7 節「大學課程」為 2026-11-17）  
 > 範圍：整理學習 AI 模型、LLM 與 Agent 的課程、書籍、論文、大學公開課、官方文件與持續追蹤的來源，並對應到本筆記庫的文件。  
 > 讀法：每個資源都標示驗證狀態——**✅** 表示我查到官方頁面、出版方頁面，或本庫文件已引用；**🔎** 表示只有二手來源確認它存在，連結與內容請自行核對。課程、書籍與網站會更新，請以官方頁面為準。
 
@@ -9,6 +9,7 @@
 - **非技術背景**：先看吳恩達的 *AI for Everyone*（不需寫程式），了解 AI 能做什麼、怎麼導入與對社會的影響。
 - **想建立直覺**：先看 3Blue1Brown 的[神經網路系列](https://www.3blue1brown.com/neural-networks)，再看 Karpathy 的 [*Neural Networks: Zero to Hero*](https://karpathy.ai/zero-to-hero.html)；想先聽概念，可看他的 [*Intro to Large Language Models*](https://www.youtube.com/watch?v=zjkBMFhNj_g) 演講；更多影片見他的 [YouTube 頻道](https://www.youtube.com/@AndrejKarpathy)。
 - **想自己動手**：Karpathy 的[系列](https://karpathy.ai/zero-to-hero.html)（影片在他的 [YouTube 頻道](https://www.youtube.com/@AndrejKarpathy)） → Raschka 的 *Build a Large Language Model (From Scratch)* → Stanford CS336。
+- **想看各家模型的官方文件與範例**：Claude、OpenAI、Gemini、DeepSeek 的入口都在第 5.2 節。
 - **想用 LLM 做應用或 Agent**：Chip Huyen 的 *AI Engineering*、Hugging Face 的 Agents Course、Anthropic 的 *Building effective agents*，再讀各家官方文件。
 - **偏好中文**：台大李宏毅老師的課程是最常被推薦的起點，影片主頁見第 6 節的 [YouTube 頻道](https://www.youtube.com/@HungyiLeeNTU/videos)。
 - **想上大學公開課**：史丹佛、MIT、清華、北大、浙大的課程，每門都附連結，見第 7 節。
@@ -123,7 +124,9 @@
 
 ---
 
-## 5. Agent 與開發工具：官方文件
+## 5. 官方文件：Agent 工具與模型廠商
+
+### 5.1 Agent 與開發工具
 
 ![圖：官方文件對應本筆記庫的哪份文件](figures/ai-learning-resources-docs-map.svg)
 
@@ -135,6 +138,27 @@
 | [Model Context Protocol 文件](https://modelcontextprotocol.io/docs/getting-started/intro) | MCP 的官方介紹與規格；文件有依協議版本分開的副本，引用時要註明版本 | [Claude-Code-CLI](Claude-Code-CLI.md) | ✅ |
 | [OpenAI API：Agents 指南](https://developers.openai.com/api/docs/guides/agents) | OpenAI 的 agent 開發指南 | [OpenAI-Python-Agent](OpenAI-Python-Agent.md) | ✅（本庫已引用） |
 | [Codex 文件](https://developers.openai.com/codex/cli) | Codex CLI、sandbox、subagents 等 | [CodeX-CLI](CodeX-CLI.md)、[CodeX-Agent](CodeX-Agent.md) | ✅（本庫已引用） |
+
+### 5.2 模型廠商：Claude、OpenAI、Gemini、DeepSeek
+
+![圖：Claude、OpenAI、Gemini、DeepSeek 在官方文件、範例、課程、論文與技術文章查到的連結](figures/ai-learning-resources-vendor-matrix.svg)
+
+| 廠商 | 資源 | 內容 | 本庫對應 | 狀態 |
+|---|---|---|---|---|
+| Claude | [Claude 開發者文件](https://platform.claude.com/docs/en/)（[API 概覽](https://platform.claude.com/docs/en/api/overview)、[繁體中文版](https://platform.claude.com/docs/zh-TW/api/overview)） | API、Messages、認證與限制等；搜尋結果也有 `docs.claude.com`，應是較早的網址 | [Claude-Model](Claude-Model.md)、[Claude-Code-CLI](Claude-Code-CLI.md) | ✅ |
+| Claude | [Anthropic Academy](https://anthropic.skilljar.com/)（[anthropic.com/learn](https://anthropic.com/learn)） | 免費、自學的訓練平台，涵蓋不寫程式、開發者與雲端平台等方向；課程數各來源說法不一（13 到 21 門不等），請以官方頁面為準 | — | ✅ |
+| Claude | [anthropics/courses](https://github.com/anthropics/courses) | Jupyter 筆記本教程：API 基礎、prompt engineering、tool use。有來源指出最後更新在 2024 年 6 月，範例偏向較舊的模型，使用前先看目前的模型名稱 | — | ✅（專案）／🔎（時效） |
+| Claude | [Claude Cookbook](https://github.com/anthropics/claude-cookbooks)（舊稱 anthropic-cookbook） | 官方的 Jupyter 範例集，依主題整理；我沒有看到這個網址直接出現在搜尋結果，是依「主要倉庫」的說法與舊名推得，請自行核對 | — | 🔎 |
+| OpenAI | [OpenAI 開發者文件](https://developers.openai.com) | APIs、模型與 ChatGPT apps 的入口；本庫已引用其[模型頁](https://developers.openai.com/api/docs/models)與[定價頁](https://developers.openai.com/api/docs/pricing) | [OpenAI-Model](OpenAI-Model.md)、[CodeX-CLI](CodeX-CLI.md) | ✅ |
+| OpenAI | [OpenAI Cookbook](https://cookbook.openai.com)（[developers.openai.com/cookbook](https://developers.openai.com/cookbook)） | 常見 API 任務的範例程式與指南 | — | ✅ |
+| Gemini | [Gemini API 文件](https://ai.google.dev/gemini-api/docs) | 官方 API 文件；網址取自 Cookbook README 指向 `ai.google.dev` 的說法，沒有在搜尋結果直接看到 `/gemini-api/docs` | [Transformer-Attention](Transformer-Attention.md)（Gemini 1.0 的 MQA） | 🔎 |
+| Gemini | [Gemini API Cookbook（ai.google.dev）](https://ai.google.dev/gemini-api/cookbook)、[google-gemini/cookbook（GitHub）](https://github.com/google-gemini/cookbook) | 官方範例集；快速入門涵蓋 Batch API、Live API、grounding 等。GitHub 上有不少 fork，請用 `google-gemini/cookbook` 這個官方倉庫 | — | ✅ |
+| Gemini | [Google AI Studio](https://aistudio.google.com) | 用 Google 帳號登入、建立 API key 的入口；網址取自搜尋摘要的文字，沒有直接出現在結果 | — | 🔎 |
+| DeepSeek | [DeepSeek API 文件](https://api-docs.deepseek.com) | 官方 API 文件；第三方指南列出此網址，並說 OpenAI SDK 可改用自訂 base URL；我沒有確認，請以官方頁面為準 | — | 🔎 |
+| DeepSeek | [github.com/deepseek-ai](https://github.com/deepseek-ai) | 開源模型、工具與範例專案的 GitHub 組織；網址取自第三方指南 | — | 🔎 |
+| DeepSeek | 技術報告：[DeepSeek-V2（MLA）](https://arxiv.org/abs/2405.04434)、[DeepSeek-V3](https://arxiv.org/abs/2412.19437)、[DeepSeek-R1](https://arxiv.org/abs/2501.12948) | V3 為 MoE，總參數 671B、每 token 啟用約 37B；R1 以強化學習強化推理 | [Transformer-Attention](Transformer-Attention.md)（MLA）、[Scaling-Laws](Scaling-Laws.md)（MoE、R1） | ✅ |
+
+> 這次**沒有查到**：OpenAI Academy 的可確認連結、Google DeepMind 的 Gemini 模型頁、DeepSeek 在 Hugging Face 的頁面、Gemini 與 OpenAI 的模型技術報告。這不代表它們不存在。模型名稱與價格變動很快，請以各家官方頁面為準；本庫的 [Claude-Model](Claude-Model.md) 與 [OpenAI-Model](OpenAI-Model.md) 記錄了兩家的模型與價格，並標有資料日期。
 
 ---
 
@@ -273,6 +297,7 @@
 - 這份清單不評價資源品質，也沒有涵蓋所有主題（例如電腦視覺、語音、強化學習專書）；它對應的是本筆記庫涵蓋的範圍。
 - **第 7 節（大學課程）的補充**：驗證日期是 2026-11-17。我**沒有開啟任何課程頁面**，簡介取自搜尋結果的摘要。標 🔎 的有 CS231n、CS229、CS25 的網址（各課程慣用的位置，沒有在搜尋結果直接看到）與清華 AI 素養網站（官網新聞轉述）。沒有核對的還有：各課程的開課學期與是否仍開放、哪些有完整錄影、教師名單、CS224N 官方 YouTube 播放清單、CS231n 目前一期是否公開錄影、浙大《機器學習》的主講人。
 - **第 7 節這次沒查到、因此沒有列的課程**：北大的深度學習與大模型課程、清華與浙大專門的大模型公開課、MIT 6.034 與 6.036。這不代表它們不存在；其他知名學校（例如 Berkeley、CMU、Harvard 的 CS50 AI）也沒有涵蓋，要擴充請指定學校。
+- **第 5.2 節（模型廠商）的補充**：驗證日期是 2026-11-17；我**沒有開啟任何網站**。標 🔎 的有 Claude Cookbook、Gemini API 文件、Google AI Studio、DeepSeek API 文件與 GitHub 組織的網址；Anthropic Academy 的課程數、`anthropics/courses` 的時效、DeepSeek 的 API 模型名稱與 base URL 也都沒有核對。沒查到的項目見該節最後一段。
 - 若發現連結失效或內容有誤，請在該項目標示 ⚠️ 並改為官方連結。
 
 ---
@@ -294,7 +319,7 @@
 - 李宏毅 2024 春季課程資料：<https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0223/0223_course.pdf>
 - 李宏毅 YouTube 頻道（網址取自二手彙整，未開啟）：<https://www.youtube.com/@HungyiLeeNTU/videos>
 - Epoch AI：<https://epoch.ai/blog/will-we-run-out-of-data>
-- 論文（arXiv）：<https://arxiv.org/abs/1706.03762>、<https://arxiv.org/abs/2001.08361>、<https://arxiv.org/abs/2203.15556>、<https://arxiv.org/abs/2005.11401>、<https://arxiv.org/abs/2205.14135>、<https://arxiv.org/abs/2305.13245>、<https://arxiv.org/abs/2307.03172>、<https://arxiv.org/abs/2405.04434>、<https://arxiv.org/abs/2501.12948>、<https://arxiv.org/abs/2408.04619>（Transformer Explainer）
+- 論文（arXiv）：<https://arxiv.org/abs/1706.03762>、<https://arxiv.org/abs/2001.08361>、<https://arxiv.org/abs/2203.15556>、<https://arxiv.org/abs/2005.11401>、<https://arxiv.org/abs/2205.14135>、<https://arxiv.org/abs/2305.13245>、<https://arxiv.org/abs/2307.03172>、<https://arxiv.org/abs/2405.04434>、<https://arxiv.org/abs/2501.12948>、<https://arxiv.org/abs/2408.04619>（Transformer Explainer）、<https://arxiv.org/abs/2412.19437>（DeepSeek-V3）
 - Karpathy 的 GitHub 專案：<https://github.com/karpathy/ng-video-lecture>、<https://github.com/karpathy/nanoGPT>
 - 官方文件：<https://code.claude.com/docs/en/features-overview.md>、<https://developers.openai.com/api/docs/guides/agents>、<https://developers.openai.com/codex/cli>
 - 課程與教材入口：<https://huggingface.co/learn>、<https://d2l.ai>、<https://www.3blue1brown.com>
@@ -306,3 +331,4 @@
 - 北大（第 7.4 節）：<https://icourse163.org/course/PKU-1002188003>
 - 浙大（第 7.5 節）：<https://www.icourse163.org/course/ZJU-1003377027>、<https://www.icourse163.org/course/ZJU-1206573810>
 - 大學課程平台（第 7.6 節）：<https://www.icourse163.org>、<https://www.xuetangx.com>、<https://higher.smartedu.cn>
+- 模型廠商（第 5.2 節）：<https://platform.claude.com/docs/en/>、<https://platform.claude.com/docs/en/api/overview>、<https://platform.claude.com/docs/zh-TW/api/overview>、<https://anthropic.skilljar.com/>、<https://anthropic.com/learn>、<https://github.com/anthropics/courses>、<https://github.com/anthropics/claude-cookbooks>（網址未直接見於搜尋結果）、<https://developers.openai.com>、<https://developers.openai.com/api/docs/models>、<https://developers.openai.com/api/docs/pricing>、<https://cookbook.openai.com>、<https://developers.openai.com/cookbook>、<https://ai.google.dev/gemini-api/docs>、<https://ai.google.dev/gemini-api/cookbook>、<https://github.com/google-gemini/cookbook>、<https://aistudio.google.com>、<https://api-docs.deepseek.com>、<https://github.com/deepseek-ai>
