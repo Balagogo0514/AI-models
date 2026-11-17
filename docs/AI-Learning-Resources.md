@@ -1,6 +1,6 @@
 # AI 學習資源
 
-> 資料日期：2026-11-16（第 3.4 節「Hugging Face」、第 5.3 節「Google Gemini」、第 5.2 節「模型廠商」與第 7 節「大學課程」為 2026-11-17）  
+> 資料日期：2026-11-16（第 3.4 節「Hugging Face」、第 5.3 節「Google Gemini」、第 5.4 節「OpenAI」、第 5.2 節「模型廠商」與第 7 節「大學課程」為 2026-11-17）  
 > 範圍：整理學習 AI 模型、LLM 與 Agent 的課程、書籍、論文、大學公開課、官方文件與持續追蹤的來源，並對應到本筆記庫的文件。  
 > 讀法：每個資源都標示驗證狀態——**✅** 表示我查到官方頁面、出版方頁面，或本庫文件已引用；**🔎** 表示只有二手來源確認它存在，連結與內容請自行核對。課程、書籍與網站會更新，請以官方頁面為準。
 
@@ -10,6 +10,7 @@
 - **想建立直覺**：先看 3Blue1Brown 的[神經網路系列](https://www.3blue1brown.com/neural-networks)，再看 Karpathy 的 [*Neural Networks: Zero to Hero*](https://karpathy.ai/zero-to-hero.html)；想先聽概念，可看他的 [*Intro to Large Language Models*](https://www.youtube.com/watch?v=zjkBMFhNj_g) 演講；更多影片見他的 [YouTube 頻道](https://www.youtube.com/@AndrejKarpathy)。
 - **想自己動手**：Karpathy 的[系列](https://karpathy.ai/zero-to-hero.html)（影片在他的 [YouTube 頻道](https://www.youtube.com/@AndrejKarpathy)） → Raschka 的 *Build a Large Language Model (From Scratch)* → Stanford CS336。
 - **想看各家模型的官方文件與範例**：Claude、OpenAI、Gemini、DeepSeek 的入口都在第 5.2 節。
+- **想學 OpenAI**：Academy、prompt 指南與 Cookbook，見第 5.4 節。
 - **想學 Google Gemini**：Cookbook、prompt 設計策略、Google Skills 與 Coursera 課程，見第 5.3 節。
 - **想用 LLM 做應用或 Agent**：Chip Huyen 的 *AI Engineering*、Hugging Face 的 [Agents Course](https://huggingface.co/learn/agents-course)、Anthropic 的 *Building effective agents*，再讀各家官方文件。
 - **偏好中文**：台大李宏毅老師的課程是最常被推薦的起點，影片主頁見第 6 節的 [YouTube 頻道](https://www.youtube.com/@HungyiLeeNTU/videos)。
@@ -175,7 +176,7 @@ Hugging Face 把課程集中在 [Hugging Face Learn](https://huggingface.co/lear
 | DeepSeek | [github.com/deepseek-ai](https://github.com/deepseek-ai) | 開源模型、工具與範例專案的 GitHub 組織；網址取自第三方指南 | — | 🔎 |
 | DeepSeek | 技術報告：[DeepSeek-V2（MLA）](https://arxiv.org/abs/2405.04434)、[DeepSeek-V3](https://arxiv.org/abs/2412.19437)、[DeepSeek-R1](https://arxiv.org/abs/2501.12948) | V3 為 MoE，總參數 671B、每 token 啟用約 37B；R1 以強化學習強化推理 | [Transformer-Attention](Transformer-Attention.md)（MLA）、[Scaling-Laws](Scaling-Laws.md)（MoE、R1） | ✅ |
 
-> 這次**沒有查到**：OpenAI Academy 的可確認連結、Google DeepMind 的 Gemini 模型頁、DeepSeek 在 Hugging Face 的頁面、Gemini 與 OpenAI 的模型技術報告。這不代表它們不存在。模型名稱與價格變動很快，請以各家官方頁面為準；本庫的 [Claude-Model](Claude-Model.md) 與 [OpenAI-Model](OpenAI-Model.md) 記錄了兩家的模型與價格，並標有資料日期。
+> 這次**沒有查到**：Google DeepMind 的 Gemini 模型頁、DeepSeek 在 Hugging Face 的頁面、Gemini 與 OpenAI 的模型技術報告。這不代表它們不存在。模型名稱與價格變動很快，請以各家官方頁面為準；本庫的 [Claude-Model](Claude-Model.md) 與 [OpenAI-Model](OpenAI-Model.md) 記錄了兩家的模型與價格，並標有資料日期。
 
 ### 5.3 Google Gemini 學習資源
 
@@ -193,6 +194,22 @@ Hugging Face 把課程集中在 [Hugging Face Learn](https://huggingface.co/lear
 | Coursera：Google Cloud 的 Gemini 課程 | 例如 *Introduction to Google Workspace with Gemini*、*Gemini in Google Docs／Sheets／Slides*、*Gemini for Application Developers* | [Coursera 搜尋「gemini」](https://www.coursera.org/courses?query=gemini) | ✅（搜尋頁） |
 
 > 這一節**沒有查到**：Google AI Essentials、Kaggle 的 Generative AI Intensive 課程、Google for Developers 的 codelabs、DeepLearning.AI 與 Google 合作的 Gemini 短課，以及 Google DeepMind 的 Gemini 模型頁。這不代表它們不存在或未開放。搜尋結果有不少 Udemy、部落格的第三方課程整理，我沒有採用，因為無法判斷品質與時效。我**沒有開啟任何頁面**，課程是否仍開放、是否收費、有沒有中文，都請以頁面為準。
+
+### 5.4 OpenAI 學習資源
+
+5.2 節列了 OpenAI 的開發者文件與 Cookbook；這一節補學習用資源。
+
+![圖：依目標選 OpenAI 的學習資源](figures/ai-learning-resources-openai.svg)
+
+| 資源 | 內容 | 連結 | 狀態 |
+|---|---|---|---|
+| OpenAI Academy | OpenAI 的免費學習平台。官方幫助中心說課程免費、自學，主題涵蓋在工作上使用 AI、用 AI 開發、帶領組織導入 AI，以及用 AI 教學；不登入也能瀏覽，但要開始課程、儲存進度需要 ChatGPT 帳號。第三方文章說部分課程完成後有結業證書，並有適合入門的 *AI Foundations*；也有第三方說需要 email 與 LinkedIn，與官方說法不同，請以官方為準 | [幫助中心：OpenAI Academy courses](https://help.openai.com/en/articles/20001270-openai-academy-courses)、[academy.openai.com](https://academy.openai.com) | ✅（幫助中心）／🔎（平台網址） |
+| Prompt 指南 | OpenAI 幫助中心的撰寫 prompt 指南（頁面標題也出現過 *Guidance for writing effective prompts*）。搜尋結果也指向較舊的 `platform.openai.com/docs/guides/prompt-engineering`，文件可能已搬到 `developers.openai.com`，我沒有確認新位置 | [幫助中心：Prompt engineering guide](https://help.openai.com/en/articles/6654000-prompt-engineering-guide) | ✅ |
+| OpenAI Cookbook | 常見 API 任務的範例程式與指南（同 5.2 節） | [cookbook.openai.com](https://cookbook.openai.com) | ✅ |
+| Agents 指南與 Codex 文件 | OpenAI 的 agent 開發指南、Codex CLI 等（同 5.1 節） | [Agents 指南](https://developers.openai.com/api/docs/guides/agents)、[Codex 文件](https://developers.openai.com/codex/cli) | ✅ |
+| 模型與定價頁 | 開發者文件裡的模型與價格；本庫的 [OpenAI-Model](OpenAI-Model.md) 整理了模型與價格並標有資料日期 | [模型](https://developers.openai.com/api/docs/models)、[定價](https://developers.openai.com/api/docs/pricing) | ✅ |
+
+> 這一節**沒有查到**：OpenAI 與 DeepLearning.AI 合作的短課（只有第三方的列表）、OpenAI Agents SDK 的專門課程、新版 prompt 指南在 `developers.openai.com` 的網址。這不代表它們不存在。我**沒有開啟任何頁面**；OpenAI Academy 的課程數、是否收費與註冊方式，請以官方頁面為準。
 
 ---
 
@@ -333,6 +350,7 @@ Hugging Face 把課程集中在 [Hugging Face Learn](https://huggingface.co/lear
 - **第 7 節這次沒查到、因此沒有列的課程**：北大的深度學習與大模型課程、清華與浙大專門的大模型公開課、MIT 6.034 與 6.036。這不代表它們不存在；其他知名學校（例如 Berkeley、CMU、Harvard 的 CS50 AI）也沒有涵蓋，要擴充請指定學校。
 - **第 5.2 節（模型廠商）的補充**：驗證日期是 2026-11-17；我**沒有開啟任何網站**。標 🔎 的有 Claude Cookbook、Gemini API 文件、Google AI Studio、DeepSeek API 文件與 GitHub 組織的網址；Anthropic Academy 的課程數、`anthropics/courses` 的時效、DeepSeek 的 API 模型名稱與 base URL 也都沒有核對。沒查到的項目見該節最後一段。
 - **第 5.3 節（Google Gemini）的補充**：我**沒有開啟任何頁面**；Google AI Studio 的網址取自搜尋摘要（🔎）；Google Skills 站內的課程網址沒有查到，所以只連到官方部落格。沒有核對的還有：各課程是否仍開放、是否收費、有沒有中文、GEAR 方案的細節。
+- **第 5.4 節（OpenAI）的補充**：我**沒有開啟任何頁面**；OpenAI Academy 平台網址（`academy.openai.com`）取自搜尋摘要（🔎），官方幫助中心頁面是搜尋結果直接回傳的（✅）。沒有核對的還有：Academy 的課程數與註冊方式、哪些課有結業證書、新版 prompt 指南的網址。
 - 若發現連結失效或內容有誤，請在該項目標示 ⚠️ 並改為官方連結。
 
 ---
@@ -368,3 +386,4 @@ Hugging Face 把課程集中在 [Hugging Face Learn](https://huggingface.co/lear
 - 大學課程平台（第 7.6 節）：<https://www.icourse163.org>、<https://www.xuetangx.com>、<https://higher.smartedu.cn>
 - 模型廠商（第 5.2 節）：<https://platform.claude.com/docs/en/>、<https://platform.claude.com/docs/en/api/overview>、<https://platform.claude.com/docs/zh-TW/api/overview>、<https://anthropic.skilljar.com/>、<https://anthropic.com/learn>、<https://github.com/anthropics/courses>、<https://github.com/anthropics/claude-cookbooks>（網址未直接見於搜尋結果）、<https://developers.openai.com>、<https://developers.openai.com/api/docs/models>、<https://developers.openai.com/api/docs/pricing>、<https://cookbook.openai.com>、<https://developers.openai.com/cookbook>、<https://ai.google.dev/gemini-api/docs>、<https://ai.google.dev/gemini-api/cookbook>、<https://github.com/google-gemini/cookbook>、<https://aistudio.google.com>、<https://api-docs.deepseek.com>、<https://github.com/deepseek-ai>
 - Google Gemini 學習（第 5.3 節）：<https://ai.google.dev/gemini-api/docs/prompting-strategies>、<https://cloud.google.com/blog/topics/training-certifications/new-gemini-courses-for-financial-services-and-legal-teams>、<https://cloud.google.com/learn/training/machinelearning-ai>、<https://www.coursera.org/courses?query=gemini>
+- OpenAI 學習（第 5.4 節）：<https://help.openai.com/en/articles/20001270-openai-academy-courses>、<https://academy.openai.com>（網址取自搜尋摘要）、<https://help.openai.com/en/articles/6654000-prompt-engineering-guide>
