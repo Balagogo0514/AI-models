@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-labelledby="t d">
+  <title id="t">Google Gemini 學習資源：依目標選起點</title>
+  <desc id="d">想用 Gemini API 寫第一個 prompt，看 Gemini API Cookbook 的 Prompting Quickstart 與 prompt 設計策略文件；想取得 API key，從 Google AI Studio 開始，網址待核對；想看免費影片，看 Google Skills 的 Gemini 影片組；想系統學習，看 Google Cloud Training 的機器學習與 AI 課程；想學 Workspace 裡的 Gemini，看 Google Cloud 在 Coursera 的 Gemini 課程。這是依各資源定位所做的歸納。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="418.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">我想…… → Gemini 的哪個資源</text>
+  <rect class="acc" x="12" y="44" width="270" height="60" rx="10"/>
+  <text x="24" y="79.0">用 Gemini API 寫第一個 prompt</text>
+  <line class="ln" x1="282" y1="74.0" x2="316" y2="74.0" marker-end="url(#a)"/>
+  <rect class="good" x="318" y="44" width="310" height="60" rx="10"/>
+  <text class="b" x="330" y="68.0">Gemini API Cookbook</text>
+  <text class="s" x="330" y="90.0">已查到：Prompting Quickstart 等 Colab 筆記本</text>
+  <rect class="acc" x="12" y="112" width="270" height="60" rx="10"/>
+  <text x="24" y="147.0">學怎麼設計 prompt</text>
+  <line class="ln" x1="282" y1="142.0" x2="316" y2="142.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="112" width="310" height="60" rx="10"/>
+  <text class="b" x="330" y="136.0">Prompt 設計策略文件</text>
+  <text class="s" x="330" y="158.0">已查到：ai.google.dev 官方文件</text>
+  <rect class="acc" x="12" y="180" width="270" height="60" rx="10"/>
+  <text x="24" y="215.0">取得 API key 試用</text>
+  <line class="ln" x1="282" y1="210.0" x2="316" y2="210.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="180" width="310" height="60" rx="10"/>
+  <text class="b" x="330" y="204.0">Google AI Studio</text>
+  <text class="s" x="330" y="226.0">待核對：網址取自搜尋摘要</text>
+  <rect class="acc" x="12" y="248" width="270" height="60" rx="10"/>
+  <text x="24" y="283.0">看免費影片課</text>
+  <line class="ln" x1="282" y1="278.0" x2="316" y2="278.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="248" width="310" height="60" rx="10"/>
+  <text class="b" x="330" y="272.0">Google Skills 的 Gemini 影片組</text>
+  <text class="s" x="330" y="294.0">已查到：官方部落格說明（沒有直接的課程網址）</text>
+  <rect class="acc" x="12" y="316" width="270" height="60" rx="10"/>
+  <text x="24" y="351.0">學 Workspace 裡的 Gemini</text>
+  <line class="ln" x1="282" y1="346.0" x2="316" y2="346.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="316" width="310" height="60" rx="10"/>
+  <text class="b" x="330" y="340.0">Coursera：Google Cloud 的 Gemini 課程</text>
+  <text class="s" x="330" y="362.0">已查到：Coursera 搜尋頁</text>
+  <text class="s" x="320" y="404" text-anchor="middle">這是依各資源定位所做的歸納；驗證狀態見第 11 節</text>
+</svg>
