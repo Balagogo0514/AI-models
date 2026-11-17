@@ -4,6 +4,12 @@ AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理�
 
 > 共 17 篇筆記。點標題即可開啟對應文件。
 
+## 學習資源
+
+| 筆記 | 內容 |
+|---|---|
+| [AI 學習資源](docs/AI-Learning-Resources.md) | 學習路徑、課程、書籍、論文清單（對應本庫文件）、官方文件、中文資源與持續追蹤的來源，並標示每項的驗證狀態 |
+
 ## 模型與訓練
 
 | 筆記 | 內容 |
@@ -29,12 +35,6 @@ AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理�
 | [Codex CLI](docs/CodeX-CLI.md) | OpenAI Codex CLI 的指令、sandbox、approval、設定的完整參考 |
 | [Codex 多 Agent 與 Code Review](docs/CodeX-Agent.md) | Codex 的 Subagents、Cloud、`codex exec` 平行與 code review 做法 |
 | [Python + OpenAI coredump 分析 Agent](docs/OpenAI-Python-Agent.md) | 以 Python 控制的 coredump 自動分析流程設計 |
-
-## 學習資源
-
-| 筆記 | 內容 |
-|---|---|
-| [AI 學習資源](docs/AI-Learning-Resources.md) | 學習路徑、課程、書籍、論文清單（對應本庫文件）、官方文件、中文資源與持續追蹤的來源，並標示每項的驗證狀態 |
 
 ## 其他
 

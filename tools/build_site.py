@@ -27,6 +27,9 @@ SITE_HEADING = "AI 模型與 Agent 筆記庫"
 
 # 首頁分類：(分類名稱, [(檔名不含 .md, 一句話說明), ...])
 CATS = [
+    ("學習資源", [
+        ("AI-Learning-Resources", "學習路徑、課程、書籍、論文清單、官方文件與中文資源，標示每項的驗證狀態"),
+    ]),
     ("模型與訓練", [
         ("Scaling-Laws", "模型效能如何隨參數量、資料量、運算量變化的冪律關係"),
         ("Post-Training", "後訓練、RL 的分類，以及企業知識整合時 RAG 夠不夠"),
@@ -46,9 +49,6 @@ CATS = [
         ("CodeX-CLI", "OpenAI Codex CLI 的指令、sandbox、approval、設定的完整參考"),
         ("CodeX-Agent", "Codex 的 Subagents、Cloud、codex exec 平行與 code review 做法"),
         ("OpenAI-Python-Agent", "以 Python 控制的 coredump 自動分析流程設計"),
-    ]),
-    ("學習資源", [
-        ("AI-Learning-Resources", "學習路徑、課程、書籍、論文清單、官方文件與中文資源，標示每項的驗證狀態"),
     ]),
 ]
 
