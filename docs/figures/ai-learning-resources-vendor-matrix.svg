@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">Claude、OpenAI、Gemini、DeepSeek 的官方資源：文件、範例、課程、論文與技術文章</title>
+  <desc id="d">四家廠商在四種資源類型查到的連結。Claude：官方文件在 platform.claude.com，Anthropic Academy 與 anthropics/courses 是課程，Anthropic Engineering 是技術文章，cookbook 的網址待核對。OpenAI：官方文件在 developers.openai.com，範例是 Cookbook，課程這次沒查到 OpenAI Academy 的可確認連結。Gemini：文件網址待核對，範例是 ai.google.dev 的 Cookbook 與 GitHub 的 google-gemini/cookbook，課程沒查到。DeepSeek：API 文件網址待核對，論文有 V2、V3、R1 三篇技術報告，範例與課程沒查到。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">各家廠商：這次查到什麼</text>
+  <rect class="hd" x="12" y="44" width="616" height="26" rx="6"/>
+  <text class="b" x="20" y="62">廠商</text>
+  <text class="b" x="184.0" y="62" text-anchor="middle">官方文件／API</text>
+  <text class="b" x="306.0" y="62" text-anchor="middle">範例（cookbook）</text>
+  <text class="b" x="428.0" y="62" text-anchor="middle">課程</text>
+  <text class="b" x="550.0" y="62" text-anchor="middle">論文／技術文章</text>
+  <rect class="box" x="12" y="78" width="616" height="86" rx="8"/>
+  <text class="b" x="24" y="126">Claude</text>
+  <circle class="dotf" cx="184.0" cy="98" r="7"/>
+  <text x="184.0" y="122" text-anchor="middle">platform.</text>
+  <text x="184.0" y="137" text-anchor="middle">claude.com</text>
+  <circle class="dote" cx="306.0" cy="98" r="7"/>
+  <text x="306.0" y="122" text-anchor="middle">claude-</text>
+  <text x="306.0" y="137" text-anchor="middle">cookbooks</text>
+  <circle class="dotf" cx="428.0" cy="98" r="7"/>
+  <text x="428.0" y="122" text-anchor="middle">Anthropic Academy</text>
+  <text x="428.0" y="137" text-anchor="middle">anthropics/courses</text>
+  <circle class="dotf" cx="550.0" cy="98" r="7"/>
+  <text x="550.0" y="122" text-anchor="middle">Anthropic</text>
+  <text x="550.0" y="137" text-anchor="middle">Engineering</text>
+  <rect class="box" x="12" y="170" width="616" height="86" rx="8"/>
+  <text class="b" x="24" y="218">OpenAI</text>
+  <circle class="dotf" cx="184.0" cy="190" r="7"/>
+  <text x="184.0" y="214" text-anchor="middle">developers.</text>
+  <text x="184.0" y="229" text-anchor="middle">openai.com</text>
+  <circle class="dotf" cx="306.0" cy="190" r="7"/>
+  <text x="306.0" y="214" text-anchor="middle">Cookbook</text>
+  <text class="s" x="428.0" y="216" text-anchor="middle">—</text>
+  <text class="s" x="428.0" y="236" text-anchor="middle">沒查到</text>
+  <text class="s" x="550.0" y="216" text-anchor="middle">—</text>
+  <text class="s" x="550.0" y="236" text-anchor="middle">沒查到</text>
+  <rect class="box" x="12" y="262" width="616" height="86" rx="8"/>
+  <text class="b" x="24" y="310">Gemini</text>
+  <circle class="dote" cx="184.0" cy="282" r="7"/>
+  <text x="184.0" y="306" text-anchor="middle">ai.google.dev</text>
+  <text x="184.0" y="321" text-anchor="middle">（文件）</text>
+  <circle class="dotf" cx="306.0" cy="282" r="7"/>
+  <text x="306.0" y="306" text-anchor="middle">ai.google.dev</text>
+  <text x="306.0" y="321" text-anchor="middle">與 GitHub</text>
+  <text class="s" x="428.0" y="308" text-anchor="middle">—</text>
+  <text class="s" x="428.0" y="328" text-anchor="middle">沒查到</text>
+  <text class="s" x="550.0" y="308" text-anchor="middle">—</text>
+  <text class="s" x="550.0" y="328" text-anchor="middle">沒查到</text>
+  <rect class="box" x="12" y="354" width="616" height="86" rx="8"/>
+  <text class="b" x="24" y="402">DeepSeek</text>
+  <circle class="dote" cx="184.0" cy="374" r="7"/>
+  <text x="184.0" y="398" text-anchor="middle">api-docs.</text>
+  <text x="184.0" y="413" text-anchor="middle">deepseek.com</text>
+  <text class="s" x="306.0" y="400" text-anchor="middle">—</text>
+  <text class="s" x="306.0" y="420" text-anchor="middle">沒查到</text>
+  <text class="s" x="428.0" y="400" text-anchor="middle">—</text>
+  <text class="s" x="428.0" y="420" text-anchor="middle">沒查到</text>
+  <circle class="dotf" cx="550.0" cy="374" r="7"/>
+  <text x="550.0" y="398" text-anchor="middle">V2、V3、R1</text>
+  <text x="550.0" y="413" text-anchor="middle">技術報告</text>
+  <circle class="dotf" cx="24" cy="460" r="6"/>
+  <text class="s" x="36" y="465">已查到官方或平台頁面</text>
+  <circle class="dote" cx="190" cy="460" r="6"/>
+  <text class="s" x="202" y="465">連結待核對</text>
+  <text class="s" x="300" y="465">—　這次沒查到可確認的連結（不代表沒有）</text>
+  <text class="s" x="320" y="494" text-anchor="middle">詳細驗證狀態見第 11 節</text>
+</svg>
