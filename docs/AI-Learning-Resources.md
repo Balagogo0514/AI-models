@@ -34,6 +34,10 @@
 
 ## 2. 基礎：機器學習與深度學習
 
+![圖：依背景選起點——要不要寫程式、偏好中文、先看原理還是先寫程式](figures/ai-learning-resources-start.svg)
+
+> 圖中的分流是我依各資源的定位做的歸納，不是學校或作者的建議。
+
 | 資源 | 形式 | 適合 | 狀態 |
 |---|---|---|---|
 | [吳恩達：*AI for Everyone*](https://www.deeplearning.ai/courses/ai-for-everyone)（[Coursera 頁面](https://www.coursera.org/learn/ai-for-everyone)） | DeepLearning.AI 在 Coursera 開的入門課；DeepLearning.AI 頁面標示約 6 小時 54 分、35 支影片，共 4 週，第 3 週談在公司裡建 AI、第 4 週談 AI 與社會 | 非技術背景的人、想了解 AI 導入與策略的管理者；不需寫程式 | ✅ |
@@ -49,6 +53,8 @@
 ---
 
 ## 3. LLM 原理與動手實作
+
+![圖：LLM 由淺到深的學習路線，以及可以看每一層輸出的互動網站](figures/ai-learning-resources-llm-route.svg)
 
 ### 3.1 課程與影片
 
@@ -118,6 +124,8 @@
 ---
 
 ## 5. Agent 與開發工具：官方文件
+
+![圖：官方文件對應本筆記庫的哪份文件](figures/ai-learning-resources-docs-map.svg)
 
 | 資源 | 內容 | 本庫對應 | 狀態 |
 |---|---|---|---|

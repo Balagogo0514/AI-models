@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 490" role="img" aria-labelledby="t d">
+  <title id="t">LLM 原理與實作：由淺到深的路線，以及可以看每一層輸出的互動網站</title>
+  <desc id="d">左側是由淺到深的路線：先建立概念，看 Karpathy 的 Intro to Large Language Models 演講約 1 小時或 Deep Dive into LLMs 約 3 小時 31 分；再動手寫，看 Zero to Hero 與 Let&#x27;s build GPT 約 1 小時 56 分；最後完整實作，讀 Raschka 的 Build a Large Language Model From Scratch，再上 Stanford CS336，作業需要 GPU。右側是可以看每一層輸出的互動網站：LLM Visualization 是 3D 走讀，含 nano-GPT 與 GPT-2；Transformer Explainer 在瀏覽器跑 GPT-2，從注意力、前饋網路到 logits；BertViz 在 Jupyter 或 Colab 看所有層與 head 的注意力；LM Transparency Tool 做 logit lens 並看各 head 推升或壓低的 token。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="488.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">學習路線 × 看每一層的網站</text>
+  <text class="b" x="162" y="54" text-anchor="middle">學習路線（由淺到深）</text>
+  <text class="b" x="478" y="54" text-anchor="middle">看每一層的輸出（互動網站）</text>
+  <rect class="box" x="12.0" y="66.0" width="300" height="96" rx="8"/>
+  <text class="b" x="162" y="94" text-anchor="middle">1 先建立概念</text>
+  <text x="162" y="110" text-anchor="middle">Karpathy：Intro to Large Language Models</text>
+  <text x="162" y="126" text-anchor="middle">（約 1 小時）；Deep Dive into LLMs</text>
+  <text x="162" y="142" text-anchor="middle">（約 3 小時 31 分）</text>
+  <path class="ln" d="M162.0,163.0 L162.0,183.0" marker-end="url(#a)"/>
+  <rect class="acc" x="12.0" y="184.0" width="300" height="96" rx="8"/>
+  <text class="b" x="162" y="220" text-anchor="middle">2 動手寫</text>
+  <text x="162" y="236" text-anchor="middle">Karpathy：Zero to Hero</text>
+  <text x="162" y="252" text-anchor="middle">含 Let&#x27;s build GPT（約 1 小時 56 分）</text>
+  <path class="ln" d="M162.0,281.0 L162.0,301.0" marker-end="url(#a)"/>
+  <rect class="good" x="12.0" y="302.0" width="300" height="96" rx="8"/>
+  <text class="b" x="162" y="338" text-anchor="middle">3 完整實作</text>
+  <text x="162" y="354" text-anchor="middle">Raschka：Build a Large Language Model</text>
+  <text x="162" y="370" text-anchor="middle">→ Stanford CS336（作業需要 GPU）</text>
+  <rect class="box" x="328.0" y="66.0" width="300" height="72" rx="8"/>
+  <text class="b" x="478" y="98" text-anchor="middle">LLM Visualization</text>
+  <text x="478" y="114" text-anchor="middle">3D 走讀；nano-GPT、GPT-2</text>
+  <rect class="box" x="328.0" y="154.0" width="300" height="72" rx="8"/>
+  <text class="b" x="478" y="186" text-anchor="middle">Transformer Explainer</text>
+  <text x="478" y="202" text-anchor="middle">瀏覽器跑 GPT-2：注意力→前饋→logits</text>
+  <rect class="box" x="328.0" y="242.0" width="300" height="72" rx="8"/>
+  <text class="b" x="478" y="274" text-anchor="middle">BertViz</text>
+  <text x="478" y="290" text-anchor="middle">Jupyter／Colab：所有層與 head 的注意力</text>
+  <rect class="box" x="328.0" y="330.0" width="300" height="72" rx="8"/>
+  <text class="b" x="478" y="362" text-anchor="middle">LM Transparency Tool</text>
+  <text x="478" y="378" text-anchor="middle">logit lens；各 head 推升／壓低的 token</text>
+  <text class="s" x="320" y="456" text-anchor="middle">兩條線可以平行：邊跑教程邊用網站對照每一層（我的建議，不是官方做法）</text>
+  <text class="s" x="320" y="474" text-anchor="middle">網站為搜尋結果摘要所述，我沒有開啟；驗證狀態見第 11 節</text>
+</svg>
