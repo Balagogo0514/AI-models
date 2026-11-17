@@ -53,7 +53,8 @@
 
 | 資源 | 內容 | 狀態 |
 |---|---|---|
-| [Karpathy：*Neural Networks: Zero to Hero*](https://karpathy.ai/zero-to-hero.html)（[GitHub](https://github.com/karpathy/nn-zero-to-hero)） | 從反向傳播一路寫到 GPT，含 *Let's build GPT: from scratch, in code, spelled out* | ✅ |
+| [Karpathy：*Neural Networks: Zero to Hero*](https://karpathy.ai/zero-to-hero.html)（[GitHub](https://github.com/karpathy/nn-zero-to-hero)） | 從反向傳播一路寫到 GPT，含 [*Let's build GPT*](https://www.youtube.com/watch?v=kCc8FmEb1nY)（下一列） | ✅ |
+| [Karpathy：*Let's build GPT: from scratch, in code, spelled out*](https://www.youtube.com/watch?v=kCc8FmEb1nY) | Zero to Hero 系列裡寫出 GPT 的那一講，約 1 小時 56 分，2023-01-17 發佈；從空檔案開始，照 *Attention Is All You Need* 與 GPT-2／GPT-3 的做法，在 Tiny Shakespeare（約 1 MB 文字）上訓練字元層級的小型 Transformer。影片說明附有 Colab 筆記本（我沒有查到可確認的網址，請到影片說明找）、[ng-video-lecture](https://github.com/karpathy/ng-video-lecture)（這一講的程式碼）與 [nanoGPT](https://github.com/karpathy/nanoGPT)（完整版）兩個 GitHub 專案；建議先看前面的 makemore 系列再看這一講 | 🔎（影片網址取自第三方網站；GitHub 專案取自搜尋結果對影片說明的轉述） |
 | [Karpathy 個人網站](https://karpathy.ai) | 他的教學影片與專案入口；站上列有他的 YouTube 頻道，內容分成技術向與一般大眾向兩條線 | ✅ |
 | [Karpathy YouTube 頻道](https://www.youtube.com/@AndrejKarpathy) | 影片主頁；網址取自第三方連結與他個人網站所列的頻道，我沒有開啟頻道頁面，訂閱數各來源差異大，不列數字 | 🔎 |
 | [Karpathy：*[1hr Talk] Intro to Large Language Models*](https://www.youtube.com/watch?v=zjkBMFhNj_g) | 約 1 小時、2023 年 11 月的一般大眾演講；以 Llama 2 70B 為例，講預訓練與微調，以及 jailbreak、prompt injection 等安全風險。適合想先建立概念、不急著寫程式的人 | 🔎（影片網址取自轉錄網站） |
@@ -166,7 +167,7 @@
 ## 10. 驗證說明與限制
 
 - 驗證日期是 2026-11-16。我用網路搜尋核對各資源是否存在；沙箱連不到 `arxiv.org`，也沒有開啟多數課程官方頁面，所以標 🔎 的項目只能保證「有二手來源提到它存在」。
-- 沒有核對的內容：各課程目前的版本與時數、書籍最新版次、Hugging Face LLM Course 的官方頁面、*AI for Everyone* 目前的價格與註冊方式、Karpathy 頻道頁面與兩支演講影片的網址與上傳日期、3Blue1Brown 第 6、7 章與 LLM 簡介的確切網址和頻道頁面、上海交大各項資源是否有公開錄影、《動手學大模型》官方專案網址、李宏毅 YouTube 頻道頁面本身與各課程的單一播放清單網址、五篇 🔎 論文的 arXiv 編號。
+- 沒有核對的內容：各課程目前的版本與時數、書籍最新版次、Hugging Face LLM Course 的官方頁面、*AI for Everyone* 目前的價格與註冊方式、Karpathy 頻道頁面與兩支演講影片的網址與上傳日期、Let's build GPT 影片頁面本身與兩個 GitHub 專案的目前狀態、3Blue1Brown 第 6、7 章與 LLM 簡介的確切網址和頻道頁面、上海交大各項資源是否有公開錄影、《動手學大模型》官方專案網址、李宏毅 YouTube 頻道頁面本身與各課程的單一播放清單網址、五篇 🔎 論文的 arXiv 編號。
 - 這份清單不評價資源品質，也沒有涵蓋所有主題（例如電腦視覺、語音、強化學習專書）；它對應的是本筆記庫涵蓋的範圍。
 - 若發現連結失效或內容有誤，請在該項目標示 ⚠️ 並改為官方連結。
 
@@ -175,7 +176,7 @@
 ## 11. 官方來源
 
 - Karpathy：<https://karpathy.ai>、<https://karpathy.ai/zero-to-hero.html>、<https://github.com/karpathy/nn-zero-to-hero>
-- Karpathy 的 YouTube（網址取自二手來源，未開啟）：<https://www.youtube.com/@AndrejKarpathy>、<https://www.youtube.com/watch?v=zjkBMFhNj_g>、<https://www.youtube.com/watch?v=7xTGNNLPyMI>
+- Karpathy 的 YouTube（網址取自二手來源，未開啟）：<https://www.youtube.com/@AndrejKarpathy>、<https://www.youtube.com/watch?v=kCc8FmEb1nY>（Let's build GPT）、<https://www.youtube.com/watch?v=zjkBMFhNj_g>、<https://www.youtube.com/watch?v=7xTGNNLPyMI>
 - Stanford CS336（2025 春季存檔）：<https://stanford-cs336.github.io/spring2025/>
 - DeepLearning.AI：*AI for Everyone*：<https://www.deeplearning.ai/courses/ai-for-everyone>、<https://www.coursera.org/learn/ai-for-everyone>
 - 3Blue1Brown：<https://www.3blue1brown.com/neural-networks>、<https://www.3blue1brown.com/lessons/gpt>；頻道（網址取自二手來源，未開啟）：<https://www.youtube.com/@3blue1brown>
