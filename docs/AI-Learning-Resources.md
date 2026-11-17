@@ -75,6 +75,21 @@
 | Chip Huyen：*AI Engineering*（O'Reilly） | 在既有基礎模型上做應用：評測、prompt、RAG 與 agents、微調、資料集工程、推論最佳化 | 🔎（出版年份各來源不一，請以 O'Reilly 頁面為準） |
 | [Jay Alammar：*The Illustrated Transformer*](https://jalammar.github.io/illustrated-transformer/) | 2018 年的圖解文章，一步步拆解 self-attention 與 encoder-decoder | 🔎 |
 
+### 3.3 互動視覺化網站：看每一層的輸出
+
+想「親眼看到」資料怎麼一層一層流過 Transformer，可以用下面這些網站與工具。它們各有側重，沒有一個能涵蓋全部：
+
+| 資源 | 能看到什麼 | 連結 | 狀態 |
+|---|---|---|---|
+| LLM Visualization（Brendan Bycroft） | 3D、可互動的 GPT 逐步走讀：可以旋轉、縮放、飛進結構裡，滑鼠移到元件上會顯示它屬於哪個結構、列數與欄數。內建小型的 nano-GPT（約 8.5 萬個參數，取自 Karpathy 的 minGPT），也能切換到 GPT-2 等較大的模型；因為依比例繪製，可以直接比較大小。程式碼開源 | [bbycroft.net/llm](https://bbycroft.net/llm)、[GitHub](https://github.com/bbycroft/llm-viz) | ✅（GitHub）／🔎（網站網址取自搜尋摘要） |
+| Transformer Explainer（Georgia Tech 與 IBM Research） | 在瀏覽器裡**直接跑一個 GPT-2**（不用安裝）：自注意力的各個 head 與注意力權重矩陣、前饋網路、layer normalization、殘差連接，到最後的 logits。只涵蓋一個小型 GPT-2，結果不能類推到大型 LLM。論文發表於 AAAI 2025，作者自述有 12.5 萬人使用，程式碼為 MIT 授權 | [線上展示](https://poloclub.github.io/transformer-explainer/)、[GitHub](https://github.com/poloclub/transformer-explainer)、[論文（AAAI 2025）](https://ojs.aaai.org/index.php/AAAI/article/view/35347)、[arXiv 2408.04619](https://arxiv.org/abs/2408.04619) | ✅ |
+| BertViz | 在 Jupyter 或 Colab 裡視覺化 Transformer 的注意力，有「model view」可以一次看**所有層與所有 head**；不含 logit lens | [GitHub](https://github.com/jessevig/bertviz) | ✅ |
+| LM Transparency Tool（Meta） | 瀏覽器介面，可以對選定的表示做 **logit lens**，並看選定的注意力 head 推升或壓低了哪些 token，較偏研究與分析；有 Hugging Face Spaces 的展示 | [GitHub](https://github.com/facebookresearch/llm-transparency-tool)、[ACL 2024 demo 論文](https://aclanthology.org/2024.acl-demos.6.pdf) | ✅（論文）／🔎（GitHub 網址、展示頁） |
+
+> 如果你記得的是「3D 方塊一層一層飛過去、可以看每一層的矩陣大小」，那最像 **LLM Visualization**；如果是「輸入一段文字、看 GPT-2 每個 head 的注意力與最後的機率」，那最像 **Transformer Explainer**。我是依描述推測，不確定是哪一個。
+>
+> 這些網站我**沒有開啟**：說明取自搜尋結果的摘要，LLM Visualization 的網址是搜尋結果直接指名的網站，LM Transparency Tool 的 GitHub 網址與展示頁取自轉述。對應的原理可以回頭看本庫的 [Transformer-Attention](Transformer-Attention.md)。
+
 ---
 
 ## 4. 論文閱讀清單（對應本筆記庫）
@@ -162,7 +177,7 @@
 ## 10. 驗證說明與限制
 
 - 驗證日期是 2026-11-16。我用網路搜尋核對各資源是否存在；沙箱連不到 `arxiv.org`，也沒有開啟多數課程官方頁面，所以標 🔎 的項目只能保證「有二手來源提到它存在」。
-- 沒有核對的內容：各課程目前的版本與時數、書籍最新版次、Hugging Face LLM Course 的官方頁面、*AI for Everyone* 目前的價格與註冊方式、Karpathy 頻道頁面與兩支演講影片的網址與上傳日期、Let's build GPT 影片頁面本身與兩個 GitHub 專案的目前狀態、3Blue1Brown 第 6、7 章與 LLM 簡介的確切網址和頻道頁面、李宏毅 YouTube 頻道頁面本身與各課程的單一播放清單網址、五篇 🔎 論文的 arXiv 編號。
+- 沒有核對的內容：各課程目前的版本與時數、書籍最新版次、Hugging Face LLM Course 的官方頁面、*AI for Everyone* 目前的價格與註冊方式、Karpathy 頻道頁面與兩支演講影片的網址與上傳日期、各互動視覺化網站目前是否可用與內容、Let's build GPT 影片頁面本身與兩個 GitHub 專案的目前狀態、3Blue1Brown 第 6、7 章與 LLM 簡介的確切網址和頻道頁面、李宏毅 YouTube 頻道頁面本身與各課程的單一播放清單網址、五篇 🔎 論文的 arXiv 編號。
 - 這份清單不評價資源品質，也沒有涵蓋所有主題（例如電腦視覺、語音、強化學習專書）；它對應的是本筆記庫涵蓋的範圍。
 - 若發現連結失效或內容有誤，請在該項目標示 ⚠️ 並改為官方連結。
 
@@ -175,6 +190,7 @@
 - Stanford CS336（2025 春季存檔）：<https://stanford-cs336.github.io/spring2025/>
 - DeepLearning.AI：*AI for Everyone*：<https://www.deeplearning.ai/courses/ai-for-everyone>、<https://www.coursera.org/learn/ai-for-everyone>
 - 3Blue1Brown：<https://www.3blue1brown.com/neural-networks>、<https://www.3blue1brown.com/lessons/gpt>；頻道（網址取自二手來源，未開啟）：<https://www.youtube.com/@3blue1brown>
+- 互動視覺化：<https://bbycroft.net/llm>、<https://github.com/bbycroft/llm-viz>、<https://poloclub.github.io/transformer-explainer/>、<https://github.com/poloclub/transformer-explainer>、<https://ojs.aaai.org/index.php/AAAI/article/view/35347>、<https://github.com/jessevig/bertviz>、<https://github.com/facebookresearch/llm-transparency-tool>、<https://aclanthology.org/2024.acl-demos.6.pdf>
 - Hugging Face Agents Course：<https://huggingface.co/learn/agents-course>
 - Manning：<https://www.manning.com/books/build-a-large-language-model-from-scratch>
 - O'Reilly：<https://www.oreilly.com/library/view/hands-on-large-language/9781098150952/>
