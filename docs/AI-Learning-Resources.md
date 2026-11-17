@@ -7,8 +7,8 @@
 ## 先看結論
 
 - **非技術背景**：先看吳恩達的 *AI for Everyone*（不需寫程式），了解 AI 能做什麼、怎麼導入與對社會的影響。
-- **想建立直覺**：先看 3Blue1Brown 的[神經網路系列](https://www.3blue1brown.com/neural-networks)，再看 Karpathy 的 [*Neural Networks: Zero to Hero*](https://karpathy.ai/zero-to-hero.html)；想先聽概念，可看他的 [*Intro to Large Language Models*](https://www.youtube.com/watch?v=zjkBMFhNj_g) 演講。
-- **想自己動手**：Karpathy 的[系列](https://karpathy.ai/zero-to-hero.html) → Raschka 的 *Build a Large Language Model (From Scratch)* → Stanford CS336。
+- **想建立直覺**：先看 3Blue1Brown 的[神經網路系列](https://www.3blue1brown.com/neural-networks)，再看 Karpathy 的 [*Neural Networks: Zero to Hero*](https://karpathy.ai/zero-to-hero.html)；想先聽概念，可看他的 [*Intro to Large Language Models*](https://www.youtube.com/watch?v=zjkBMFhNj_g) 演講；更多影片見他的 [YouTube 頻道](https://www.youtube.com/@AndrejKarpathy)。
+- **想自己動手**：Karpathy 的[系列](https://karpathy.ai/zero-to-hero.html)（影片在他的 [YouTube 頻道](https://www.youtube.com/@AndrejKarpathy)） → Raschka 的 *Build a Large Language Model (From Scratch)* → Stanford CS336。
 - **想用 LLM 做應用或 Agent**：Chip Huyen 的 *AI Engineering*、Hugging Face 的 Agents Course、Anthropic 的 *Building effective agents*，再讀各家官方文件。
 - **偏好中文**：台大李宏毅老師的課程是最常被推薦的起點，影片主頁見第 6 節的 [YouTube 頻道](https://www.youtube.com/@HungyiLeeNTU/videos)。
 - **想上大學公開課**：史丹佛、MIT、清華、北大、浙大的課程，每門都附連結，見第 7 節。
@@ -238,6 +238,7 @@
 
 | 來源 | 內容 | 狀態 |
 |---|---|---|
+| [Karpathy 的 YouTube 頻道](https://www.youtube.com/@AndrejKarpathy) | 追蹤他的新影片；他的個人網站把內容分成技術向與一般大眾向兩條線。網址取自第三方連結與他個人網站所列的頻道，我沒有開啟頻道頁面，不寫更新頻率與訂閱數 | 🔎 |
 | [Lilian Weng：Lil'Log](https://lilianweng.github.io) | 長篇技術整理，常被引用為某個主題的入門總覽 | 🔎 |
 | [Sebastian Raschka：Ahead of AI](https://magazine.sebastianraschka.com) | Substack 電子報，談 LLM 與研究進展 | 🔎 |
 | [Jay Alammar 的部落格](https://jalammar.github.io) | 圖解文章 | 🔎 |
