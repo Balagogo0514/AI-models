@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" role="img" aria-labelledby="t d">
+  <title id="t">localhost 上的 React 範例流程：你、dev server、Claude Code 與 Chrome 的互動順序</title>
+  <desc id="d">四個角色：你、跑 dev server 的終端機、跑 Claude Code 的終端機、Chrome 與擴充功能。順序：一，你在終端機 A 執行 npm run dev，網站在 localhost。二，你在終端機 B 執行 claude --chrome，並用 /chrome 確認狀態。三，你要求 Claude 開 localhost 的登入頁、送出錯誤資料並檢查 console。四，Claude Code 請 Chrome 開新分頁並操作表單。五，Chrome 向 dev server 載入頁面。六，Chrome 把 console 錯誤與 DOM 狀態回報給 Claude Code。七，Claude 修改元件檔案。八，dev server 熱更新。九，Claude 請 Chrome 重新驗證並取得結果。十，Claude 回報，你審查 diff。熱更新與 port 依專案而定，為建議做法。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="638.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">localhost 範例流程：誰跟誰說話</text>
+  <rect class="acc" x="16.0" y="45.0" width="128" height="34" rx="8"/>
+  <text class="b" x="80" y="66" text-anchor="middle">你</text>
+  <line class="dash" x1="80" y1="86" x2="80" y2="596"/>
+  <rect class="acc" x="176.0" y="40.0" width="128" height="44" rx="8"/>
+  <text class="b" x="240" y="58" text-anchor="middle">終端機 A</text>
+  <text x="240" y="74" text-anchor="middle">dev server</text>
+  <line class="dash" x1="240" y1="86" x2="240" y2="596"/>
+  <rect class="acc" x="336.0" y="40.0" width="128" height="44" rx="8"/>
+  <text class="b" x="400" y="58" text-anchor="middle">終端機 B</text>
+  <text x="400" y="74" text-anchor="middle">Claude Code</text>
+  <line class="dash" x1="400" y1="86" x2="400" y2="596"/>
+  <rect class="acc" x="496.0" y="40.0" width="128" height="44" rx="8"/>
+  <text class="b" x="560" y="58" text-anchor="middle">Chrome</text>
+  <text x="560" y="74" text-anchor="middle">＋擴充功能</text>
+  <line class="dash" x1="560" y1="86" x2="560" y2="596"/>
+  <path class="ln" d="M80.0,112.0 L240.0,112.0" marker-end="url(#a)"/>
+  <rect x="85.8" y="92" width="148.3" height="16" fill="var(--bg)"/>
+  <text class="s" x="160.0" y="104" text-anchor="middle">1 npm run dev（localhost）</text>
+  <path class="ln" d="M80.0,160.0 L400.0,160.0" marker-end="url(#a)"/>
+  <rect x="147.2" y="140" width="185.6" height="16" fill="var(--bg)"/>
+  <text class="s" x="240.0" y="152" text-anchor="middle">2 claude --chrome ＋ /chrome 確認</text>
+  <path class="ln" d="M80.0,208.0 L400.0,208.0" marker-end="url(#a)"/>
+  <rect x="114.7" y="188" width="250.6" height="16" fill="var(--bg)"/>
+  <text class="s" x="240.0" y="200" text-anchor="middle">3 「開 localhost 登入頁、送錯資料、看 console」</text>
+  <path class="ln" d="M400.0,256.0 L560.0,256.0" marker-end="url(#a)"/>
+  <rect x="426.4" y="236" width="107.2" height="16" fill="var(--bg)"/>
+  <text class="s" x="480.0" y="248" text-anchor="middle">4 開新分頁、操作表單</text>
+  <path class="ln" d="M560.0,304.0 L240.0,304.0" marker-end="url(#a)"/>
+  <rect x="370.9" y="284" width="58.2" height="16" fill="var(--bg)"/>
+  <text class="s" x="400.0" y="296" text-anchor="middle">5 載入頁面</text>
+  <path class="ln" d="M560.0,352.0 L400.0,352.0" marker-end="url(#a)"/>
+  <rect x="425.6" y="332" width="108.7" height="16" fill="var(--bg)"/>
+  <text class="s" x="480.0" y="344" text-anchor="middle">6 回報 console、DOM</text>
+  <rect class="good" x="330" y="386" width="140" height="28" rx="6"/>
+  <text x="400" y="405" text-anchor="middle">7 修改元件檔案</text>
+  <path class="ln" d="M240.0,448.0 L560.0,448.0" marker-end="url(#a)"/>
+  <rect x="351.3" y="428" width="97.4" height="16" fill="var(--bg)"/>
+  <text class="s" x="400.0" y="440" text-anchor="middle">8 熱更新（依專案）</text>
+  <path class="ln" d="M400.0,496.0 L560.0,496.0" marker-end="url(#a)"/>
+  <rect x="408.4" y="476" width="143.2" height="16" fill="var(--bg)"/>
+  <text class="s" x="480.0" y="488" text-anchor="middle">9 重新載入並驗證 → 回報結果</text>
+  <path class="ln" d="M400.0,544.0 L80.0,544.0" marker-end="url(#a)"/>
+  <rect x="184.6" y="524" width="110.7" height="16" fill="var(--bg)"/>
+  <text class="s" x="240.0" y="536" text-anchor="middle">10 回報；你審查 diff</text>
+  <text class="s" x="320" y="626" text-anchor="middle">熱更新與 port 依專案設定而定；以終端機輸出的網址為準</text>
+</svg>

@@ -9,6 +9,7 @@
 
 - **Claude Code 不是 React 專用工具**：它是在你的專案目錄裡讀檔、改檔、跑指令的 agent；React 的特性靠你寫進 `CLAUDE.md`、權限與 hooks 來告訴它。
 - **開發循環**：你下指令 → Claude 改檔 → hook 自動 lint → dev server 熱更新 → 跑測試與瀏覽器驗證 → 把關 → 你審查 diff（第 1 節）。
+- **範例流程**：用 `localhost` 跑 React，再讓 Claude Code 用 Chrome 整合直接檢查 console 與畫面，見第 4.4 節。
 - **讓它「看到」結果是關鍵**：只改程式碼不夠，要讓 Claude 能跑測試、看到錯誤訊息，必要時看到畫面。畫面可以用 **Chrome 整合**或 **Playwright MCP**（第 4 節）。
 - **要強制的規則用 hooks 與 deny，不要只靠 `CLAUDE.md`**：`CLAUDE.md` 是放進 context 的文字，Claude 會盡量遵守但不保證（【官方】，見 [Claude-Context](Claude-Context.md)）。
 - **大規模改寫**（例如元件遷移）可用 `/batch` 搭配 worktree；官方範例之一就是 `/batch migrate src/ from Solid to React`。
@@ -160,6 +161,71 @@ claude mcp add playwright -- npx @playwright/mcp@latest
 | 設定 | 裝擴充功能、用 `/login`、需直接的 Anthropic 方案 | `claude mcp add` 一行 | 專案本來就有 |
 | 適合 | 在你自己的 Chrome 裡驗證、除錯（共用登入狀態、可見視窗） | 可寫進 `.mcp.json` 讓團隊共用、較容易重現 | 邏輯、元件行為 |
 | 限制 | 依賴 `/login` 與擴充功能；不支援 WSL；不能用 API key | 要下載瀏覽器；版本需固定 | 看不到實際畫面與樣式 |
+
+### 4.4 完整範例流程：用 localhost 啟動 React，讓 Claude Code 直接檢查結果
+
+情境：你在本機用 `localhost` 跑 React，想讓 Claude Code 直接開瀏覽器檢查。這裡用官方範例的情境「登入表單的驗證」走一遍。**以下是依官方文件與範例組成的流程，我沒有實際跑過**；指令與提示詞照官方寫法，檔名、網址與埠號是示意，請換成你的專案。
+
+![圖：localhost 範例流程，你、dev server、Claude Code 與 Chrome 的互動順序](figures/claude-code-react-localhost-flow.svg)
+
+**事前條件**（第 4.1 節）：已安裝 Claude in Chrome 擴充功能（1.0.36 以上）、用 `/login` 登入 Claude Code、不是透過 Bedrock 等第三方供應商。
+
+**步驟 1：終端機 A 啟動 dev server**（【建議】）
+
+```bash
+npm run dev
+```
+
+記下終端機印出的網址（官方範例用 `localhost:3000`，**實際埠號以你專案的輸出為準**）。讓這個終端機一直開著，Claude 改檔後由 dev server 熱更新（是否熱更新依專案設定）。
+
+**步驟 2：終端機 B 在專案目錄啟動 Claude Code**（【官方】）
+
+```bash
+cd your-react-app
+claude --chrome
+```
+
+首次會出現一次性對話框，按 Enter 繼續。接著輸入 `/chrome`，**狀態面板顯示 `Status: Enabled` 與 `Extension: Installed` 就代表整合正常**。
+
+**步驟 3：請 Claude 檢查目前的畫面**（【官方】範例，換成你的登入頁網址）
+
+```text
+Open localhost:3000/login, submit the form with an empty email and with an
+invalid email, and check if the error messages appear correctly. Also check
+the console for any errors.
+```
+
+Claude 會開新分頁、操作表單，並回報它觀察到的結果（官方原文：「Claude navigates to your local server, interacts with the form, and reports what it observes」）。如果它要做的瀏覽器動作需要許可，會跳出以 `Claude in Chrome wants to` 開頭的對話框；可以只允許這次，或允許該網站在本次 session 的所有動作。**回報的內容會因專案而異，我沒有範例輸出可以給你。**
+
+**步驟 4：發現問題就請它修，並重新驗證**（【建議】）
+
+```text
+Based on what you just observed, fix the validation in
+src/components/LoginForm.tsx, then reload the page and verify it again.
+```
+
+這時 Claude 會編輯檔案（需要編輯權限，常用 `acceptEdits`，第 2.3 節）；dev server 熱更新後，它再請瀏覽器重新載入並確認。
+
+**步驟 5：留下證據**（【官方】範例）
+
+```text
+Take a screenshot of the login page and save it to disk
+```
+
+Claude 會把圖存到磁碟並回報路徑。也可以請它錄成 GIF，但**錄影會拍下畫面上的所有內容，分享前要先檢查**。
+
+**步驟 6：收尾**（【建議】）：跑 `npm test` 與 `npm run lint`，用 `/review` 看過 diff 再 commit（第 1、5、6 節）。
+
+**補充**：
+- 【建議】把驗證方式寫進 `CLAUDE.md`，每次都不必重講，例如：「瀏覽器驗證：用 Chrome 整合開 `http://localhost:3000`，只看 console 的 error 與 warning，不要貼完整 log」。這呼應官方的提醒：告訴 Claude 要找哪種訊息，不要要求全部 console 輸出。
+- 【推論】**`localhost` 是從你的 Chrome 所在的那台機器來解析的**。如果 Claude Code 跑在別台機器（例如遠端），而 dev server 也跑在遠端，你的 Chrome 打不開那個 `localhost`；要讓 dev server 與 Chrome 在同一台機器，或自行處理連線轉發。官方頁面沒有針對這個情況說明，我沒有驗證。
+- 官方說 `Enabled by default` 會讓瀏覽器工具常駐、增加 context 用量，不常用就用 `--chrome` 臨時開。
+
+### 4.5 檢查不到結果時
+
+![圖：Chrome 整合檢查不到結果時的六種症狀與處理](figures/claude-code-react-chrome-troubleshoot.svg)
+
+前五項取自官方頁面的疑難排解與錯誤訊息表（【官方】），最後一項是我加的（【建議】）。官方還提醒：如果你的 Claude 帳號屬於多個組織，擴充功能必須登入**與 Claude Code 相同的組織**，用 `/status` 的 `Organization` 欄位確認；若登出擴充功能，會失去存在擴充功能裡的捷徑與排程任務，所以先試其他修法。
 
 ---
 
