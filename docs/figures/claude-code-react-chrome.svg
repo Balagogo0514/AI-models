@@ -36,7 +36,7 @@
   <text class="t" x="320" y="28" text-anchor="middle">Chrome 整合：Claude 怎麼看到輸出</text>
   <rect class="box" x="20.0" y="44.0" width="440" height="58" rx="8"/>
   <text class="b" x="240" y="69" text-anchor="middle">1 你：先跑起 dev server</text>
-  <text x="240" y="85" text-anchor="middle">建議在另一個終端機執行 npm run dev</text>
+  <text x="240" y="85" text-anchor="middle">建議在另一個終端機執行 yarn start</text>
   <path class="ln" d="M240.0,102.0 L240.0,122.0" marker-end="url(#a)"/>
   <rect class="acc" x="20.0" y="122.0" width="440" height="58" rx="8"/>
   <text class="b" x="240" y="147" text-anchor="middle">2 你：claude --chrome ＋ 下指令</text>

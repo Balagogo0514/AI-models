@@ -26,7 +26,7 @@
 | 1 下指令 | 你 | 大改動先用 `plan` 權限模式探索與規劃（`Shift+Tab` 切換） | 【官方】 |
 | 2 改檔 | Claude | Edit／Write；權限常用 `acceptEdits`，事後審 diff | 【官方】 |
 | 3 自動檢查 | hook | `PostToolUse` 在 Edit／Write 後跑 lint 或 format | 【官方】範例 |
-| 4 熱更新 | dev server | 建議你在**另一個終端機**跑 `npm run dev`，讓 Claude 專注改檔與驗證 | 【建議】 |
+| 4 熱更新 | dev server | 建議你在**另一個終端機**跑 `yarn start`，讓 Claude 專注改檔與驗證 | 【建議】 |
 | 5 驗證 | Claude | 跑測試；用 Chrome 整合或 Playwright MCP 看畫面 | 【官方】功能／【建議】用法 |
 | 6 把關 | hook | `Stop` hook 在測試沒過時 block，要求 Claude 繼續修 | 【官方】範例 |
 | 7 審查 | 你 | 看 diff、用 `/review`，再 commit | 【官方】 |
@@ -43,15 +43,17 @@
 
 ### 2.2 CLAUDE.md：把 React 專案慣例寫進去
 
+> 本文的指令用 yarn：你們的 GUI 是用 `yarn start` 啟動。`test`、`lint`、`typecheck` 等 script 名稱只是範例，**以你專案 `package.json` 的 `scripts` 為準**。
+
 【官方】`CLAUDE.md` 會在每次請求時放進 context；它是文字指示，Claude 會盡量遵守但不保證（詳見 [Claude-Context](Claude-Context.md)）。下面是 React 專案的**範例**（【建議】，內容請依你的專案調整）：
 
 ```markdown
 # 專案慣例（範例）
 
 ## 指令
-- 開發：npm run dev（我會自己開著，不要重複啟動）
-- 測試：npm test；單一檔案：npm test -- <檔名>
-- 檢查：npm run lint、npm run typecheck
+- 開發：yarn start（我會自己開著，不要重複啟動）
+- 測試：yarn test；單一檔案：yarn test <檔名>
+- 檢查：yarn lint、yarn typecheck
 
 ## 規範
 - 元件放在 src/components，一個元件一個資料夾
@@ -71,12 +73,12 @@
 {
   "permissions": {
     "deny": ["Read(.env*)", "Bash(rm -rf*)", "Bash(git push --force*)"],
-    "allow": ["Bash(npm run *)", "Bash(npm test*)", "Edit(src/**)"]
+    "allow": ["Bash(yarn start*)", "Bash(yarn test*)", "Bash(yarn lint*)", "Edit(src/**)"]
   }
 }
 ```
 
-- 我故意**沒有**把 `npm install` 放進 `allow`：安裝套件會執行第三方腳本，建議每次由你確認（【建議】）。
+- 我故意**沒有**把 `yarn add`、`yarn install` 放進 `allow`：安裝套件會執行第三方腳本，建議每次由你確認（【建議】）。
 - 各 pattern 的比對細節我沒有逐一驗證；寫好後請實際觸發一次確認有擋到。
 - 權限模式：`default` 只自動放行唯讀；`acceptEdits` 自動放行檔案編輯；`plan` 只讀不寫；`auto`、`dontAsk`、`bypassPermissions` 見 [Claude-Code-CLI 第 16 節](Claude-Code-CLI.md)（【官方】）。
 
@@ -84,15 +86,15 @@
 
 ## 3. 讓 Claude 看見結果：dev server 與測試
 
-- **dev server**（【建議】）：在另一個終端機自己執行 `npm run dev`，Claude 改檔後熱更新會自動套用。這樣不必讓 Claude 管理長時間執行的程序；也避免兩邊各開一個 server 造成 port 衝突。
-- **測試**（【建議】）：讓 Claude 在改完後自己跑 `npm test`，並把失敗訊息當作下一步的依據。React 專案常見的測試組合是 Vitest 或 Jest 加 React Testing Library；本文不涉及這些工具的官方文件，請參考各自的說明。
-- **把「通過」寫成可驗證的條件**：【官方】`/goal` 的有效條件要有「單一可量測終態」，例如 `npm test exits 0`；官方範例也有 `migrate all API call sites to v2 and npm run build exits 0` 與 `all linting errors fixed, or stop after 20 turns`。React 的對應寫法（【建議】）：
+- **dev server**（【建議】）：在另一個終端機自己執行 `yarn start`，Claude 改檔後熱更新會自動套用。這樣不必讓 Claude 管理長時間執行的程序；也避免兩邊各開一個 server 造成 port 衝突。
+- **測試**（【建議】）：讓 Claude 在改完後自己跑 `yarn test`，並把失敗訊息當作下一步的依據。React 專案常見的測試組合是 Vitest 或 Jest 加 React Testing Library；本文不涉及這些工具的官方文件，請參考各自的說明。
+- **把「通過」寫成可驗證的條件**：【官方】`/goal` 的有效條件要有「單一可量測終態」，例如 `npm test exits 0`（官方原文；你們用 yarn 就寫 `yarn test exits 0`）；官方範例也有 `migrate all API call sites to v2 and npm run build exits 0` 與 `all linting errors fixed, or stop after 20 turns`。React 的對應寫法（【建議】）：
 
 ```text
-/goal all tests in src/components pass and npm run lint exits 0, or stop after 15 turns
+/goal all tests in src/components pass and yarn lint exits 0, or stop after 15 turns
 ```
 
-- **型別檢查**（【建議】）：若是 TypeScript 專案，把 `npm run typecheck` 也放進驗證條件，React 元件的 props 型別錯誤常在這一步才會露出。
+- **型別檢查**（【建議】）：若是 TypeScript 專案，把 `yarn typecheck` 也放進驗證條件，React 元件的 props 型別錯誤常在這一步才會露出。
 
 ---
 
@@ -174,7 +176,7 @@ claude mcp add playwright -- npx @playwright/mcp@latest
 **步驟 1：終端機 A 啟動 dev server**（【建議】）
 
 ```bash
-npm run dev
+yarn start
 ```
 
 記下終端機印出的網址（官方範例用 `localhost:3000`，**實際埠號以你專案的輸出為準**）。讓這個終端機一直開著，Claude 改檔後由 dev server 熱更新（是否熱更新依專案設定）。
@@ -215,7 +217,7 @@ Take a screenshot of the login page and save it to disk
 
 Claude 會把圖存到磁碟並回報路徑。也可以請它錄成 GIF，但**錄影會拍下畫面上的所有內容，分享前要先檢查**。
 
-**步驟 6：收尾**（【建議】）：跑 `npm test` 與 `npm run lint`，用 `/review` 看過 diff 再 commit（第 1、5、6 節）。
+**步驟 6：收尾**（【建議】）：跑 `yarn test` 與 `yarn lint`，用 `/review` 看過 diff 再 commit（第 1、5、6 節）。
 
 **補充**：
 - 【建議】把驗證方式寫進 `CLAUDE.md`，每次都不必重講，例如：「瀏覽器驗證：用 Chrome 整合開 `http://localhost:3000`，只看 console 的 error 與 warning，不要貼完整 log」。這呼應官方的提醒：告訴 Claude 要找哪種訊息，不要要求全部 console 輸出。
@@ -232,7 +234,7 @@ Claude 會把圖存到磁碟並回報路徑。也可以請它錄成 GIF，但**�
 
 ## 5. Hooks：自動 lint 與測試把關
 
-【官方】hooks 的設定結構、觸發時機與位置見 [Claude-Code-CLI 第 17 節](Claude-Code-CLI.md)。官方整理的兩個範例，直接適合 React 專案：
+【官方】hooks 的設定結構、觸發時機與位置見 [Claude-Code-CLI 第 17 節](Claude-Code-CLI.md)。官方整理的兩個範例，直接適合 React 專案（官方範例寫的是 `npm`，這裡換成 yarn）：
 
 **編輯後自動 lint（`PostToolUse`）**
 
@@ -242,7 +244,7 @@ Claude 會把圖存到磁碟並回報路徑。也可以請它錄成 GIF，但**�
     "PostToolUse": [
       {
         "matcher": "Edit|Write",
-        "hooks": [{ "type": "command", "command": "npm run lint --fix" }]
+        "hooks": [{ "type": "command", "command": "yarn lint --fix" }]
       }
     ]
   }
@@ -254,7 +256,7 @@ Claude 會把圖存到磁碟並回報路徑。也可以請它錄成 GIF，但**�
 ```bash
 #!/bin/bash
 # 若測試失敗，回傳 block 讓 Claude 繼續修復
-npm test > /tmp/test-output.txt 2>&1
+yarn test > /tmp/test-output.txt 2>&1
 if [ $? -ne 0 ]; then
   RESULT=$(cat /tmp/test-output.txt)
   echo "{\"decision\":\"block\",\"reason\":\"測試失敗，請修復後再停止\",\"additionalContext\":\"$RESULT\"}"
@@ -264,7 +266,7 @@ exit 0
 
 React 專案的注意事項（【建議】）：
 
-- **確認 `npm test` 是一次性執行，不是 watch 模式**，否則 `Stop` hook 會卡住等不到結束。
+- **確認 `yarn test` 是一次性執行，不是 watch 模式**，否則 `Stop` hook 會卡住等不到結束。
 - 每次編輯都跑整個 lint 可能很慢；hook 有 `async` 欄位可以在背景執行、`timeout` 可設逾時（【官方】欄位說明取自 v2.1.316 設定 schema，各欄位適用於哪些 handler 類型尚未逐一驗證）。
 - 強制規則（例如不准改 lockfile）用 `PreToolUse` hook 或 `permissions.deny`，不要只寫在 `CLAUDE.md`。
 
@@ -282,13 +284,13 @@ React 專案的注意事項（【建議】）：
 
 ## 7. CI 與非互動模式
 
-【官方】`claude -p` 是非互動（print）模式，搭配旗標限制範圍。官方的 CI 範例：
+【官方】`claude -p` 是非互動（print）模式，搭配旗標限制範圍。官方的 CI 範例（官方寫 `Bash(npm test)`，這裡換成 yarn）：
 
 ```bash
 claude -p "run tests and report failures" \
   --max-turns 8 \
   --max-budget-usd 2 \
-  --allowedTools "Read,Bash(npm test)" \
+  --allowedTools "Read,Bash(yarn test)" \
   --output-format json
 ```
 
@@ -309,7 +311,7 @@ claude -p "run tests and report failures" \
 
 1. **只看測試、不看畫面**：樣式與版面問題測試抓不到，重要頁面要用第 4 節的方式看一次。
 2. **把規則只寫在 `CLAUDE.md`**：它不保證被遵守；會出事的規則（碰 `.env`、改依賴）要用 deny 或 hook 擋。
-3. **讓 Claude 隨意 `npm install`**：新增依賴會改 `package.json` 與 lockfile，建議每次由你確認。
+3. **讓 Claude 隨意 `yarn add`／`yarn install`**：新增依賴會改 `package.json` 與 lockfile，建議每次由你確認。
 4. **一次要求太大**：一次一個元件或一個功能；大改動先用 `plan` 模式看計畫。
 5. **不看 diff**：`acceptEdits` 是「事後審查」，不是「不用審查」。
 6. **在 `.mcp.json` 用 `@latest`**：團隊共用時固定版本，避免不同人拿到不同行為。
@@ -345,10 +347,10 @@ claude -p "run tests and report failures" \
 # 專案慣例（範例）
 
 ## 指令
-- 開發：npm run dev（我會自己開著，不要重複啟動）
-- 測試：npm test；單一檔案：npm test -- <檔名>
-- 檢查：npm run lint、npm run typecheck
-- 完成前一定要跑 npm test 與 npm run lint，結果貼在回覆裡
+- 開發：yarn start（我會自己開著，不要重複啟動）
+- 測試：yarn test；單一檔案：yarn test <檔名>
+- 檢查：yarn lint、yarn typecheck
+- 完成前一定要跑 yarn test 與 yarn lint，結果貼在回覆裡
 
 ## 規範
 - 元件放在 src/components，一個元件一個資料夾
@@ -374,7 +376,7 @@ approval_policy = "on-request"
 ```
 
 - 【建議】**不要為了讓指令跑起來就用 `danger-full-access` 或 `--dangerously-bypass-approvals-and-sandbox`**；本庫把後者標為「極危險」。指令被擋時，先用 `/permissions` 看是哪一項，再決定放行什麼。
-- **我沒有查證**：在 `workspace-write` 下 `npm install`、下載套件或連到本機埠是否被擋。若被擋，這會影響第 10.4 節的流程。
+- **我沒有查證**：在 `workspace-write` 下 `yarn install`、下載套件或連到本機埠是否被擋。若被擋，這會影響第 10.4 節的流程。
 - **敏感檔案**：Claude Code 可以用 `deny` 擋 `.env*`；Codex 這邊我沒有查到等價的規則。`AGENTS.md` 裡寫「不要讀取 `.env*`」只是文字指示，**不保證**被遵守。【建議】開發用的機密不要放在 Codex 的工作目錄裡。
 
 ### 10.3 瀏覽器驗證：Codex 怎麼看到畫面
@@ -417,10 +419,10 @@ args = ["@playwright/mcp@latest"]
 **步驟 1：終端機 A 啟動 dev server**（【建議】）
 
 ```bash
-npm run dev
+yarn start
 ```
 
-記下終端機印出的網址。Vite 專案常見是 `localhost:5173`，**實際以你專案的輸出為準**。
+記下終端機印出的網址。本文範例用 `localhost:3000`，**實際埠號以 `yarn start` 在終端機印出的網址為準**。
 
 **步驟 2：終端機 B 在專案目錄啟動 Codex**（【官方】）
 
@@ -440,7 +442,7 @@ codex -C . -s workspace-write -a on-request
 **步驟 4：請 Codex 檢查目前的畫面**（【建議】提示詞）
 
 ```text
-Open http://localhost:5173/login in the browser, submit the form with an empty
+Open http://localhost:3000/login in the browser, submit the form with an empty
 email and with an invalid email, and check that the error messages appear
 correctly. Also report any console errors. Do not edit files yet.
 ```
@@ -450,7 +452,7 @@ correctly. Also report any console errors. Do not edit files yet.
 ```text
 Based on what you observed, fix the validation in
 src/components/LoginForm.tsx, then reload the page and verify it again.
-Run npm test and npm run lint before you finish.
+Run yarn test and yarn lint before you finish.
 ```
 
 `-a on-request` 下，Codex 會視需要請你批准指令或寫檔；dev server 熱更新後它再請瀏覽器重新載入確認。
@@ -459,12 +461,12 @@ Run npm test and npm run lint before you finish.
 
 **補充**：
 - 【推論】Playwright MCP 由 Codex 所在的機器啟動瀏覽器，所以 `localhost` 指的是**那台機器**。Codex Cloud 的任務是在雲端機器跑，你本機的 dev server 對它是看不到的；要讓 Codex 驗證 `localhost` 頁面，dev server 與瀏覽器要和 Codex 在同一台。官方資料沒有針對這個情況說明，我沒有驗證。
-- 【建議】把驗證方式寫進 `AGENTS.md`，例如：「瀏覽器驗證：開 `http://localhost:5173`，只回報 console 的 error 與 warning」。
+- 【建議】把驗證方式寫進 `AGENTS.md`，例如：「瀏覽器驗證：開 `http://localhost:3000`，只回報 console 的 error 與 warning」。
 - 官方提醒頁面內容是不受信任的輸入：被檢查的頁面如果會顯示使用者輸入或外部內容，請別讓它的文字左右 Codex 的後續動作。
 
 ### 10.5 把關、審查、平行開發與 CI
 
-- **把關**：因為 hook 的設定我沒查證，【建議】先用較樸素的做法：在 `AGENTS.md` 要求「完成前跑 `npm test` 與 `npm run lint`」，再用 CI 或 git 的 pre-commit hook 擋住沒過的 commit。`AGENTS.md` 是文字指示，不保證被遵守，所以真正的把關要放在 CI。
+- **把關**：因為 hook 的設定我沒查證，【建議】先用較樸素的做法：在 `AGENTS.md` 要求「完成前跑 `yarn test` 與 `yarn lint`」，再用 CI 或 git 的 pre-commit hook 擋住沒過的 commit。`AGENTS.md` 是文字指示，不保證被遵守，所以真正的把關要放在 CI。
 - **目標條件**：【官方】Codex 有 `/goal`（設定、暫停、恢復、清除目標）。可以用像第 3 節那樣**可驗證**的條件（測試全過、lint 退出碼為 0）；`/goal` 的細部行為我沒查證，請以 `/goal` 的說明為準。
 - **審查**：【官方】`/review`、`/diff`、`codex review --uncommitted`；多 Agent 審查見 [CodeX-Agent](CodeX-Agent.md)。
 - **平行開發**：【官方】自己建 worktree 並用 `-C` 指向，不是 Codex 內建功能：
@@ -479,7 +481,7 @@ codex -C ../app-feature-b -s workspace-write -a on-request
 
 ```bash
 codex exec --json --sandbox workspace-write -a never \
-  "Run npm test and summarize the failing tests. Do not change files."
+  "Run yarn test and summarize the failing tests. Do not change files."
 ```
 
   只要 Codex 分析、不改檔，可改成 `--sandbox read-only`；但測試若需要寫入暫存檔，read-only 會失敗，請在隔離的 CI worktree 用 `workspace-write`。
@@ -487,7 +489,7 @@ codex exec --json --sandbox workspace-write -a never \
 ### 10.6 用 Codex 做這件事的限制
 
 - 我**沒有讀到** OpenAI 官方頁面原文（網路被擋），Browser plugin、`AGENTS.md`、MCP 設定的細節只來自搜尋摘要，標了【官方\*】。
-- 沒有驗證：Browser plugin 能否在 CLI 使用；hook 的事件與設定；Codex 能否禁止讀 `.env`；`workspace-write` 下 `npm install` 與連本機埠的行為；`/goal` 的細部行為。
+- 沒有驗證：Browser plugin 能否在 CLI 使用；hook 的事件與設定；Codex 能否禁止讀 `.env`；`workspace-write` 下 `yarn add`／`yarn install` 與連本機埠的行為；`/goal` 的細部行為。
 - 範例流程與提示詞是我組合的，沒有在實際的 React 專案上跑過。
 - Codex 更新快，旗標與功能以你當下的 `codex --help` 與官方文件為準。
 

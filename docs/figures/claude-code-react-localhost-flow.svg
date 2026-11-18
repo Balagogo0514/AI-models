@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" role="img" aria-labelledby="t d">
   <title id="t">localhost 上的 React 範例流程：你、dev server、Claude Code 與 Chrome 的互動順序</title>
-  <desc id="d">四個角色：你、跑 dev server 的終端機、跑 Claude Code 的終端機、Chrome 與擴充功能。順序：一，你在終端機 A 執行 npm run dev，網站在 localhost。二，你在終端機 B 執行 claude --chrome，並用 /chrome 確認狀態。三，你要求 Claude 開 localhost 的登入頁、送出錯誤資料並檢查 console。四，Claude Code 請 Chrome 開新分頁並操作表單。五，Chrome 向 dev server 載入頁面。六，Chrome 把 console 錯誤與 DOM 狀態回報給 Claude Code。七，Claude 修改元件檔案。八，dev server 熱更新。九，Claude 請 Chrome 重新驗證並取得結果。十，Claude 回報，你審查 diff。熱更新與 port 依專案而定，為建議做法。</desc>
+  <desc id="d">四個角色：你、跑 dev server 的終端機、跑 Claude Code 的終端機、Chrome 與擴充功能。順序：一，你在終端機 A 執行 yarn start，網站在 localhost。二，你在終端機 B 執行 claude --chrome，並用 /chrome 確認狀態。三，你要求 Claude 開 localhost 的登入頁、送出錯誤資料並檢查 console。四，Claude Code 請 Chrome 開新分頁並操作表單。五，Chrome 向 dev server 載入頁面。六，Chrome 把 console 錯誤與 DOM 狀態回報給 Claude Code。七，Claude 修改元件檔案。八，dev server 熱更新。九，Claude 請 Chrome 重新驗證並取得結果。十，Claude 回報，你審查 diff。熱更新與 port 依專案而定，為建議做法。</desc>
   <style>
     svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
     @media (prefers-color-scheme: dark) {
@@ -50,8 +50,8 @@
   <text x="560" y="74" text-anchor="middle">＋擴充功能</text>
   <line class="dash" x1="560" y1="86" x2="560" y2="596"/>
   <path class="ln" d="M80.0,112.0 L240.0,112.0" marker-end="url(#a)"/>
-  <rect x="85.8" y="92" width="148.3" height="16" fill="var(--bg)"/>
-  <text class="s" x="160.0" y="104" text-anchor="middle">1 npm run dev（localhost）</text>
+  <rect x="88.6" y="92" width="142.8" height="16" fill="var(--bg)"/>
+  <text class="s" x="160.0" y="104" text-anchor="middle">1 yarn start（localhost）</text>
   <path class="ln" d="M80.0,160.0 L400.0,160.0" marker-end="url(#a)"/>
   <rect x="147.2" y="140" width="185.6" height="16" fill="var(--bg)"/>
   <text class="s" x="240.0" y="152" text-anchor="middle">2 claude --chrome ＋ /chrome 確認</text>

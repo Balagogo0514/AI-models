@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 656" role="img" aria-labelledby="t d">
   <title id="t">localhost 上的 React 範例流程（Codex）：你、dev server、Codex 與瀏覽器的互動順序</title>
-  <desc id="d">四個角色：你、跑 dev server 的終端機 A、跑 Codex CLI 的終端機 B、經 Playwright MCP 控制的瀏覽器。順序：一，終端機 A 執行 npm run dev。二，終端機 B 用 codex 搭配 workspace-write 啟動。三，用 /mcp 確認有 playwright 工具。四，你要求 Codex 開 localhost 登入頁、送出錯誤資料並檢查 console。五，Codex 透過 MCP 請瀏覽器開頁操作表單。六，瀏覽器向 dev server 載入頁面。七，瀏覽器回報頁面內容與 console。八，Codex 修改元件檔案。九，dev server 熱更新。十，Codex 請瀏覽器重新驗證並回報。十一，你用 diff 與 review 審查。在 Codex app 可改用 Browser plugin。流程由文件組成，沒有實際執行過。</desc>
+  <desc id="d">四個角色：你、跑 dev server 的終端機 A、跑 Codex CLI 的終端機 B、經 Playwright MCP 控制的瀏覽器。順序：一，終端機 A 執行 yarn start。二，終端機 B 用 codex 搭配 workspace-write 啟動。三，用 /mcp 確認有 playwright 工具。四，你要求 Codex 開 localhost 登入頁、送出錯誤資料並檢查 console。五，Codex 透過 MCP 請瀏覽器開頁操作表單。六，瀏覽器向 dev server 載入頁面。七，瀏覽器回報頁面內容與 console。八，Codex 修改元件檔案。九，dev server 熱更新。十，Codex 請瀏覽器重新驗證並回報。十一，你用 diff 與 review 審查。在 Codex app 可改用 Browser plugin。流程由文件組成，沒有實際執行過。</desc>
   <style>
     svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
     @media (prefers-color-scheme: dark) {
@@ -50,8 +50,8 @@
   <text x="560" y="74" text-anchor="middle">Playwright MCP</text>
   <line class="dash" x1="560" y1="86" x2="560" y2="614"/>
   <path class="ln" d="M80.0,112.0 L240.0,112.0" marker-end="url(#a)"/>
-  <rect x="85.8" y="92" width="148.3" height="16" fill="var(--bg)"/>
-  <text class="s" x="160.0" y="104" text-anchor="middle">1 npm run dev（localhost）</text>
+  <rect x="88.6" y="92" width="142.8" height="16" fill="var(--bg)"/>
+  <text class="s" x="160.0" y="104" text-anchor="middle">1 yarn start（localhost）</text>
   <path class="ln" d="M80.0,158.0 L400.0,158.0" marker-end="url(#a)"/>
   <rect x="150.9" y="138" width="178.1" height="16" fill="var(--bg)"/>
   <text class="s" x="240.0" y="150" text-anchor="middle">2 codex -C . -s workspace-write</text>

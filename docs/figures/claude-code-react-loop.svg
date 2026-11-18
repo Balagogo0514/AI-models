@@ -48,11 +48,11 @@
   <path class="ln" d="M290.0,258.0 L290.0,278.0" marker-end="url(#a)"/>
   <rect class="box" x="60.0" y="278.0" width="460" height="58" rx="8"/>
   <text class="b" x="290" y="303" text-anchor="middle">4 dev server：熱更新</text>
-  <text x="290" y="319" text-anchor="middle">建議你在另一個終端機跑 npm run dev</text>
+  <text x="290" y="319" text-anchor="middle">建議你在另一個終端機跑 yarn start</text>
   <path class="ln" d="M290.0,336.0 L290.0,356.0" marker-end="url(#a)"/>
   <rect class="acc" x="60.0" y="356.0" width="460" height="58" rx="8"/>
   <text class="b" x="290" y="381" text-anchor="middle">5 驗證：測試與瀏覽器</text>
-  <text x="290" y="397" text-anchor="middle">npm test；Chrome 整合或 Playwright MCP 看畫面</text>
+  <text x="290" y="397" text-anchor="middle">yarn test；Chrome 整合或 Playwright MCP 看畫面</text>
   <path class="ln" d="M290.0,414.0 L290.0,434.0" marker-end="url(#a)"/>
   <rect class="good" x="60.0" y="434.0" width="460" height="58" rx="8"/>
   <text class="b" x="290" y="459" text-anchor="middle">6 hook：Stop 把關</text>
