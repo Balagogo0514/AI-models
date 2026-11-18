@@ -98,13 +98,48 @@
 
 測試通過不等於畫面對。要讓 Claude 看到實際渲染，有兩條路：
 
-### 4.1 Chrome 整合
+### 4.1 Chrome 整合：Claude 怎麼直接看到瀏覽器的輸出
 
-【官方】[Claude Code 的 Chrome 整合](https://code.claude.com/docs/en/chrome)：用 `claude --chrome` 啟動，或在 session 中輸入 `/chrome` 啟用；也有 `--no-chrome` 停用。首次啟動會出現一次性的說明對話框，講整合與網站權限。
+【官方】來源是 [Use Claude Code with Chrome](https://code.claude.com/docs/en/chrome)（我於 2026-11-18 取得該頁全文，下列內容都取自它）。
 
-- 需要安裝 Claude in Chrome 擴充功能；搜尋結果顯示需要用 `/login` 登入，**用 API key 或 `claude setup-token` 的長效 token 時，整合會保持關閉**。
-- 第三方指南提到擴充功能版本 1.0.36 以上、Claude Code 2.0.73 以上；**這是第三方說法，請以官方頁面為準**。
-- 支援的瀏覽器：官方文件（二手引述）說是 Google Chrome 與 Microsoft Edge；也有來源說會偵測 Brave、Arc 等，**說法不一**，請以官方頁面為準。
+![圖：Claude Code 如何直接檢查 Chrome 的輸出，從 prompt 到讀回 console 與 DOM](figures/claude-code-react-chrome.svg)
+
+**機制**：Claude Code 透過 **Claude in Chrome 瀏覽器擴充功能**連到你的 Chrome。Claude 為瀏覽器任務開**新分頁**、共用你的登入狀態；動作在**可見的 Chrome 視窗**即時進行；遇到登入頁或 CAPTCHA 會暫停，請你手動處理。擴充功能把 Claude 開的分頁收進一個與 session 綁定的分頁群組。
+
+**它能看到什麼**（官方列出的能力）：
+- **即時除錯**：直接讀 **console 錯誤與 DOM 狀態**，再去修造成錯誤的程式。
+- **設計驗證**：照 Figma 稿做出介面後，開在瀏覽器裡確認是否一致。
+- **網頁測試**：表單驗證、視覺回歸、使用者流程。
+- **截圖存檔**與**錄成 GIF**；也能上傳檔案、擷取頁面資料（錄影會拍下畫面上所有內容，含已登入頁面的帳號資訊，分享前要檢查）。
+- 完整的瀏覽器工具清單：在 Claude Code 裡執行 `/mcp`，選 `claude-in-chrome`，再選 **View tools**。
+- ⚠️ **Network 請求**：官方頁面沒有列出這項；有第三方文章說可以，我沒有確認。
+
+**怎麼用**（官方範例，React 專案請把網址換成你的 dev server，例如 `localhost:3000`）：
+
+```text
+I just updated the login form validation. Can you open localhost:3000,
+try submitting the form with invalid data, and check if the error
+messages appear correctly?
+```
+
+```text
+Open the dashboard page and check the console for any errors when
+the page loads.
+```
+
+- 官方提醒：**告訴 Claude 要找哪種訊息，不要要求「全部 console 輸出」**，因為 log 可能很冗長（Claude 讀 console 訊息後可以依樣式或錯誤類型過濾）。
+- 啟動：`claude --chrome`（首次會出現一次性說明對話框）；之後可用 `/chrome` 檢查連線（正常時顯示 `Status: Enabled`、`Extension: Installed`）、管理權限、重新連線、選擇瀏覽器；`Enabled by default` 可以不帶旗標，但**會讓瀏覽器工具與說明常駐、增加 context 用量**，所以需要時再開比較省。
+- 【建議】React 專案：先在另一個終端機啟動 dev server，再請 Claude 檢查頁面載入時 console 有沒有錯誤；改完元件後請它重新載入並確認。
+
+**需求與限制**（官方）：
+- 瀏覽器：Chrome 與 Edge；Claude Code 也會偵測並設定 Brave、Arc、Vivaldi、Opera 等 Chromium 系瀏覽器。**不支援 WSL**。
+- Claude in Chrome 擴充功能 **1.0.36 以上**，以及直接的 Anthropic 方案（Pro、Max、Ultra、Team、Enterprise）。
+- 必須用 `/login` 登入；用 API key 或 `claude setup-token` 的長效 token 時，**即使帶了 `--chrome`，整合仍保持關閉**。**不能**透過 Amazon Bedrock、Google Cloud、Microsoft Foundry 等第三方供應商使用。
+- 啟用 Zero Data Retention 的組織無法在 Claude Code 使用；啟用 HIPAA 的 Enterprise 組織預設關閉。
+- 擴充功能與 Claude Code 要登入**同一個 claude.ai 帳號與組織**，否則會出現 `Browser extension is not connected`。
+- **專案的 `.claude/settings.json` 不能替你開啟 Chrome 整合**（會被忽略並顯示警告），因為你 checkout 的 repo 不該有權限連到你的瀏覽器；要用請自己執行 `/chrome` 或加 `--chrome`。
+
+**常見問題**（官方）：頁面上跳出 `alert`／`confirm`／`prompt` 對話框會擋住瀏覽器指令，先手動關掉再叫 Claude 繼續；長時間閒置後連線可能中斷，執行 `/chrome` 選 `Reconnect extension`；第一次啟用後若偵測不到擴充功能，重啟 Chrome。
 
 ### 4.2 Playwright MCP
 
@@ -122,9 +157,9 @@ claude mcp add playwright -- npx @playwright/mcp@latest
 
 | 面向 | Chrome 整合 | Playwright MCP | 只靠測試 |
 |---|---|---|---|
-| 設定 | 裝擴充功能、用 `/login` | `claude mcp add` 一行 | 專案本來就有 |
-| 適合 | 在你自己的瀏覽器裡驗證、除錯 | 可寫進 `.mcp.json` 讓團隊共用、較容易重現 | 邏輯、元件行為 |
-| 限制 | 依賴 `/login` 與擴充功能 | 要下載瀏覽器；版本需固定 | 看不到實際畫面與樣式 |
+| 設定 | 裝擴充功能、用 `/login`、需直接的 Anthropic 方案 | `claude mcp add` 一行 | 專案本來就有 |
+| 適合 | 在你自己的 Chrome 裡驗證、除錯（共用登入狀態、可見視窗） | 可寫進 `.mcp.json` 讓團隊共用、較容易重現 | 邏輯、元件行為 |
+| 限制 | 依賴 `/login` 與擴充功能；不支援 WSL；不能用 API key | 要下載瀏覽器；版本需固定 | 看不到實際畫面與樣式 |
 
 ---
 
@@ -217,7 +252,7 @@ claude -p "run tests and report failures" \
 ## 10. 驗證說明與限制
 
 - 資料日期 2026-11-18。**我沒有實際在 React 專案上跑過本文的流程**，也沒有執行任何範例指令。
-- **【官方】** 的內容取自本庫已整理的 Claude Code 文件（來源為 `code.claude.com` 的官方文件，包括 hooks、MCP、worktree、`/batch`、`/goal`、權限與非互動模式），並與本庫對應章節一致；Chrome 整合取自官方頁面的搜尋結果，**我沒有開啟頁面**，其中擴充功能與 Claude Code 的版本需求、支援的瀏覽器取自第三方或二手引述，已在文中標明。
+- **【官方】** 的內容取自本庫已整理的 Claude Code 文件（來源為 `code.claude.com` 的官方文件，包括 hooks、MCP、worktree、`/batch`、`/goal`、權限與非互動模式），並與本庫對應章節一致；第 4.1 節的 Chrome 整合取自官方頁面[Use Claude Code with Chrome](https://code.claude.com/docs/en/chrome)，我於 2026-11-18 取得了全文；**但我沒有實際安裝擴充功能或執行過 `claude --chrome`**，所以沒有親眼驗證它能讀到什麼。其餘各節我沒有開啟官方頁面，內容取自本庫已整理的資料。
 - **Playwright MCP** 的指令取自搜尋結果（含 Playwright 官方文件），不是 Claude Code 文件；各旗標請以 Playwright 官方說明為準。
 - **【建議】** 都是我的歸納，沒有官方依據；React、Vite、Next.js、Vitest、Jest 與 React Testing Library 各自的用法，本文沒有查證。
 - Claude Code 更新很快，功能名稱、旗標與預設值以官方文件為準；本庫的 [Claude-Code-CLI](Claude-Code-CLI.md) 標有它整理時的版本資訊。
@@ -226,7 +261,7 @@ claude -p "run tests and report failures" \
 
 ## 11. 官方來源
 
-- Claude Code 的 Chrome 整合：<https://code.claude.com/docs/en/chrome>
+- Claude Code 的 Chrome 整合（第 4.1 節的依據）：<https://code.claude.com/docs/en/chrome>
 - Claude Code 的 MCP：<https://code.claude.com/docs/en/mcp.md>
 - Claude Code 的 memory（CLAUDE.md）：<https://code.claude.com/docs/en/memory.md>
 - Playwright MCP 入門：<https://playwright.dev/python/docs/getting-started-mcp>
