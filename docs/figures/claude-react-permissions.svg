@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 560" role="img" aria-labelledby="t d">
+  <title id="t">Claude Code 權限：一個動作怎麼被放行或擋下</title>
+  <desc id="d">Claude 要執行一個動作時，先看有沒有命中 deny 規則，命中就擋下，deny 與 allow 同時命中時 deny 優先。沒命中 deny 就看有沒有命中 allow，命中就直接執行。兩者都沒命中，就依目前的權限模式：default 只自動放行唯讀，其他要問你；acceptEdits 自動放行檔案編輯，其他要問你；plan 只讀不寫，先規劃。deny 優先是官方規則，之後依權限模式的串接是依官方說明整理的歸納。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="558.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">權限：一個動作怎麼被放行或擋下</text>
+  <rect class="box" x="90.0" y="50.0" width="300" height="44" rx="8"/>
+  <text class="b" x="240" y="68" text-anchor="middle">Claude 要執行一個動作</text>
+  <text x="240" y="84" text-anchor="middle">例如改檔、跑 yarn test</text>
+  <path class="ln" d="M240.0,94.0 L240.0,120.0" marker-end="url(#a)"/>
+  <polygon class="acc" points="240,120.0 390.0,160 240,200.0 90.0,160"/>
+  <text class="b" x="240" y="156" text-anchor="middle">命中 deny 規則？</text>
+  <text x="240" y="172" text-anchor="middle">deny 優先於 allow</text>
+  <rect class="bad" x="445.0" y="135.0" width="170" height="50" rx="8"/>
+  <text class="b" x="530" y="164" text-anchor="middle">擋下，不執行</text>
+  <path class="ln" d="M390.0,160.0 L445.0,160.0" marker-end="url(#a)"/>
+  <text class="s" x="418" y="150" text-anchor="middle">是</text>
+  <path class="ln" d="M240.0,200.0 L240.0,240.0" marker-end="url(#a)"/>
+  <text class="s" x="254" y="224" text-anchor="middle">否</text>
+  <polygon class="acc" points="240,240.0 390.0,280 240,320.0 90.0,280"/>
+  <text class="b" x="240" y="276" text-anchor="middle">命中 allow 規則？</text>
+  <text x="240" y="292" text-anchor="middle">例：Bash(yarn test*)</text>
+  <rect class="good" x="445.0" y="255.0" width="170" height="50" rx="8"/>
+  <text class="b" x="530" y="284" text-anchor="middle">直接執行</text>
+  <path class="ln" d="M390.0,280.0 L445.0,280.0" marker-end="url(#a)"/>
+  <text class="s" x="418" y="270" text-anchor="middle">是</text>
+  <path class="ln" d="M240.0,320.0 L240.0,366.0" marker-end="url(#a)"/>
+  <text class="s" x="254" y="348" text-anchor="middle">否</text>
+  <rect class="acc" x="50.0" y="368.0" width="380" height="40" rx="8"/>
+  <text class="b" x="240" y="392" text-anchor="middle">都沒命中 → 看目前的權限模式</text>
+  <path class="ln" d="M240.0,408.0 L240.0,426.0 L110.0,426.0 L110.0,444.0" marker-end="url(#a)"/>
+  <rect class="box" x="15.0" y="448.0" width="190" height="60" rx="8"/>
+  <text class="b" x="110" y="474" text-anchor="middle">default</text>
+  <text x="110" y="490" text-anchor="middle">只自動放行唯讀，其他要問你</text>
+  <path class="ln" d="M240.0,408.0 L240.0,426.0 L320.0,426.0 L320.0,444.0" marker-end="url(#a)"/>
+  <rect class="box" x="225.0" y="448.0" width="190" height="60" rx="8"/>
+  <text class="b" x="320" y="474" text-anchor="middle">acceptEdits</text>
+  <text x="320" y="490" text-anchor="middle">自動放行檔案編輯，其他要問你</text>
+  <path class="ln" d="M240.0,408.0 L240.0,426.0 L530.0,426.0 L530.0,444.0" marker-end="url(#a)"/>
+  <rect class="box" x="435.0" y="448.0" width="190" height="60" rx="8"/>
+  <text class="b" x="530" y="474" text-anchor="middle">plan</text>
+  <text x="530" y="490" text-anchor="middle">只讀不寫，先規劃</text>
+  <text class="s" x="320" y="540" text-anchor="middle">deny 優先是官方規則；沒命中規則後看權限模式，是依官方說明整理的歸納</text>
+</svg>

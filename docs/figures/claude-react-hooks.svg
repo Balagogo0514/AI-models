@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">兩個 hook 的時機：編輯後自動 lint，結束前用測試把關</title>
+  <desc id="d">左邊是編輯後：Claude 用 Edit 或 Write 改檔，觸發 PostToolUse hook，matcher 為 Edit 或 Write，執行 yarn lint 加 fix，自動整理。右邊是結束前：Claude 準備結束這一輪，觸發 Stop hook 執行 yarn test。測試通過就放行，交給你審查；沒通過就回傳 block 加失敗訊息，Claude 繼續修，再試著結束時 Stop hook 會再跑一次。注意 yarn test 要是一次性執行而不是 watch 模式，hook 有 async 與 timeout 欄位。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">兩個 hook 的時機</text>
+  <rect class="hd" x="20" y="44" width="210" height="28" rx="6"/>
+  <text class="b" x="125" y="63" text-anchor="middle">編輯後：PostToolUse</text>
+  <rect class="hd" x="255" y="44" width="375" height="28" rx="6"/>
+  <text class="b" x="442" y="63" text-anchor="middle">結束前：Stop</text>
+  <rect class="box" x="20.0" y="95.0" width="210" height="50" rx="8"/>
+  <text x="125" y="124" text-anchor="middle">Claude 用 Edit／Write 改檔</text>
+  <rect class="acc" x="20.0" y="172.0" width="210" height="56" rx="8"/>
+  <text class="b" x="125" y="196" text-anchor="middle">PostToolUse hook</text>
+  <text x="125" y="212" text-anchor="middle">matcher：Edit|Write</text>
+  <rect class="good" x="20.0" y="262.0" width="210" height="56" rx="8"/>
+  <text class="b" x="125" y="286" text-anchor="middle">yarn lint --fix</text>
+  <text x="125" y="302" text-anchor="middle">自動整理，每次存檔都跑</text>
+  <path class="ln" d="M125.0,145.0 L125.0,172.0" marker-end="url(#a)"/>
+  <path class="ln" d="M125.0,228.0 L125.0,262.0" marker-end="url(#a)"/>
+  <rect class="box" x="255.0" y="95.0" width="210" height="50" rx="8"/>
+  <text x="360" y="124" text-anchor="middle">Claude 準備結束這一輪</text>
+  <rect class="acc" x="255.0" y="172.0" width="210" height="56" rx="8"/>
+  <text class="b" x="360" y="196" text-anchor="middle">Stop hook</text>
+  <text x="360" y="212" text-anchor="middle">執行 yarn test</text>
+  <path class="ln" d="M360.0,145.0 L360.0,172.0" marker-end="url(#a)"/>
+  <path class="ln" d="M360.0,228.0 L360.0,258.0" marker-end="url(#a)"/>
+  <polygon class="acc" points="360,258.0 445.0,300 360,342.0 275.0,300"/>
+  <text class="b" x="360" y="304" text-anchor="middle">測試通過？</text>
+  <rect class="bad" x="480.0" y="272.0" width="150" height="56" rx="8"/>
+  <text class="b" x="555" y="296" text-anchor="middle">回傳 block＋失敗訊息</text>
+  <text x="555" y="312" text-anchor="middle">Claude 繼續修</text>
+  <path class="ln" d="M445.0,300.0 L480.0,300.0" marker-end="url(#a)"/>
+  <text class="s" x="462" y="290" text-anchor="middle">否</text>
+  <path class="ln" d="M555.0,272.0 L555.0,200.0 L465.0,200.0" marker-end="url(#a)"/>
+  <text class="s" x="560" y="238" text-anchor="middle">再試著結束</text>
+  <path class="ln" d="M360.0,342.0 L360.0,384.0" marker-end="url(#a)"/>
+  <text class="s" x="372" y="366" text-anchor="middle">是</text>
+  <rect class="good" x="265.0" y="385.0" width="190" height="50" rx="8"/>
+  <text class="b" x="360" y="414" text-anchor="middle">放行，交給你審查</text>
+  <text class="s" x="320" y="478" text-anchor="middle">yarn test 要是一次性執行，不是 watch 模式，否則 Stop hook 會等不到結束</text>
+  <text class="s" x="320" y="496" text-anchor="middle">hook 有 async（背景執行）與 timeout（逾時）欄位；範例取自官方整理</text>
+</svg>

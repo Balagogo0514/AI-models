@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 560" role="img" aria-labelledby="t d">
+  <title id="t">CI 與非互動模式：claude -p 與 codex exec 並排</title>
+  <desc id="d">CI job 被觸發後，左邊用 Claude Code 的 claude -p 非互動模式，用 allowedTools、max-turns、max-budget-usd、dontAsk 限制範圍，輸出用 output-format json。右邊用 Codex 的 codex exec 非互動，用 sandbox 與 approval 的 never 限制範圍，沒有可以硬性限制回合與 token 的旗標，輸出用 json 或 output-last-message。兩邊的結果都由 CI 檢查退出碼與輸出，通過才繼續，失敗就擋住。機密方面，CODEX_API_KEY 只支援 codex exec，要注入單次 job，不要設成 job-level 環境變數。範例指令皆未實際執行。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="558.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">CI：兩個工具並排</text>
+  <rect class="box" x="140.0" y="46.0" width="360" height="40" rx="8"/>
+  <text class="b" x="320" y="70" text-anchor="middle">CI job 觸發（push、PR、排程）</text>
+  <path class="ln" d="M320.0,86.0 L320.0,100.0 L165.0,100.0 L165.0,150.0" marker-end="url(#a)"/>
+  <path class="ln" d="M320.0,100.0 L475.0,100.0 L475.0,150.0" marker-end="url(#a)"/>
+  <rect class="acc" x="20.0" y="150.0" width="290" height="64" rx="8"/>
+  <text class="b" x="165" y="178" text-anchor="middle">Claude Code｜claude -p</text>
+  <text x="165" y="194" text-anchor="middle">非互動（print）模式</text>
+  <path class="ln" d="M165.0,214.0 L165.0,236.0" marker-end="url(#a)"/>
+  <rect class="good" x="20.0" y="242.0" width="290" height="80" rx="8"/>
+  <text class="b" x="165" y="270" text-anchor="middle">限制範圍</text>
+  <text x="165" y="286" text-anchor="middle">--allowedTools、--max-turns</text>
+  <text x="165" y="302" text-anchor="middle">--max-budget-usd、dontAsk</text>
+  <path class="ln" d="M165.0,322.0 L165.0,344.0" marker-end="url(#a)"/>
+  <rect class="box" x="20.0" y="344.0" width="290" height="56" rx="8"/>
+  <text class="b" x="165" y="368" text-anchor="middle">輸出</text>
+  <text x="165" y="384" text-anchor="middle">--output-format json</text>
+  <path class="ln" d="M165.0,400.0 L165.0,420.0 L320.0,420.0 L320.0,440.0" marker-end="url(#a)"/>
+  <rect class="acc" x="330.0" y="150.0" width="290" height="64" rx="8"/>
+  <text class="b" x="475" y="178" text-anchor="middle">Codex｜codex exec</text>
+  <text x="475" y="194" text-anchor="middle">非互動，不開 TUI</text>
+  <path class="ln" d="M475.0,214.0 L475.0,236.0" marker-end="url(#a)"/>
+  <rect class="good" x="330.0" y="242.0" width="290" height="80" rx="8"/>
+  <text class="b" x="475" y="270" text-anchor="middle">限制範圍</text>
+  <text x="475" y="286" text-anchor="middle">--sandbox、-a never</text>
+  <text x="475" y="302" text-anchor="middle">沒有硬性限制回合與 token 的旗標</text>
+  <path class="ln" d="M475.0,322.0 L475.0,344.0" marker-end="url(#a)"/>
+  <rect class="box" x="330.0" y="344.0" width="290" height="56" rx="8"/>
+  <text class="b" x="475" y="368" text-anchor="middle">輸出</text>
+  <text x="475" y="384" text-anchor="middle">--json、--output-last-message</text>
+  <path class="ln" d="M475.0,400.0 L475.0,420.0 L320.0,420.0"/>
+  <rect class="acc" x="110.0" y="440.0" width="420" height="52" rx="8"/>
+  <text class="b" x="320" y="462" text-anchor="middle">CI 檢查退出碼與輸出</text>
+  <text x="320" y="478" text-anchor="middle">通過才繼續；失敗就擋住</text>
+  <rect class="bad" x="30.0" y="510.0" width="580" height="40" rx="8"/>
+  <text x="320" y="534" text-anchor="middle">機密：CODEX_API_KEY 只支援 codex exec，要注入單次 job，不要設成 job-level 環境變數</text>
+</svg>
