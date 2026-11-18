@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 596" role="img" aria-labelledby="t d">
+  <title id="t">React 開發循環中，Claude Code 與 Codex 的功能對照</title>
+  <desc id="d">八列對照。專案慣例檔：Claude Code 用 CLAUDE.md，Codex 用 AGENTS.md 並可用 init 產生範本。權限：Claude Code 用權限模式與 allow、deny；Codex 用 sandbox 加 approval。看見瀏覽器：Claude Code 用 Chrome 整合；Codex 在 app 用 Browser plugin，CLI 建議用 Playwright MCP。MCP：claude mcp add 對應 codex mcp add。自動把關：Claude Code 有 hooks；Codex 有 hooks 指令但事件與設定未查證。審查：兩者都有 review。非互動與 CI：claude -p 對應 codex exec。平行與大規模改動：Claude Code 有 worktree 與 batch；Codex 要自己建 git worktree 並用 -C，沒有已驗證的 batch 對應。綠色表示本庫或官方資料可對應，橘色表示未驗證或沒有對應。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="594.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">同一個開發循環，兩個工具怎麼對應</text>
+  <rect class="hd" x="12" y="40" width="616" height="26" rx="6"/>
+  <text class="b" x="20" y="58">要做的事</text>
+  <text class="b" x="150" y="58">Claude Code</text>
+  <text class="b" x="398" y="58">Codex</text>
+  <rect class="box" x="12" y="72" width="616" height="56" rx="8"/>
+  <text class="b" x="20" y="105">專案慣例</text>
+  <text x="150" y="96">CLAUDE.md</text>
+  <text x="150" y="113">每次請求放進 context</text>
+  <rect class="good" x="390" y="76" width="232" height="48" rx="6"/>
+  <text x="398" y="96">AGENTS.md</text>
+  <text x="398" y="113">/init 產生範本</text>
+  <rect class="box" x="12" y="134" width="616" height="56" rx="8"/>
+  <text class="b" x="20" y="167">權限</text>
+  <text x="150" y="158">權限模式＋allow／deny</text>
+  <text x="150" y="175">deny 優先</text>
+  <rect class="good" x="390" y="138" width="232" height="48" rx="6"/>
+  <text x="398" y="158">sandbox（-s）＋approval（-a）</text>
+  <text x="398" y="175">/permissions 調整</text>
+  <rect class="box" x="12" y="196" width="616" height="56" rx="8"/>
+  <text class="b" x="20" y="229">看見瀏覽器</text>
+  <text x="150" y="220">Chrome 整合</text>
+  <text x="150" y="237">claude --chrome</text>
+  <rect class="good" x="390" y="200" width="232" height="48" rx="6"/>
+  <text x="398" y="220">app：Browser plugin</text>
+  <text x="398" y="237">CLI：Playwright MCP（建議）</text>
+  <rect class="box" x="12" y="258" width="616" height="56" rx="8"/>
+  <text class="b" x="20" y="291">接 MCP</text>
+  <text x="150" y="282">claude mcp add</text>
+  <text x="150" y="299">--scope project 寫入 .mcp.json</text>
+  <rect class="good" x="390" y="262" width="232" height="48" rx="6"/>
+  <text x="398" y="282">codex mcp add</text>
+  <text x="398" y="299">/mcp 查看可用工具</text>
+  <rect class="box" x="12" y="320" width="616" height="56" rx="8"/>
+  <text class="b" x="20" y="353">自動把關</text>
+  <text x="150" y="344">hooks</text>
+  <text x="150" y="361">PostToolUse、Stop</text>
+  <rect class="bad" x="390" y="324" width="232" height="48" rx="6"/>
+  <text x="398" y="344">有 /hooks</text>
+  <text x="398" y="361">事件與設定我沒查證</text>
+  <rect class="box" x="12" y="382" width="616" height="56" rx="8"/>
+  <text class="b" x="20" y="415">審查</text>
+  <text x="150" y="415">/review</text>
+  <rect class="good" x="390" y="386" width="232" height="48" rx="6"/>
+  <text x="398" y="406">/review、/diff</text>
+  <text x="398" y="423">codex review --uncommitted</text>
+  <rect class="box" x="12" y="444" width="616" height="56" rx="8"/>
+  <text class="b" x="20" y="477">非互動／CI</text>
+  <text x="150" y="468">claude -p</text>
+  <text x="150" y="485">--allowedTools、dontAsk</text>
+  <rect class="good" x="390" y="448" width="232" height="48" rx="6"/>
+  <text x="398" y="468">codex exec</text>
+  <text x="398" y="485">--json、--sandbox、-a never</text>
+  <rect class="box" x="12" y="506" width="616" height="56" rx="8"/>
+  <text class="b" x="20" y="539">平行／大改動</text>
+  <text x="150" y="539">--worktree、/batch</text>
+  <rect class="bad" x="390" y="510" width="232" height="48" rx="6"/>
+  <text x="398" y="530">自建 git worktree＋-C</text>
+  <text x="398" y="547">沒有已驗證的 /batch 對應</text>
+  <text class="s" x="320" y="584" text-anchor="middle">綠：本庫或官方資料可對應；橘：未驗證或沒有對應</text>
+</svg>

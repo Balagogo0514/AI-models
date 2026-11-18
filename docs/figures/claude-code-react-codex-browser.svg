@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 396" role="img" aria-labelledby="t d">
+  <title id="t">Codex 怎麼看到瀏覽器：依你用的介面選</title>
+  <desc id="d">四種情況。在 Codex app 裡檢查 localhost 頁面，用 Browser plugin，以 @Browser 呼叫，和你共看同一頁，這是官方頁面所述。用 CLI 終端機，建議用 Playwright MCP，以 codex mcp add 加入，這是我的建議，沒有實際執行過。需要驗證要登入的網站，第三方文章提到 Codex 有 Chrome 擴充功能，我沒有查證。頁面內容與 console 訊息要當作不受信任的輸入，不要把機密貼進瀏覽器流程，這是官方頁面的提醒。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="394.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">Codex：我該用哪一種瀏覽器方式？</text>
+  <rect class="acc" x="12" y="44" width="270" height="70" rx="10"/>
+  <text x="24" y="84.0">用 Codex app，頁面在 localhost</text>
+  <line class="ln" x1="282" y1="79.0" x2="316" y2="79.0" marker-end="url(#a)"/>
+  <rect class="good" x="318" y="44" width="310" height="70" rx="10"/>
+  <text class="b" x="330" y="73.0">Browser plugin（@Browser）</text>
+  <text class="s" x="330" y="95.0">app 內建瀏覽器，和你共看同一頁（官方）</text>
+  <rect class="acc" x="12" y="124" width="270" height="70" rx="10"/>
+  <text x="24" y="164.0">用 CLI 終端機</text>
+  <line class="ln" x1="282" y1="159.0" x2="316" y2="159.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="124" width="310" height="70" rx="10"/>
+  <text class="b" x="330" y="153.0">Playwright MCP</text>
+  <text class="s" x="330" y="175.0">codex mcp add playwright …（建議，未實跑）</text>
+  <rect class="acc" x="12" y="204" width="270" height="70" rx="10"/>
+  <text x="24" y="244.0">要驗證需要登入的網站</text>
+  <line class="ln" x1="282" y1="239.0" x2="316" y2="239.0" marker-end="url(#a)"/>
+  <rect class="bad" x="318" y="204" width="310" height="70" rx="10"/>
+  <text class="b" x="330" y="233.0">先確認需求再選</text>
+  <text class="s" x="330" y="255.0">第三方提到 Chrome 擴充功能，我沒查證</text>
+  <rect class="acc" x="12" y="284" width="270" height="70" rx="10"/>
+  <text x="24" y="324.0">頁面內容與 console 訊息</text>
+  <line class="ln" x1="282" y1="319.0" x2="316" y2="319.0" marker-end="url(#a)"/>
+  <rect class="good" x="318" y="284" width="310" height="70" rx="10"/>
+  <text class="b" x="330" y="313.0">當作不受信任的輸入</text>
+  <text class="s" x="330" y="335.0">不要把機密貼進瀏覽器流程（官方提醒）</text>
+  <text class="s" x="320" y="380" text-anchor="middle">Browser plugin 的說明來自官方 app 頁面（經搜尋摘要）；我沒有開啟原文</text>
+</svg>

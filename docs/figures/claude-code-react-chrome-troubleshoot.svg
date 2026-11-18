@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">Chrome 整合檢查不到結果時：症狀與處理</title>
+  <desc id="d">六種症狀與處理。帶了 claude --chrome 仍沒有瀏覽器工具，檢查是否用 API key 或 setup-token 登入，改用 /login。/chrome 顯示 Extension Not detected，到 chrome://extensions 安裝或啟用擴充功能，必要時重啟 Chrome。出現 Browser extension is not connected，擴充功能與 Claude Code 要登入同一個 claude.ai 帳號與組織，再用 /chrome 重新連線。No tab available 或指令沒反應，請 Claude 開新分頁重試，並檢查是否有 alert、confirm、prompt 對話框擋住。Receiving end does not exist，是擴充功能閒置，用 /chrome 選 Reconnect extension。頁面打不開時，建議確認 dev server 有在跑、網址與 port 正確。前五項為官方文件所述，最後一項為建議。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">症狀 → 處理</text>
+  <rect class="acc" x="12" y="44" width="270" height="66" rx="10"/>
+  <text x="24" y="82.0">帶了 --chrome 仍沒有瀏覽器工具</text>
+  <line class="ln" x1="282" y1="77.0" x2="316" y2="77.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="44" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="71.0">檢查是不是用 API key 或 setup-token</text>
+  <text class="s" x="330" y="93.0">改用 /login 登入（官方）</text>
+  <rect class="acc" x="12" y="118" width="270" height="66" rx="10"/>
+  <text x="24" y="156.0">/chrome 顯示 Extension: Not detected</text>
+  <line class="ln" x1="282" y1="151.0" x2="316" y2="151.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="118" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="145.0">安裝或啟用擴充功能</text>
+  <text class="s" x="330" y="167.0">chrome://extensions；必要時重啟 Chrome（官方）</text>
+  <rect class="acc" x="12" y="192" width="270" height="66" rx="10"/>
+  <text x="24" y="230.0">Browser extension is not connected</text>
+  <line class="ln" x1="282" y1="225.0" x2="316" y2="225.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="192" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="219.0">擴充功能與 Claude Code 要同帳號、同組織</text>
+  <text class="s" x="330" y="241.0">再 /chrome → Reconnect extension（官方）</text>
+  <rect class="acc" x="12" y="266" width="270" height="66" rx="10"/>
+  <text x="24" y="304.0">No tab available／指令沒反應</text>
+  <line class="ln" x1="282" y1="299.0" x2="316" y2="299.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="266" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="293.0">請 Claude 開新分頁重試</text>
+  <text class="s" x="330" y="315.0">檢查有沒有 alert／confirm／prompt 擋住（官方）</text>
+  <rect class="acc" x="12" y="340" width="270" height="66" rx="10"/>
+  <text x="24" y="378.0">Receiving end does not exist</text>
+  <line class="ln" x1="282" y1="373.0" x2="316" y2="373.0" marker-end="url(#a)"/>
+  <rect class="box" x="318" y="340" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="367.0">擴充功能的 service worker 閒置了</text>
+  <text class="s" x="330" y="389.0">/chrome → Reconnect extension（官方）</text>
+  <rect class="acc" x="12" y="414" width="270" height="66" rx="10"/>
+  <text x="24" y="452.0">localhost 頁面打不開</text>
+  <line class="ln" x1="282" y1="447.0" x2="316" y2="447.0" marker-end="url(#a)"/>
+  <rect class="bad" x="318" y="414" width="310" height="66" rx="10"/>
+  <text class="b" x="330" y="441.0">確認 dev server 有在跑、網址與 port 正確</text>
+  <text class="s" x="330" y="463.0">（建議，非官方）</text>
+</svg>
