@@ -1,4 +1,4 @@
-# Claude Code 如何結合 React 本機開發
+# Claude 如何結合 React 本機開發：Claude Code 與 Codex
 
 > 資料日期：2026-11-18  
 > 範圍：在本機用 Claude Code 開發 React 專案（Vite、Next.js 等）的工作流程：專案設定、權限、dev server 與測試、瀏覽器驗證、hooks、平行開發與 CI；第 10 節補上用 Codex 做同樣的事。  
@@ -15,11 +15,13 @@
 - **用 Codex 也行**：`AGENTS.md` 對應 `CLAUDE.md`、sandbox 加 approval 對應權限、瀏覽器驗證用 Browser plugin 或 Playwright MCP，見第 10 節；官方頁面我打不開，該節多處只來自搜尋摘要。
 - **大規模改寫**（例如元件遷移）可用 `/batch` 搭配 worktree；官方範例之一就是 `/batch migrate src/ from Solid to React`。
 
+![圖：文件導覽，五個區塊依序是準備、看見結果、把關與規模、用 Codex 做同樣的事、查閱](figures/claude-react-map.svg)
+
 ---
 
 ## 1. 整體流程：Claude 在本機 React 開發循環中的位置
 
-![圖：Claude Code 在本機 React 開發循環中的位置，七個步驟與誰負責](figures/claude-code-react-loop.svg)
+![圖：Claude Code 在本機 React 開發循環中的位置，七個步驟與誰負責](figures/claude-react-loop.svg)
 
 | 步驟 | 誰做 | 用到的功能 | 依據 |
 |---|---|---|---|
@@ -37,7 +39,7 @@
 
 ### 2.1 設定檔放哪裡
 
-![圖：React 專案裡 Claude Code 相關檔案放哪裡，哪些可 commit、哪些是個人的](figures/claude-code-react-files.svg)
+![圖：React 專案裡 Claude Code 相關檔案放哪裡，哪些可 commit、哪些是個人的](figures/claude-react-files.svg)
 
 【官方】hooks 與權限可放在 `~/.claude/settings.json`（個人，所有專案）、`.claude/settings.json`（專案，可 commit 共享）、`.claude/settings.local.json`（專案，個人不共享）。MCP 的 `project` scope 寫入專案根目錄的 `.mcp.json`，可 commit 共享。
 
@@ -78,6 +80,8 @@
 }
 ```
 
+![圖：Claude Code 權限流程，先看 deny、再看 allow，都沒命中就依權限模式](figures/claude-react-permissions.svg)
+
 - 我故意**沒有**把 `yarn add`、`yarn install` 放進 `allow`：安裝套件會執行第三方腳本，建議每次由你確認（【建議】）。
 - 各 pattern 的比對細節我沒有逐一驗證；寫好後請實際觸發一次確認有擋到。
 - 權限模式：`default` 只自動放行唯讀；`acceptEdits` 自動放行檔案編輯；`plan` 只讀不寫；`auto`、`dontAsk`、`bypassPermissions` 見 [Claude-Code-CLI 第 16 節](Claude-Code-CLI.md)（【官方】）。
@@ -85,6 +89,8 @@
 ---
 
 ## 3. 讓 Claude 看見結果：dev server 與測試
+
+![圖：讓 Claude 看見結果的四種回饋訊號：測試、lint 與型別、瀏覽器、可驗證的完成條件](figures/claude-react-signals.svg)
 
 - **dev server**（【建議】）：在另一個終端機自己執行 `yarn start`，Claude 改檔後熱更新會自動套用。這樣不必讓 Claude 管理長時間執行的程序；也避免兩邊各開一個 server 造成 port 衝突。
 - **測試**（【建議】）：讓 Claude 在改完後自己跑 `yarn test`，並把失敗訊息當作下一步的依據。React 專案常見的測試組合是 Vitest 或 Jest 加 React Testing Library；本文不涉及這些工具的官方文件，請參考各自的說明。
@@ -106,7 +112,7 @@
 
 【官方】來源是 [Use Claude Code with Chrome](https://code.claude.com/docs/en/chrome)（我於 2026-11-18 取得該頁全文，下列內容都取自它）。
 
-![圖：Claude Code 如何直接檢查 Chrome 的輸出，從 prompt 到讀回 console 與 DOM](figures/claude-code-react-chrome.svg)
+![圖：Claude Code 如何直接檢查 Chrome 的輸出，從 prompt 到讀回 console 與 DOM](figures/claude-react-chrome.svg)
 
 **機制**：Claude Code 透過 **Claude in Chrome 瀏覽器擴充功能**連到你的 Chrome。Claude 為瀏覽器任務開**新分頁**、共用你的登入狀態；動作在**可見的 Chrome 視窗**即時進行；遇到登入頁或 CAPTCHA 會暫停，請你手動處理。擴充功能把 Claude 開的分頁收進一個與 session 綁定的分頁群組。
 
@@ -169,7 +175,7 @@ claude mcp add playwright -- npx @playwright/mcp@latest
 
 情境：你在本機用 `localhost` 跑 React，想讓 Claude Code 直接開瀏覽器檢查。這裡用官方範例的情境「登入表單的驗證」走一遍。**以下是依官方文件與範例組成的流程，我沒有實際跑過**；指令與提示詞照官方寫法，檔名、網址與埠號是示意，請換成你的專案。
 
-![圖：localhost 範例流程，你、dev server、Claude Code 與 Chrome 的互動順序](figures/claude-code-react-localhost-flow.svg)
+![圖：localhost 範例流程，你、dev server、Claude Code 與 Chrome 的互動順序](figures/claude-react-localhost-flow.svg)
 
 **事前條件**（第 4.1 節）：已安裝 Claude in Chrome 擴充功能（1.0.36 以上）、用 `/login` 登入 Claude Code、不是透過 Bedrock 等第三方供應商。
 
@@ -226,7 +232,7 @@ Claude 會把圖存到磁碟並回報路徑。也可以請它錄成 GIF，但**�
 
 ### 4.5 檢查不到結果時
 
-![圖：Chrome 整合檢查不到結果時的六種症狀與處理](figures/claude-code-react-chrome-troubleshoot.svg)
+![圖：Chrome 整合檢查不到結果時的六種症狀與處理](figures/claude-react-chrome-troubleshoot.svg)
 
 前五項取自官方頁面的疑難排解與錯誤訊息表（【官方】），最後一項是我加的（【建議】）。官方還提醒：如果你的 Claude 帳號屬於多個組織，擴充功能必須登入**與 Claude Code 相同的組織**，用 `/status` 的 `Organization` 欄位確認；若登出擴充功能，會失去存在擴充功能裡的捷徑與排程任務，所以先試其他修法。
 
@@ -235,6 +241,8 @@ Claude 會把圖存到磁碟並回報路徑。也可以請它錄成 GIF，但**�
 ## 5. Hooks：自動 lint 與測試把關
 
 【官方】hooks 的設定結構、觸發時機與位置見 [Claude-Code-CLI 第 17 節](Claude-Code-CLI.md)。官方整理的兩個範例，直接適合 React 專案（官方範例寫的是 `npm`，這裡換成 yarn）：
+
+![圖：兩個 hook 的時機：編輯後 PostToolUse 跑 lint，結束前 Stop hook 跑測試，沒過就 block 讓 Claude 繼續修](figures/claude-react-hooks.svg)
 
 **編輯後自動 lint（`PostToolUse`）**
 
@@ -274,6 +282,8 @@ React 專案的注意事項（【建議】）：
 
 ## 6. 平行開發與大規模改動：worktree、/batch、審查
 
+![圖：主 checkout 與兩個 worktree，/batch 在 worktree 中平行執行，Codex 要自己建 worktree](figures/claude-react-worktree.svg)
+
 - **Worktree**（【官方】）：`claude --worktree <名稱>` 在 `.claude/worktrees/<名稱>/` 建立隔離的工作目錄與分支；用來同時開發兩個功能而不互踩。
   - `.env` 等 gitignore 的檔案不會自動進 worktree，要用 repo 根目錄的 `.worktreeinclude` 指定複製（語法同 `.gitignore`）。
   - **React 專案的額外注意**（【建議】）：worktree 是乾淨的 checkout，`node_modules` 不會跟著來，每個 worktree 都要自己安裝依賴；同時開多個 dev server 時要用不同的 port。
@@ -283,6 +293,10 @@ React 專案的注意事項（【建議】）：
 ---
 
 ## 7. CI 與非互動模式
+
+![圖：CI 中 claude -p 與 codex exec 並排：限制範圍、輸出、由 CI 檢查退出碼](figures/claude-react-ci.svg)
+
+下文先說 Claude Code，Codex 的對應做法見第 10.5 節。
 
 【官方】`claude -p` 是非互動（print）模式，搭配旗標限制範圍。官方的 CI 範例（官方寫 `Bash(npm test)`，這裡換成 yarn）：
 
@@ -301,13 +315,15 @@ claude -p "run tests and report failures" \
 
 ## 8. 依需求選做法
 
-![圖：依需求選做法：畫面、邏輯、lint、大規模改寫與 CI](figures/claude-code-react-choose.svg)
+![圖：依需求選做法：畫面、邏輯、lint、大規模改寫與 CI](figures/claude-react-choose.svg)
 
 > 這是我依各功能定位做的歸納，不是官方建議。
 
 ---
 
 ## 9. 常見陷阱（【建議】）
+
+![圖：六個常見陷阱與對策](figures/claude-react-pitfalls.svg)
 
 1. **只看測試、不看畫面**：樣式與版面問題測試抓不到，重要頁面要用第 4 節的方式看一次。
 2. **把規則只寫在 `CLAUDE.md`**：它不保證被遵守；會出事的規則（碰 `.env`、改依賴）要用 deny 或 hook 擋。
@@ -330,7 +346,7 @@ claude -p "run tests and report failures" \
 
 ### 10.1 與 Claude Code 的對照
 
-![圖：React 開發循環中，Claude Code 與 Codex 的功能對照，綠色表示可對應，橘色表示未驗證或沒有對應](figures/claude-code-react-codex-map.svg)
+![圖：React 開發循環中，Claude Code 與 Codex 的功能對照，綠色表示可對應，橘色表示未驗證或沒有對應](figures/claude-react-codex-map.svg)
 
 幾個要注意的差異：
 
@@ -368,6 +384,8 @@ claude -p "run tests and report failures" \
 codex -C . -s workspace-write -a on-request
 ```
 
+![圖：Codex 權限的兩個維度 sandbox 與 approval，以及本庫整理的常用組合](figures/claude-react-codex-permissions.svg)
+
 想固定下來，可寫進 `config.toml`（【官方】本庫範例，欄位名稱以你版本的 `config-reference` 為準）：
 
 ```toml
@@ -381,7 +399,7 @@ approval_policy = "on-request"
 
 ### 10.3 瀏覽器驗證：Codex 怎麼看到畫面
 
-![圖：Codex 怎麼看到瀏覽器：app 用 Browser plugin，CLI 建議用 Playwright MCP，需要登入的網站先確認需求，頁面內容當作不受信任的輸入](figures/claude-code-react-codex-browser.svg)
+![圖：Codex 怎麼看到瀏覽器：app 用 Browser plugin，CLI 建議用 Playwright MCP，需要登入的網站先確認需求，頁面內容當作不受信任的輸入](figures/claude-react-codex-browser.svg)
 
 **Codex app 的 Browser plugin**（【官方\*】）：
 - 官方頁面（<https://developers.openai.com/codex/app/browser>）說，app 內建瀏覽器讓你和 Codex 在 thread 裡**共看同一個渲染後的頁面**，用途包含建置與除錯網頁應用、預覽頁面、對頁面留視覺化評論。
@@ -414,7 +432,7 @@ args = ["@playwright/mcp@latest"]
 
 情境與第 4.4 節相同（登入表單的驗證），下面用 CLI ＋ Playwright MCP。**這是我依上面各段組成的流程，沒有實際跑過**；提示詞是我寫的（官方沒有針對 Playwright MCP 的範例），檔名、網址與埠號是示意。
 
-![圖：Codex 的 localhost 範例流程，你、dev server、Codex CLI 與瀏覽器的互動順序](figures/claude-code-react-codex-flow.svg)
+![圖：Codex 的 localhost 範例流程，你、dev server、Codex CLI 與瀏覽器的互動順序](figures/claude-react-codex-flow.svg)
 
 **步驟 1：終端機 A 啟動 dev server**（【建議】）
 

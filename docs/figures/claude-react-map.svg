@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-labelledby="t d">
+  <title id="t">文件導覽：這份文件的章節怎麼串起來</title>
+  <desc id="d">五個區塊。準備（第 2 節）：CLAUDE.md 或 AGENTS.md、權限、設定檔放哪裡。看見結果（第 3 到 4 節）：dev server、測試、瀏覽器驗證與完整範例流程。把關與規模（第 5 到 7 節）：hooks、worktree 與 batch、CI。用 Codex 做同樣的事（第 10 節）：對照、sandbox 與 approval、瀏覽器、範例流程。查閱（第 8、9、11、12 節）：依需求選做法、常見陷阱、驗證說明、官方來源。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="478.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">文件導覽</text>
+  <rect class="acc" x="40.0" y="44.0" width="560" height="64" rx="8"/>
+  <text class="b" x="320" y="72" text-anchor="middle">準備｜第 2 節</text>
+  <text x="320" y="88" text-anchor="middle">CLAUDE.md／AGENTS.md、權限、設定檔放哪裡</text>
+  <path class="ln" d="M320.0,108.0 L320.0,124.0" marker-end="url(#a)"/>
+  <rect class="good" x="40.0" y="124.0" width="560" height="64" rx="8"/>
+  <text class="b" x="320" y="152" text-anchor="middle">看見結果｜第 3–4 節</text>
+  <text x="320" y="168" text-anchor="middle">dev server、測試、瀏覽器驗證、完整範例流程</text>
+  <path class="ln" d="M320.0,188.0 L320.0,204.0" marker-end="url(#a)"/>
+  <rect class="acc" x="40.0" y="204.0" width="560" height="64" rx="8"/>
+  <text class="b" x="320" y="232" text-anchor="middle">把關與規模｜第 5–7 節</text>
+  <text x="320" y="248" text-anchor="middle">hooks、worktree 與 /batch、CI</text>
+  <path class="ln" d="M320.0,268.0 L320.0,284.0" marker-end="url(#a)"/>
+  <rect class="box" x="40.0" y="284.0" width="560" height="64" rx="8"/>
+  <text class="b" x="320" y="312" text-anchor="middle">用 Codex 做同樣的事｜第 10 節</text>
+  <text x="320" y="328" text-anchor="middle">對照、sandbox 與 approval、瀏覽器、範例流程</text>
+  <path class="dash" d="M320.0,348.0 L320.0,364.0" marker-end="url(#a)"/>
+  <rect class="box" x="40.0" y="364.0" width="560" height="64" rx="8"/>
+  <text class="b" x="320" y="392" text-anchor="middle">查閱｜第 8、9、11、12 節</text>
+  <text x="320" y="408" text-anchor="middle">依需求選做法、常見陷阱、驗證說明、官方來源</text>
+  <text class="s" x="320" y="466" text-anchor="middle">前三區是 Claude Code 的工作流程；第 10 節用 Codex 重做一遍</text>
+</svg>
