@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 548" role="img" aria-labelledby="t d">
+  <title id="t">評測流程：用案例集量準確率、成本與失敗模式</title>
+  <desc id="d">評測流程由上到下。案例集五十到一百個。run_eval 逐案呼叫 run_case，並記錄模型與 prompt 版本。輸出每案的 report.json 與成本紀錄。與 expected.json 比對，可用規則或人工。最後得到指標：根因 Top-1 與 Top-3 正確率；無證據卻高信心的比例，目標是零；每案成本、耗時、工具呼叫數；失敗分類，分為證據不足、工具錯誤、判斷錯。指標用來做閘門二的決策。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="546.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">評測流程</text>
+  <rect class="box" x="110.0" y="46.0" width="420" height="56" rx="8"/>
+  <text class="b" x="320" y="70" text-anchor="middle">案例集（50–100 個）</text>
+  <text x="320" y="86" text-anchor="middle">每案：core、binary、symbols、source、expected.json</text>
+  <path class="ln" d="M320.0,102.0 L320.0,126.0" marker-end="url(#a)"/>
+  <rect class="acc" x="110.0" y="126.0" width="420" height="56" rx="8"/>
+  <text class="b" x="320" y="150" text-anchor="middle">run_eval：逐案呼叫 run_case</text>
+  <text x="320" y="166" text-anchor="middle">記錄模型版本、prompt 版本、工具版本</text>
+  <path class="ln" d="M320.0,182.0 L320.0,206.0" marker-end="url(#a)"/>
+  <rect class="box" x="110.0" y="206.0" width="420" height="56" rx="8"/>
+  <text class="b" x="320" y="230" text-anchor="middle">每案輸出</text>
+  <text x="320" y="246" text-anchor="middle">report.json、token 與成本、耗時、工具呼叫</text>
+  <path class="ln" d="M320.0,262.0 L320.0,286.0" marker-end="url(#a)"/>
+  <rect class="acc" x="110.0" y="286.0" width="420" height="56" rx="8"/>
+  <text class="b" x="320" y="310" text-anchor="middle">與 expected.json 比對</text>
+  <text x="320" y="326" text-anchor="middle">規則比對，或人工判定</text>
+  <path class="ln" d="M320.0,342.0 L320.0,366.0" marker-end="url(#a)"/>
+  <rect class="good" x="40.0" y="362.0" width="560" height="112" rx="8"/>
+  <text class="b" x="320" y="390" text-anchor="middle">指標</text>
+  <text x="320" y="406" text-anchor="middle">根因 Top-1／Top-3 正確率</text>
+  <text x="320" y="422" text-anchor="middle">無證據卻高信心的比例（目標 0）</text>
+  <text x="320" y="438" text-anchor="middle">每案成本、耗時、工具呼叫數</text>
+  <text x="320" y="454" text-anchor="middle">失敗分類：證據不足／工具錯誤／判斷錯</text>
+  <text class="b" x="320" y="494" text-anchor="middle">→ 用來做閘門 2：達標往下走，未達標先查失敗模式</text>
+  <text class="s" x="320" y="520" text-anchor="middle">門檻由你們與值班人員一起定；本文不給數字</text>
+</svg>

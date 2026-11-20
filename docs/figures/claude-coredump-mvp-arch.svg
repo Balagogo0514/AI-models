@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 560" role="img" aria-labelledby="t d">
+  <title id="t">階段 2 的模組與資料流：命令列程式，不是服務</title>
+  <desc id="d">階段 2 是一支命令列程式。run_case 讀案例目錄，交給 preprocess 這支確定性程式產生 case_facts，內含 signal、build-id 與 threads。orchestrator 迴圈受 CaseBudget 限制，左邊呼叫三個唯讀工具，這些工具是有 timeout 的子行程；右邊呼叫 Claude Messages API，模型只看到 case_facts 與工具結果。迴圈結束後，報告 JSON 要通過 schema 驗證，不過就不收；通過後存檔並記錄 token、成本與工具呼叫；評測 harness 再與 expected.json 比對。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="558.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">階段 2：模組與資料流</text>
+  <rect class="box" x="170.0" y="50.0" width="300" height="52" rx="8"/>
+  <text class="b" x="320" y="72" text-anchor="middle">run_case（命令列）</text>
+  <text x="320" y="88" text-anchor="middle">讀案例目錄</text>
+  <path class="ln" d="M320.0,102.0 L320.0,126.0" marker-end="url(#a)"/>
+  <rect class="good" x="170.0" y="128.0" width="300" height="64" rx="8"/>
+  <text class="b" x="320" y="156" text-anchor="middle">preprocess（確定性程式）</text>
+  <text x="320" y="172" text-anchor="middle">case_facts.json：signal、build-id、threads</text>
+  <path class="ln" d="M320.0,192.0 L320.0,216.0" marker-end="url(#a)"/>
+  <rect class="acc" x="195.0" y="223.0" width="250" height="90" rx="8"/>
+  <text class="b" x="320" y="256" text-anchor="middle">orchestrator 迴圈</text>
+  <text x="320" y="272" text-anchor="middle">CaseBudget 限制</text>
+  <text x="320" y="288" text-anchor="middle">呼叫次數、token、秒數</text>
+  <rect class="box" x="15.0" y="208.0" width="150" height="120" rx="8"/>
+  <text class="b" x="90" y="240" text-anchor="middle">3 個唯讀工具</text>
+  <text x="90" y="256" text-anchor="middle">子行程＋timeout</text>
+  <text x="90" y="272" text-anchor="middle">extract_backtrace</text>
+  <text x="90" y="288" text-anchor="middle">resolve_symbols</text>
+  <text x="90" y="304" text-anchor="middle">search_repository</text>
+  <rect class="box" x="475.0" y="223.0" width="150" height="90" rx="8"/>
+  <text class="b" x="550" y="256" text-anchor="middle">Claude Messages API</text>
+  <text x="550" y="272" text-anchor="middle">只看 case_facts</text>
+  <text x="550" y="288" text-anchor="middle">與工具結果</text>
+  <path class="ln" d="M195.0,256.0 L165.0,256.0" marker-end="url(#a)"/>
+  <path class="ln" d="M165.0,282.0 L195.0,282.0" marker-end="url(#a)"/>
+  <path class="ln" d="M445.0,256.0 L475.0,256.0" marker-end="url(#a)"/>
+  <path class="ln" d="M475.0,282.0 L445.0,282.0" marker-end="url(#a)"/>
+  <path class="ln" d="M320.0,313.0 L320.0,350.0" marker-end="url(#a)"/>
+  <rect class="good" x="170.0" y="356.0" width="300" height="56" rx="8"/>
+  <text class="b" x="320" y="380" text-anchor="middle">報告 JSON 驗證 schema</text>
+  <text x="320" y="396" text-anchor="middle">不過就不收</text>
+  <path class="ln" d="M320.0,412.0 L320.0,442.0" marker-end="url(#a)"/>
+  <rect class="box" x="190.0" y="446.0" width="260" height="56" rx="8"/>
+  <text class="b" x="320" y="470" text-anchor="middle">存檔 report.json</text>
+  <text x="320" y="486" text-anchor="middle">記錄 token、成本、工具呼叫</text>
+  <rect class="acc" x="475.0" y="446.0" width="150" height="56" rx="8"/>
+  <text class="b" x="550" y="470" text-anchor="middle">評測 harness</text>
+  <text x="550" y="486" text-anchor="middle">比對 expected.json</text>
+  <path class="ln" d="M450.0,474.0 L475.0,474.0" marker-end="url(#a)"/>
+  <text class="s" x="320" y="542" text-anchor="middle">階段 2 不做佇列、Jira、去重；先證明分析本身可行</text>
+</svg>

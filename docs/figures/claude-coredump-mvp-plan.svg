@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 650" role="img" aria-labelledby="t d">
+  <title id="t">最小實作計畫：階段 0 到 2，以及兩個決策閘門</title>
+  <desc id="d">計畫由上到下。階段 0：準備案例集與環境，從十到二十個已知根因的案例起步，決定 dump 能否外送，準備隔離的 VM 或容器。階段 1：用 Claude Code 互動驗證，人在迴圈，產出 gdb 指令集、prompt 初稿、報告 schema v0 與失敗模式記錄。閘門一：指令集穩定、格式固定嗎？否就回階段 1 修指令集與 prompt。是就進階段 2：Python 加 Messages API 最小版本，三個唯讀工具、案件預算、JSON 報告與評測 harness。閘門二：準確率與成本達標嗎？否就查失敗模式並回階段 2；是就往後做薄服務與 Jira 整合。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="648.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">最小實作計畫</text>
+  <rect class="box" x="70.0" y="46.0" width="360" height="64" rx="8"/>
+  <text class="b" x="250" y="74" text-anchor="middle">階段 0：準備案例集與環境</text>
+  <text x="250" y="90" text-anchor="middle">10–20 個已知案例起步；確認 dump 能否外送；隔離環境</text>
+  <path class="ln" d="M250.0,110.0 L250.0,138.0" marker-end="url(#a)"/>
+  <rect class="acc" x="70.0" y="140.0" width="360" height="72" rx="8"/>
+  <text class="b" x="250" y="172" text-anchor="middle">階段 1：Claude Code 互動驗證（人在迴圈）</text>
+  <text x="250" y="188" text-anchor="middle">產出：gdb 指令集、prompt、報告 schema、失敗模式</text>
+  <path class="ln" d="M250.0,212.0 L250.0,232.0" marker-end="url(#a)"/>
+  <polygon class="acc" points="250,232.0 390.0,272 250,312.0 110.0,272"/>
+  <text class="b" x="250" y="268" text-anchor="middle">閘門 1</text>
+  <text x="250" y="284" text-anchor="middle">指令集穩定、格式固定？</text>
+  <path class="ln" d="M390.0,272.0 L480.0,272.0 L480.0,176.0 L430.0,176.0" marker-end="url(#a)"/>
+  <text class="s" x="548" y="232" text-anchor="middle">否：修指令集與 prompt</text>
+  <path class="ln" d="M250.0,312.0 L250.0,342.0" marker-end="url(#a)"/>
+  <text class="s" x="262" y="330" text-anchor="middle">是</text>
+  <rect class="acc" x="70.0" y="348.0" width="360" height="72" rx="8"/>
+  <text class="b" x="250" y="380" text-anchor="middle">階段 2：Python ＋ Messages API 最小版本</text>
+  <text x="250" y="396" text-anchor="middle">3 個唯讀工具、CaseBudget、JSON 報告、評測 harness</text>
+  <path class="ln" d="M250.0,420.0 L250.0,440.0" marker-end="url(#a)"/>
+  <polygon class="acc" points="250,440.0 390.0,480 250,520.0 110.0,480"/>
+  <text class="b" x="250" y="476" text-anchor="middle">閘門 2</text>
+  <text x="250" y="492" text-anchor="middle">準確率與成本達標？</text>
+  <path class="ln" d="M390.0,480.0 L480.0,480.0 L480.0,384.0 L430.0,384.0" marker-end="url(#a)"/>
+  <text class="s" x="548" y="440" text-anchor="middle">否：查失敗模式</text>
+  <path class="ln" d="M250.0,520.0 L250.0,550.0" marker-end="url(#a)"/>
+  <text class="s" x="262" y="538" text-anchor="middle">是</text>
+  <rect class="good" x="70.0" y="558.0" width="360" height="52" rx="8"/>
+  <text class="b" x="250" y="580" text-anchor="middle">往後：薄服務、Jira、佇列、去重</text>
+  <text x="250" y="596" text-anchor="middle">（Claude-Coredump-Agent 第 9–10 節）</text>
+  <text class="s" x="320" y="640" text-anchor="middle">不做：佇列、Jira、n8n、深度分析、多 agent、向量搜尋</text>
+</svg>
