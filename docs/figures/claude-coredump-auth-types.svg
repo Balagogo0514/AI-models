@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 472" role="img" aria-labelledby="t d">
+  <title id="t">四種認證與計費方式：訂閱登入、setup-token、Console API key、月度 credits</title>
+  <desc id="d">四種方式。一，訂閱登入：claude.ai 帳號，互動 Claude Code 的正規用途；Agent SDK 與 claude -p 登入訂閱時仍從訂閱額度扣；建置產品或服務應改用 API key。二，setup-token：一年期的 OAuth token，放在 CLAUDE_CODE_OAUTH_TOKEN，用訂閱額度，只能做模型請求，bare 模式不讀，不是 API key，也不是臨時的。三，Console API key：按 token 計費，Messages API、Agent SDK、claude -p 皆可，ANTHROPIC_API_KEY 優先於訂閱登入，官方建議建置服務時使用。四，月度 API credits：Max、Ultra、Team 才有，不是另一種 key，而是 Console 組織的餘額，用一般 API key 消耗，月底失效，用完 API 停止，涵蓋 API 與 Agent SDK，不含 Claude Code。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="470.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">四種認證與計費方式</text>
+  <rect class="acc" x="12" y="44" width="616" height="90" rx="10"/>
+  <text class="b" x="26" y="80">訂閱登入</text>
+  <text class="s" x="26" y="102">/login：claude.ai 帳號</text>
+  <text x="200" y="72">互動 Claude Code 的正規用途</text>
+  <text x="200" y="94">Agent SDK、claude -p 登入訂閱時，仍從訂閱額度扣</text>
+  <text x="200" y="116">建置產品或服務，官方要求改用 API key</text>
+  <rect class="acc" x="12" y="144" width="616" height="90" rx="10"/>
+  <text class="b" x="26" y="180">setup-token</text>
+  <text class="s" x="26" y="202">一年期 OAuth token</text>
+  <text x="200" y="172">放在 CLAUDE_CODE_OAUTH_TOKEN，用訂閱額度</text>
+  <text x="200" y="194">只能做模型請求；--bare 模式不讀</text>
+  <text x="200" y="216">不是 API key，也不是臨時的</text>
+  <rect class="good" x="12" y="244" width="616" height="90" rx="10"/>
+  <text class="b" x="26" y="280">Console API key</text>
+  <text class="s" x="26" y="302">按 token 計費</text>
+  <text x="200" y="272">Messages API、Agent SDK、claude -p 皆可</text>
+  <text x="200" y="294">ANTHROPIC_API_KEY 優先於訂閱登入</text>
+  <text x="200" y="316">官方：建置產品或服務應使用</text>
+  <rect class="good" x="12" y="344" width="616" height="90" rx="10"/>
+  <text class="b" x="26" y="380">月度 API credits</text>
+  <text class="s" x="26" y="402">Max／Ultra／Team 才有</text>
+  <text x="200" y="372">不是另一種 key：是 Console 組織的餘額</text>
+  <text x="200" y="394">用一般 API key 消耗；月底失效、用完 API 停止</text>
+  <text x="200" y="416">涵蓋 API、Agent SDK；不含 Claude Code</text>
+  <text class="s" x="320" y="458" text-anchor="middle">藍：用訂閱額度；綠：用 API 計費（含 credits 折抵）</text>
+</svg>
