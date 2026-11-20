@@ -50,6 +50,7 @@ CATS = [
         ("CodeX-CLI", "OpenAI Codex CLI 的指令、sandbox、approval、設定的完整參考"),
         ("CodeX-Agent", "Codex 的 Subagents、Cloud、codex exec 平行與 code review 做法"),
         ("OpenAI-Python-Agent", "以 Python 控制的 coredump 自動分析流程設計"),
+        ("Claude-Coredump-Agent", "coredump auto parser 的工具選型：Claude Code、n8n、LangChain、Claude SDK 的角色、架構、成本漏斗、安全與導入順序"),
     ]),
 ]
 

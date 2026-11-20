@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">導入順序：先驗證，再做最小版本，最後才加框架</title>
+  <desc id="d">五個階段。一，用 Claude Code 互動驗證 gdb 指令、prompt 與報告格式，完成條件是報告格式固定。二，Messages API 最小版本：三個唯讀工具、單次呼叫、JSON 報告，完成條件是能跑單案。三，加入去重、快取與預算，完成條件是重複案件不呼叫模型。四，加入佇列、n8n、人工核准與評測，完成條件是有五十到一百個已知案例可回歸。五，選配：Agent SDK 子流程，只做協作，不取代控制層。完成條件是建議。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">導入順序</text>
+  <rect class="box" x="12" y="44" width="616" height="76" rx="10"/>
+  <text class="b" x="26" y="76">1 Claude Code 互動驗證</text>
+  <text class="s" x="26" y="100">驗證 gdb 指令、prompt、報告格式</text>
+  <rect class="good" x="404" y="54" width="212" height="56" rx="8"/>
+  <text class="s" x="510" y="75" text-anchor="middle">完成條件</text>
+  <text class="b" x="510" y="95" text-anchor="middle">報告格式固定</text>
+  <path class="ln" d="M320.0,120.0 L320.0,132.0" marker-end="url(#a)"/>
+  <rect class="box" x="12" y="132" width="616" height="76" rx="10"/>
+  <text class="b" x="26" y="164">2 Messages API 最小版本</text>
+  <text class="s" x="26" y="188">3 個唯讀工具、單次呼叫、JSON 報告</text>
+  <rect class="good" x="404" y="142" width="212" height="56" rx="8"/>
+  <text class="s" x="510" y="163" text-anchor="middle">完成條件</text>
+  <text class="b" x="510" y="183" text-anchor="middle">能跑單案</text>
+  <path class="ln" d="M320.0,208.0 L320.0,220.0" marker-end="url(#a)"/>
+  <rect class="box" x="12" y="220" width="616" height="76" rx="10"/>
+  <text class="b" x="26" y="252">3 去重、快取、預算</text>
+  <text class="s" x="26" y="276">fingerprint、artifact cache、CaseBudget</text>
+  <rect class="good" x="404" y="230" width="212" height="56" rx="8"/>
+  <text class="s" x="510" y="251" text-anchor="middle">完成條件</text>
+  <text class="b" x="510" y="271" text-anchor="middle">重複案件不呼叫模型</text>
+  <path class="ln" d="M320.0,296.0 L320.0,308.0" marker-end="url(#a)"/>
+  <rect class="box" x="12" y="308" width="616" height="76" rx="10"/>
+  <text class="b" x="26" y="340">4 佇列、n8n、核准、評測</text>
+  <text class="s" x="26" y="364">queue、深度升級、人工核准、trace、案例集</text>
+  <rect class="good" x="404" y="318" width="212" height="56" rx="8"/>
+  <text class="s" x="510" y="339" text-anchor="middle">完成條件</text>
+  <text class="b" x="510" y="359" text-anchor="middle">50–100 個案例可回歸</text>
+  <path class="ln" d="M320.0,384.0 L320.0,396.0" marker-end="url(#a)"/>
+  <rect class="box" x="12" y="396" width="616" height="76" rx="10"/>
+  <text class="b" x="26" y="428">5（選配）Agent SDK 子流程</text>
+  <text class="s" x="26" y="452">Issue 分流、相似事件查詢、通知</text>
+  <rect class="good" x="404" y="406" width="212" height="56" rx="8"/>
+  <text class="s" x="510" y="427" text-anchor="middle">完成條件</text>
+  <text class="b" x="510" y="447" text-anchor="middle">不取代控制層</text>
+  <text class="s" x="320" y="500" text-anchor="middle">步驟取自本庫 OpenAI-Python-Agent 並改為 Claude；完成條件是我的建議</text>
+</svg>
