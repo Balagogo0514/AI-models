@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 532" role="img" aria-labelledby="t d">
+  <title id="t">每案成本漏斗：多數案件在不呼叫模型或一次短分析就結束</title>
+  <desc id="d">四層漏斗。第 0 層 fingerprint 去重：用 signal、build-id 與 top frames 產生簽章，命中既有分析就直接回傳，不呼叫模型。第 1 層固定工具初篩：readelf、symbolication、受限 gdb batch、已知 issue 搜尋，不呼叫模型。第 2 層標準模型分析：只傳案件摘要、verified facts、前三到十個關鍵 frames 與必要 source，一次短分析，依 schema 輸出。第 3 層深度分析：只有 P0 或 P1、新 fingerprint、符號完整仍無法判斷、疑似安全或資料損壞才升級，需人工核准或 on-call policy。下方是硬性預算，由程式強制，耗盡就回傳 needs_human_or_deep_analysis。數值是初始範例。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="530.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">成本漏斗：愈往下愈貴、愈少案件</text>
+  <rect class="good" x="40.0" y="47.0" width="560" height="70" rx="8"/>
+  <text class="b" x="320" y="70" text-anchor="middle">第 0 層：fingerprint 去重</text>
+  <text x="320" y="86" text-anchor="middle">signal＋build-id＋top frames；命中就直接回傳</text>
+  <text x="320" y="102" text-anchor="middle">不呼叫模型</text>
+  <path class="ln" d="M320.0,117.0 L320.0,139.0" marker-end="url(#a)"/>
+  <text class="s" x="356" y="132" text-anchor="middle">未解決</text>
+  <rect class="good" x="70.0" y="139.0" width="500" height="70" rx="8"/>
+  <text class="b" x="320" y="162" text-anchor="middle">第 1 層：固定工具初篩</text>
+  <text x="320" y="178" text-anchor="middle">readelf、symbolication、受限 gdb -batch、issue 搜尋</text>
+  <text x="320" y="194" text-anchor="middle">不呼叫模型</text>
+  <path class="ln" d="M320.0,209.0 L320.0,231.0" marker-end="url(#a)"/>
+  <text class="s" x="356" y="224" text-anchor="middle">未解決</text>
+  <rect class="acc" x="100.0" y="231.0" width="440" height="70" rx="8"/>
+  <text class="b" x="320" y="254" text-anchor="middle">第 2 層：標準模型分析</text>
+  <text x="320" y="270" text-anchor="middle">案件摘要＋verified facts＋前 3–10 個 frames</text>
+  <text x="320" y="286" text-anchor="middle">一次短分析，依 schema 輸出</text>
+  <path class="ln" d="M320.0,301.0 L320.0,323.0" marker-end="url(#a)"/>
+  <text class="s" x="356" y="316" text-anchor="middle">未解決</text>
+  <rect class="bad" x="130.0" y="323.0" width="380" height="70" rx="8"/>
+  <text class="b" x="320" y="346" text-anchor="middle">第 3 層：深度分析</text>
+  <text x="320" y="362" text-anchor="middle">P0／P1、新 fingerprint、疑似安全或資料損壞</text>
+  <text x="320" y="378" text-anchor="middle">需人工核准或 on-call policy</text>
+  <rect class="bad" x="40.0" y="417.0" width="560" height="70" rx="8"/>
+  <text class="b" x="320" y="440" text-anchor="middle">硬性預算：由程式強制，不是 prompt</text>
+  <text x="320" y="456" text-anchor="middle">max_model_calls、max_tool_calls、max_input／output_tokens、max_debugger_seconds</text>
+  <text x="320" y="472" text-anchor="middle">耗盡 → 回傳 needs_human_or_deep_analysis</text>
+  <text class="s" x="320" y="512" text-anchor="middle">數值是初始範例，依真實資料調整；取自本庫 OpenAI-Python-Agent</text>
+</svg>

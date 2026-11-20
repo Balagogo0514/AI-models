@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 616" role="img" aria-labelledby="t d">
+  <title id="t">單案處理迴圈：orchestrator 如何在預算與 allowlist 內驅動 Claude 與工具</title>
+  <desc id="d">四個角色：Python orchestrator、Claude Messages API、受控工具（sandbox）、artifact 與案件資料庫。順序：一，orchestrator 讀 case_facts 並查快取。二，把精簡證據與工具定義送給 Claude。三，Claude 要求呼叫工具。四，orchestrator 檢查預算與 allowlist。五，在 sandbox 執行工具。六，工具回傳 JSON 與 evidence ID。七，結果交還模型，三到七重複。八，Claude 輸出報告 JSON。九，orchestrator 用 schema 驗證。十，存報告，轉人工或建立 Issue。流程為依本庫設計整理的建議，沒有實際執行。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="614.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">單案處理迴圈</text>
+  <rect class="acc" x="16.0" y="40.0" width="128" height="44" rx="8"/>
+  <text class="b" x="80" y="58" text-anchor="middle">Python</text>
+  <text x="80" y="74" text-anchor="middle">orchestrator</text>
+  <line class="dash" x1="80" y1="86" x2="80" y2="570"/>
+  <rect class="acc" x="176.0" y="40.0" width="128" height="44" rx="8"/>
+  <text class="b" x="240" y="58" text-anchor="middle">Claude</text>
+  <text x="240" y="74" text-anchor="middle">Messages API</text>
+  <line class="dash" x1="240" y1="86" x2="240" y2="570"/>
+  <rect class="acc" x="336.0" y="40.0" width="128" height="44" rx="8"/>
+  <text class="b" x="400" y="58" text-anchor="middle">受控工具</text>
+  <text x="400" y="74" text-anchor="middle">（sandbox）</text>
+  <line class="dash" x1="400" y1="86" x2="400" y2="570"/>
+  <rect class="acc" x="496.0" y="40.0" width="128" height="44" rx="8"/>
+  <text class="b" x="560" y="58" text-anchor="middle">artifact／</text>
+  <text x="560" y="74" text-anchor="middle">案件資料庫</text>
+  <line class="dash" x1="560" y1="86" x2="560" y2="570"/>
+  <path class="ln" d="M80.0,112.0 L560.0,112.0" marker-end="url(#a)"/>
+  <rect x="255.8" y="92" width="128.3" height="16" fill="var(--bg)"/>
+  <text class="s" x="320.0" y="104" text-anchor="middle">1 讀 case_facts、查快取</text>
+  <path class="ln" d="M80.0,158.0 L240.0,158.0" marker-end="url(#a)"/>
+  <rect x="101.5" y="138" width="117.0" height="16" fill="var(--bg)"/>
+  <text class="s" x="160.0" y="150" text-anchor="middle">2 送精簡證據＋工具定義</text>
+  <path class="ln" d="M240.0,204.0 L80.0,204.0" marker-end="url(#a)"/>
+  <rect x="121.1" y="184" width="77.8" height="16" fill="var(--bg)"/>
+  <text class="s" x="160.0" y="196" text-anchor="middle">3 要求呼叫工具</text>
+  <rect class="good" x="10" y="236" width="140" height="28" rx="6"/>
+  <text x="80" y="255" text-anchor="middle">4 檢查預算與 allowlist</text>
+  <path class="ln" d="M80.0,296.0 L400.0,296.0" marker-end="url(#a)"/>
+  <rect x="181.3" y="276" width="117.4" height="16" fill="var(--bg)"/>
+  <text class="s" x="240.0" y="288" text-anchor="middle">5 在 sandbox 執行工具</text>
+  <path class="ln" d="M400.0,342.0 L80.0,342.0" marker-end="url(#a)"/>
+  <rect x="171.9" y="322" width="136.2" height="16" fill="var(--bg)"/>
+  <text class="s" x="240.0" y="334" text-anchor="middle">6 回傳 JSON＋evidence_id</text>
+  <path class="ln" d="M80.0,388.0 L240.0,388.0" marker-end="url(#a)"/>
+  <rect x="93.3" y="368" width="133.4" height="16" fill="var(--bg)"/>
+  <text class="s" x="160.0" y="380" text-anchor="middle">7 結果交還模型，重複 3～7</text>
+  <path class="ln" d="M240.0,434.0 L80.0,434.0" marker-end="url(#a)"/>
+  <rect x="110.1" y="414" width="99.7" height="16" fill="var(--bg)"/>
+  <text class="s" x="160.0" y="426" text-anchor="middle">8 輸出報告（JSON）</text>
+  <rect class="good" x="10" y="466" width="140" height="28" rx="6"/>
+  <text x="80" y="485" text-anchor="middle">9 用 schema 驗證</text>
+  <path class="ln" d="M80.0,526.0 L560.0,526.0" marker-end="url(#a)"/>
+  <rect x="252.1" y="506" width="135.8" height="16" fill="var(--bg)"/>
+  <text class="s" x="320.0" y="518" text-anchor="middle">10 存報告；轉人工或 Issue</text>
+  <text class="s" x="320" y="598" text-anchor="middle">依本庫設計整理的建議流程；函式與欄位名稱為示意</text>
+</svg>

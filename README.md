@@ -2,7 +2,7 @@
 
 AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理與訓練、Claude Code／Codex 等 Agent 工具的使用與選型。以繁體中文撰寫。
 
-> 共 18 篇筆記。點標題即可開啟對應文件。
+> 共 19 篇筆記。點標題即可開啟對應文件。
 
 ## 學習資源
 
@@ -36,6 +36,7 @@ AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理�
 | [Codex CLI](docs/CodeX-CLI.md) | OpenAI Codex CLI 的指令、sandbox、approval、設定的完整參考 |
 | [Codex 多 Agent 與 Code Review](docs/CodeX-Agent.md) | Codex 的 Subagents、Cloud、`codex exec` 平行與 code review 做法 |
 | [Python + OpenAI coredump 分析 Agent](docs/OpenAI-Python-Agent.md) | 以 Python 控制的 coredump 自動分析流程設計 |
+| [Claude coredump 自動分析：工具選型](docs/Claude-Coredump-Agent.md) | 開發 coredump auto parser 時，Claude Code、n8n、LangChain、Claude SDK 等工具各自的角色、建議架構、成本漏斗、安全邊界與導入順序；區分官方、本庫設計與推論 |
 
 ## 其他
 

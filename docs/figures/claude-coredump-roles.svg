@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">各工具在 coredump 系統中的建議角色</title>
+  <desc id="d">七種工具的建議角色。Claude Messages API SDK 是正式核心，自己掌控迴圈、預算與狀態。Claude Code 互動模式用於開發與人工調查。claude -p 用於 CI 少量一次性分析，有回合與費用上限旗標但只在單次執行內生效。Claude Agent SDK 用於子流程與實驗。n8n 負責觸發、通知與核准，不放分析迴圈。LangChain 與 LangGraph 不當起點，團隊已有經驗才考慮。Managed Agents 先不選，因為跑在 Anthropic 雲端，資料外送要先評估。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">工具 → 建議角色</text>
+  <rect class="acc" x="12" y="44" width="216" height="54" rx="10"/>
+  <text x="24" y="76.0">Claude Messages API SDK</text>
+  <line class="ln" x1="228" y1="71.0" x2="256" y2="71.0" marker-end="url(#a)"/>
+  <rect class="good" x="258" y="44" width="370" height="54" rx="10"/>
+  <text class="b" x="270" y="65.0">正式核心</text>
+  <text class="s" x="270" y="87.0">自己掌控迴圈、預算、狀態</text>
+  <rect class="acc" x="12" y="106" width="216" height="54" rx="10"/>
+  <text x="24" y="138.0">Claude Code（互動）</text>
+  <line class="ln" x1="228" y1="133.0" x2="256" y2="133.0" marker-end="url(#a)"/>
+  <rect class="acc" x="258" y="106" width="370" height="54" rx="10"/>
+  <text class="b" x="270" y="127.0">開發與人工調查</text>
+  <text class="s" x="270" y="149.0">寫 parser、gdb 腳本、測試</text>
+  <rect class="acc" x="12" y="168" width="216" height="54" rx="10"/>
+  <text x="24" y="200.0">claude -p（CI）</text>
+  <line class="ln" x1="228" y1="195.0" x2="256" y2="195.0" marker-end="url(#a)"/>
+  <rect class="acc" x="258" y="168" width="370" height="54" rx="10"/>
+  <text class="b" x="270" y="189.0">少量一次性分析</text>
+  <text class="s" x="270" y="211.0">有回合與費用上限，但只在單次內生效</text>
+  <rect class="acc" x="12" y="230" width="216" height="54" rx="10"/>
+  <text x="24" y="262.0">Claude Agent SDK</text>
+  <line class="ln" x1="228" y1="257.0" x2="256" y2="257.0" marker-end="url(#a)"/>
+  <rect class="acc" x="258" y="230" width="370" height="54" rx="10"/>
+  <text class="b" x="270" y="251.0">子流程與實驗</text>
+  <text class="s" x="270" y="273.0">Issue 分流、相似事件查詢</text>
+  <rect class="acc" x="12" y="292" width="216" height="54" rx="10"/>
+  <text x="24" y="324.0">n8n</text>
+  <line class="ln" x1="228" y1="319.0" x2="256" y2="319.0" marker-end="url(#a)"/>
+  <rect class="acc" x="258" y="292" width="370" height="54" rx="10"/>
+  <text class="b" x="270" y="313.0">觸發、通知、核准</text>
+  <text class="s" x="270" y="335.0">不要放分析迴圈</text>
+  <rect class="acc" x="12" y="354" width="216" height="54" rx="10"/>
+  <text x="24" y="386.0">LangChain／LangGraph</text>
+  <line class="ln" x1="228" y1="381.0" x2="256" y2="381.0" marker-end="url(#a)"/>
+  <rect class="bad" x="258" y="354" width="370" height="54" rx="10"/>
+  <text class="b" x="270" y="375.0">不當起點</text>
+  <text class="s" x="270" y="397.0">團隊已有經驗才考慮</text>
+  <rect class="acc" x="12" y="416" width="216" height="54" rx="10"/>
+  <text x="24" y="448.0">Managed Agents</text>
+  <line class="ln" x1="228" y1="443.0" x2="256" y2="443.0" marker-end="url(#a)"/>
+  <rect class="bad" x="258" y="416" width="370" height="54" rx="10"/>
+  <text class="b" x="270" y="437.0">先不選</text>
+  <text class="s" x="270" y="459.0">跑在 Anthropic 雲端；資料外送要先評估</text>
+  <text class="s" x="320" y="508" text-anchor="middle">角色是依本庫資料與一般認知整理的建議，細節見各節</text>
+</svg>
