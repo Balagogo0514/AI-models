@@ -97,7 +97,7 @@ claude -p "Analyze cases/case-001 using only gdb -batch. Return a JSON report." 
 
 ![圖：階段 2 的模組與資料流：run_case 讀案例，preprocess 產生 case_facts，orchestrator 迴圈受 CaseBudget 限制並呼叫三個唯讀工具與 Claude API，報告驗證 schema 後存檔，由評測 harness 與 expected.json 比對](figures/claude-coredump-mvp-arch.svg)
 
-它是**一支命令列程式**：`run_case <案例目錄>` 讀案例、分析、寫出 `report.json`。**不做佇列、Jira、去重**；先證明分析本身可行。
+它是**一支命令列程式**：`run_case <案例目錄>` 讀案例、分析、寫出 `report.json`。**不做佇列、Jira、去重**；先證明分析本身可行。（可執行的範例程式碼，含 Jira 與 Claude 的實際呼叫，見 [Claude-Coredump-Code](Claude-Coredump-Code.md)；那份範例已包含 Jira 與佇列，階段 2 可只取其中的工具、預算、報告驗證與迴圈。）
 
 建議的專案結構（【建議】）：
 

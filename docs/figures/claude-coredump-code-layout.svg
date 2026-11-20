@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">程式碼結構：模組、行程與沙箱的分工</title>
+  <desc id="d">兩個行程加一個沙箱。接收端行程以 uvicorn 執行，含 webhook_app.py 負責驗證、過濾、入列，以及 jobs.py 的 SQLite jobs 表。worker 行程含 worker.py 負責領取、下載、回寫，以及 agent.py 的 Claude 工具迴圈，並使用 budget.py 與 report.py。沙箱含 tools.py 執行的 gdb、readelf、file、git，唯讀，透過 sandbox_prefix 可放進容器。Jira 事件進到 webhook_app.py；worker 用 REST 下載附件並回寫 comment 與 label；agent.py 呼叫 Claude API；工具呼叫進沙箱。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">程式碼結構</text>
+  <rect class="box" x="20.0" y="48.0" width="150" height="44" rx="8"/>
+  <text class="b" x="95" y="74" text-anchor="middle">Jira</text>
+  <rect class="box" x="480.0" y="48.0" width="150" height="44" rx="8"/>
+  <text class="b" x="555" y="74" text-anchor="middle">Claude API</text>
+  <rect class="zone" x="12" y="112" width="292" height="190" rx="10"/>
+  <text class="b" x="24" y="132">接收端行程（uvicorn）</text>
+  <rect class="acc" x="30.0" y="154.0" width="130" height="72" rx="8"/>
+  <text class="b" x="95" y="186" text-anchor="middle">webhook_app.py</text>
+  <text x="95" y="202" text-anchor="middle">驗證、過濾、入列</text>
+  <rect class="acc" x="185.0" y="154.0" width="110" height="72" rx="8"/>
+  <text class="b" x="240" y="178" text-anchor="middle">jobs.py</text>
+  <text x="240" y="194" text-anchor="middle">SQLite jobs 表</text>
+  <text x="240" y="210" text-anchor="middle">去重、領取</text>
+  <path class="ln" d="M95.0,92.0 L95.0,154.0" marker-end="url(#a)"/>
+  <text class="s" x="138" y="104" text-anchor="middle">webhook</text>
+  <path class="ln" d="M160.0,190.0 L185.0,190.0" marker-end="url(#a)"/>
+  <rect class="zone" x="320" y="112" width="308" height="190" rx="10"/>
+  <text class="b" x="332" y="132">worker 行程</text>
+  <rect class="good" x="330.0" y="154.0" width="130" height="72" rx="8"/>
+  <text class="b" x="395" y="186" text-anchor="middle">worker.py</text>
+  <text x="395" y="202" text-anchor="middle">領取、下載、回寫</text>
+  <rect class="good" x="490.0" y="154.0" width="130" height="72" rx="8"/>
+  <text class="b" x="555" y="178" text-anchor="middle">agent.py</text>
+  <text x="555" y="194" text-anchor="middle">Claude 工具迴圈</text>
+  <text x="555" y="210" text-anchor="middle">budget／report</text>
+  <path class="ln" d="M295.0,190.0 L330.0,190.0" marker-end="url(#a)"/>
+  <path class="ln" d="M460.0,190.0 L490.0,190.0" marker-end="url(#a)"/>
+  <path class="ln" d="M555.0,154.0 L555.0,92.0" marker-end="url(#a)"/>
+  <text class="s" x="590" y="122" text-anchor="middle">messages</text>
+  <path class="dash" d="M395.0,154.0 L395.0,70.0 L170.0,70.0" marker-end="url(#a)"/>
+  <text class="s" x="285" y="62" text-anchor="middle">REST：下載、comment、label</text>
+  <rect class="zone" x="320" y="330" width="308" height="120" rx="10"/>
+  <text class="b" x="332" y="350">沙箱（建議用 sandbox_prefix）</text>
+  <rect class="box" x="339.0" y="374.0" width="270" height="60" rx="8"/>
+  <text class="b" x="474" y="400" text-anchor="middle">tools.py（唯讀）</text>
+  <text x="474" y="416" text-anchor="middle">gdb／readelf／file／git</text>
+  <path class="ln" d="M555.0,226.0 L555.0,330.0 L520.0,374.0" marker-end="url(#a)"/>
+  <text class="s" x="590" y="290" text-anchor="middle">工具呼叫</text>
+  <text class="s" x="320" y="474" text-anchor="middle">憑證只在上面兩個行程；gdb 這類處理不可信 core 的程式，放進沙箱</text>
+  <text class="s" x="320" y="494" text-anchor="middle">本範例的 worker 同時持有憑證；正式環境請依第 7 節把工具放進容器</text>
+</svg>

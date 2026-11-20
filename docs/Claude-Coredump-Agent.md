@@ -379,6 +379,8 @@ n8n 在這條流程裡只做三件事，用幾十行程式也能做（【推論�
 6. **來源驗證**：webhook 的驗證方式依版本而異，我沒查證；至少用 HTTPS、不可猜的 secret 路徑或 token，再加 IP 白名單。
 7. **維運**：systemd 或容器自動重啟、健康檢查、優雅關閉（收到停止訊號時，把「分析中」的案件放回待處理）、記錄每案 token 與成本。
 
+**實際程式碼**：這個架構的可執行範例（webhook、jobs 表、Jira REST、Claude 工具迴圈、報告驗證、測試）見 [Claude-Coredump-Code](Claude-Coredump-Code.md)。
+
 **規模**：案件很少時，服務加 SQLite 就夠；案件量大時，把 jobs 表換成正式 queue（Redis、SQS 等）並加多個 worker，架構不變。**SDK**：核心用 Claude 的 Python SDK（Messages API）；Agent SDK 只在分析完成後的子流程才考慮。
 
 ### 9.4 事件去重與防迴圈
