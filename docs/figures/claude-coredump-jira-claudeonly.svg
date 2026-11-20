@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 560" role="img" aria-labelledby="t d">
+  <title id="t">只用 Claude Code 行不行：四條路線比較</title>
+  <desc id="d">四條路線。A，Routine 的 API 觸發，純 Claude Code：Jira Automation 打 routine 的 endpoint，跑在 Anthropic 雲端；限制是只能用 text 傳文字、dump 進不去、是 experimental beta、有每日配額、資料外送。B，服務加 claude -p：服務收 webhook，在隔離環境呼叫 claude -p；仍需要接收端，迴圈內無法硬性限制每案總 token；這是建議的折衷。C，排程輪詢：Routine 排程最小間隔一小時，loop 在本機 session 內；不即時，loop 七天後過期。D，Messages API worker：自寫工具迴圈與預算，工程量最高、控制力最高。案件少、有人看、dump 可外送時 A 或 B 就夠；案件多、要成本上限、去重與隔離時用 B 或 D。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="558.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">只用 Claude Code 行不行：四條路線</text>
+  <rect class="bad" x="12" y="44" width="616" height="82" rx="10"/>
+  <text class="b" x="26" y="68">A Routine 的 API 觸發（純 Claude Code）</text>
+  <text x="26" y="90">做法：Jira Automation 打 routine endpoint；跑在 Anthropic 雲端</text>
+  <text class="s" x="26" y="110">限制：只能用 text 傳文字、dump 進不去；experimental beta；有每日配額；資料外送</text>
+  <rect class="good" x="12" y="136" width="616" height="82" rx="10"/>
+  <text class="b" x="26" y="160">B 服務 ＋ claude -p（建議的折衷）</text>
+  <text x="26" y="182">做法：服務收 webhook，在隔離環境呼叫 claude -p</text>
+  <text class="s" x="26" y="202">限制：仍需要接收端；迴圈內無法硬性限制每案總 token</text>
+  <rect class="bad" x="12" y="228" width="616" height="82" rx="10"/>
+  <text class="b" x="26" y="252">C 排程輪詢</text>
+  <text x="26" y="274">做法：Routine 排程最小 1 小時；/loop 在本機 session 內</text>
+  <text class="s" x="26" y="294">限制：不即時；/loop 7 天後過期</text>
+  <rect class="acc" x="12" y="320" width="616" height="82" rx="10"/>
+  <text class="b" x="26" y="344">D Messages API worker</text>
+  <text x="26" y="366">做法：自寫工具迴圈與預算</text>
+  <text class="s" x="26" y="386">限制：工程量最高、控制力最高</text>
+  <rect class="box" x="12" y="418" width="616" height="92" rx="10"/>
+  <text x="26" y="442">案件少、有人看、dump 可外送 → A 或 B 就夠</text>
+  <text x="26" y="466">案件多、要成本上限、去重、隔離 → B 或 D</text>
+  <text x="26" y="490">Jira Automation 能否帶 Bearer header 打 routine endpoint，我沒查證</text>
+  <text class="s" x="320" y="534" text-anchor="middle">紅：限制多；綠：建議的折衷；藍：控制力最高</text>
+</svg>
