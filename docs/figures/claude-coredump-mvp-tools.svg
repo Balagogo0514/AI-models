@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 476" role="img" aria-labelledby="t d">
+  <title id="t">階段 2 先做哪三個工具，哪三個先不做</title>
+  <desc id="d">六個工具中先做三個唯讀工具。extract_backtrace：各 thread 的標準化 frames，是最核心的證據來源，要做。resolve_symbols：判斷符號是否完整，影響結論可信度，要做。search_repository：source 摘錄與 blame，要做。inspect_core：先併入 preprocess，signal 與 build-id 由確定性程式放進 case_facts，不做成工具。inspect_frame：受限的區域變數與 registers，第一輪證據不夠再加，暫不做。save_analysis：由 orchestrator 直接寫檔，不做成工具。這是依本庫的六個工具設計取捨的建議。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="474.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">六個工具：做三個、先不做三個</text>
+  <rect class="acc" x="12" y="44" width="210" height="58" rx="10"/>
+  <text x="24" y="78.0">extract_backtrace</text>
+  <line class="ln" x1="222" y1="73.0" x2="248" y2="73.0" marker-end="url(#a)"/>
+  <rect class="good" x="250" y="44" width="378" height="58" rx="10"/>
+  <text class="b" x="262" y="67.0">做｜各 thread 的標準化 frames</text>
+  <text class="s" x="262" y="89.0">最核心的證據來源</text>
+  <rect class="acc" x="12" y="110" width="210" height="58" rx="10"/>
+  <text x="24" y="144.0">resolve_symbols</text>
+  <line class="ln" x1="222" y1="139.0" x2="248" y2="139.0" marker-end="url(#a)"/>
+  <rect class="good" x="250" y="110" width="378" height="58" rx="10"/>
+  <text class="b" x="262" y="133.0">做｜符號是否完整、缺什麼</text>
+  <text class="s" x="262" y="155.0">影響結論可信度</text>
+  <rect class="acc" x="12" y="176" width="210" height="58" rx="10"/>
+  <text x="24" y="210.0">search_repository</text>
+  <line class="ln" x1="222" y1="205.0" x2="248" y2="205.0" marker-end="url(#a)"/>
+  <rect class="good" x="250" y="176" width="378" height="58" rx="10"/>
+  <text class="b" x="262" y="199.0">做｜source 摘錄與 blame</text>
+  <text class="s" x="262" y="221.0">把 frame 對回程式碼</text>
+  <rect class="acc" x="12" y="242" width="210" height="58" rx="10"/>
+  <text x="24" y="276.0">inspect_core</text>
+  <line class="ln" x1="222" y1="271.0" x2="248" y2="271.0" marker-end="url(#a)"/>
+  <rect class="box" x="250" y="242" width="378" height="58" rx="10"/>
+  <text class="b" x="262" y="265.0">不做｜併入 preprocess</text>
+  <text class="s" x="262" y="287.0">signal、build-id 由確定性程式放進 case_facts</text>
+  <rect class="acc" x="12" y="308" width="210" height="58" rx="10"/>
+  <text x="24" y="342.0">inspect_frame</text>
+  <line class="ln" x1="222" y1="337.0" x2="248" y2="337.0" marker-end="url(#a)"/>
+  <rect class="box" x="250" y="308" width="378" height="58" rx="10"/>
+  <text class="b" x="262" y="331.0">暫不做</text>
+  <text class="s" x="262" y="353.0">區域變數與 registers；證據不夠再加</text>
+  <rect class="acc" x="12" y="374" width="210" height="58" rx="10"/>
+  <text x="24" y="408.0">save_analysis</text>
+  <line class="ln" x1="222" y1="403.0" x2="248" y2="403.0" marker-end="url(#a)"/>
+  <rect class="box" x="250" y="374" width="378" height="58" rx="10"/>
+  <text class="b" x="262" y="397.0">不做｜由 orchestrator 寫檔</text>
+  <text class="s" x="262" y="419.0">不需要讓模型呼叫</text>
+  <text class="s" x="320" y="462" text-anchor="middle">取捨是我的建議；六個工具的原設計見 OpenAI-Python-Agent</text>
+</svg>
