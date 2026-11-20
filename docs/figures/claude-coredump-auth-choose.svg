@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 626" role="img" aria-labelledby="t d">
+  <title id="t">該用哪種認證：依用途決定</title>
+  <desc id="d">三個問題。一，自己在終端機互動使用 Claude Code 嗎？是就用訂閱登入，並確認帳號類型與資料政策。二，只是個人原型或腳本、只有你自己用嗎？是就可以試訂閱，用 claude -p 或 setup-token，但額度制、條款灰色、ANTHROPIC_API_KEY 會優先。否，也就是正式服務、多人共用或處理公司案件，就用 Console API key，這是官方建議。三，方案是 Max、Ultra 或 Team 嗎？是就領月度 credits 折抵，要連結 Console 組織；否就購買 Console 額度，Pro 與 Enterprise 不符 credits 資格。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="624.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">該用哪種認證？</text>
+  <polygon class="acc" points="200,66.0 350.0,108 200,150.0 50.0,108"/>
+  <text class="b" x="200" y="104" text-anchor="middle">自己在終端機</text>
+  <text x="200" y="120" text-anchor="middle">互動使用 Claude Code？</text>
+  <rect class="good" x="410.0" y="76.0" width="220" height="64" rx="8"/>
+  <text class="b" x="520" y="104" text-anchor="middle">訂閱登入（/login）</text>
+  <text x="520" y="120" text-anchor="middle">確認帳號類型與資料政策</text>
+  <path class="ln" d="M350.0,108.0 L410.0,108.0" marker-end="url(#a)"/>
+  <text class="s" x="380" y="98" text-anchor="middle">是</text>
+  <path class="ln" d="M200.0,150.0 L200.0,182.0" marker-end="url(#a)"/>
+  <text class="s" x="214" y="170" text-anchor="middle">否</text>
+  <polygon class="acc" points="200,182.0 350.0,224 200,266.0 50.0,224"/>
+  <text class="b" x="200" y="220" text-anchor="middle">只是個人原型或腳本，</text>
+  <text x="200" y="236" text-anchor="middle">只有你自己用？</text>
+  <rect class="bad" x="410.0" y="186.0" width="220" height="76" rx="8"/>
+  <text class="b" x="520" y="212" text-anchor="middle">可試訂閱：claude -p</text>
+  <text x="520" y="228" text-anchor="middle">或 setup-token</text>
+  <text x="520" y="244" text-anchor="middle">額度制；條款灰色</text>
+  <path class="ln" d="M350.0,224.0 L410.0,224.0" marker-end="url(#a)"/>
+  <text class="s" x="380" y="214" text-anchor="middle">是</text>
+  <path class="ln" d="M200.0,266.0 L200.0,302.0" marker-end="url(#a)"/>
+  <text class="s" x="290" y="292" text-anchor="middle">否：正式服務、多人共用
+或處理公司案件</text>
+  <rect class="good" x="50.0" y="304.0" width="300" height="56" rx="8"/>
+  <text class="b" x="200" y="328" text-anchor="middle">Console API key</text>
+  <text x="200" y="344" text-anchor="middle">官方：建置產品或服務應使用</text>
+  <path class="ln" d="M200.0,360.0 L200.0,396.0" marker-end="url(#a)"/>
+  <polygon class="acc" points="200,396.0 350.0,438 200,480.0 50.0,438"/>
+  <text class="b" x="200" y="434" text-anchor="middle">方案是</text>
+  <text x="200" y="450" text-anchor="middle">Max、Ultra 或 Team？</text>
+  <rect class="good" x="410.0" y="406.0" width="220" height="64" rx="8"/>
+  <text class="b" x="520" y="434" text-anchor="middle">領月度 credits 折抵</text>
+  <text x="520" y="450" text-anchor="middle">連結 Console 組織</text>
+  <path class="ln" d="M350.0,438.0 L410.0,438.0" marker-end="url(#a)"/>
+  <text class="s" x="380" y="428" text-anchor="middle">是</text>
+  <path class="ln" d="M200.0,480.0 L200.0,516.0" marker-end="url(#a)"/>
+  <text class="s" x="214" y="502" text-anchor="middle">否</text>
+  <rect class="box" x="50.0" y="518.0" width="300" height="56" rx="8"/>
+  <text class="b" x="200" y="542" text-anchor="middle">購買 Console 額度</text>
+  <text x="200" y="558" text-anchor="middle">Pro、Enterprise 不符 credits 資格</text>
+  <text class="s" x="320" y="604" text-anchor="middle">只有「自己互動用」這條，是訂閱登入明確的正規用途；其餘依官方頁面與你們的合約判斷</text>
+</svg>

@@ -14,7 +14,7 @@
 - **Claude Agent SDK**：適合分析完成後的**子流程**（Issue 分流、相似事件查詢）或實驗，不取代控制層。
 - **理由只有一個**：coredump 分析需要**每案硬性的成本與工具上限、去重、受控工具、佇列、重試、稽核**，這些要由你們的系統擁有，不要交給框架或互動工具（【本庫設計】）。
 - **接 Jira**：**不一定要 n8n**；一個 Python 常駐服務可以直接收 Jira 事件（接收端、jobs 表、隔離 worker）。**只用 Claude Code** 只適合小量原型；折衷是薄服務加 `claude -p` 當 worker（第 9 節）。
-- **成本**：模型 token 以本庫價格可估；單次呼叫（輸入 20K、輸出 2K）在 Sonnet 5.5 約 $0.06、Opus 5.5 約 $0.12。**月成本主要取決於「多少案件在不呼叫模型的層解決」與「升級到深度分析的比例」，不是工具選哪個**；基礎設施、人力、平台費用我沒有數據（第 6 節）。
+- **成本**：模型 token 以本庫價格可估；單次呼叫（輸入 20K、輸出 2K）在 Sonnet 5.5 約 $0.06、Opus 5.5 約 $0.12。**月成本主要取決於「多少案件在不呼叫模型的層解決」與「升級到深度分析的比例」，不是工具選哪個**；基礎設施、人力、平台費用我沒有數據（第 6 節）。**認證與計費（訂閱、setup-token、API key、月度 credits）見第 6.7 節**：正式服務應用 Console API key，不要押在訂閱上。
 - **先確認一件事**：dump 能不能離開公司。它會影響整個選型（第 11 節）。
 
 **請你確認這五點，結論可能改變**：① 每天大約多少個 core？② 是否已有程式能穩定產出 full backtrace、registers、threads？③ dump 或其中的證據能否送到外部 API？④ 是否已有 job queue 或 n8n？⑤ 每月能接受的模型預算大約多少？
@@ -211,7 +211,7 @@ while True:
 | 工具 | 主要成本 | 怎麼控制 | 本庫有無數據 |
 |---|---|---|---|
 | Messages API ＋ orchestrator | 按 token（6.2 價格）＋**最高的開發人力** | orchestrator 逐呼叫計帳，可硬性上限、可跨案件累積 | 價格有；人力沒有 |
-| `claude -p` | 若用 API 計費則按 token（【推論】；本庫沒有訂閱方案如何計） | `--max-budget-usd` 只在單次內生效；跨次自己加總 `--output-format json` 的 `total_cost_usd`，或在 Console 設 workspace 層級 spend limit（【官方】） | 沒有方案價格 |
+| `claude -p` | 用 API key 時按 token；用訂閱登入時扣訂閱額度（額度制，不是按 token）；兩者的差異與限制見第 6.7 節（【官方†】） | `--max-budget-usd` 只在單次內生效；跨次自己加總 `--output-format json` 的 `total_cost_usd`，或在 Console 設 workspace 層級 spend limit（【官方】） | 價格有（API key）；訂閱是額度制 |
 | Agent SDK | 按 token；迴圈由 SDK 管，多輪工具呼叫會累積 context（【推論】） | 能否逐步強制預算我沒查證 | 沒有 |
 | Claude Code（互動） | 開發階段的工程師使用成本 | 不計入每案成本 | 沒有方案價格 |
 | n8n | 平台費用（自架或雲端）我沒查證 | — | 沒有 |
@@ -227,6 +227,76 @@ while True:
 3. **先量再估**：用 50–100 個已知案例，量出「每層命中率、升級率、每層成本」，再把 6.3 的假設換成實測。
 4. **成本與準確率一起看**：比較 Haiku 與 Sonnet 當標準層時，同時看每案成本與根因 Top-1／Top-3、「無證據卻高信心」比例。
 5. **小規模試跑**後再決定模型等級與升級條件。
+
+---
+
+### 6.7 認證與計費：訂閱、setup-token、API key 與月度 credits
+
+前面的成本估算（6.2–6.4）假設的是**按 token 計費的 API key**。實務上你會遇到四種認證與計費方式，容易混淆；本節釐清，並說明 coredump 專案各階段該用哪一種。
+
+**依據與標記**：**【官方†】** 是 Anthropic 官方頁面的內容，由**代理人讀取原文後回報**，我沒有親自開啟；引文依回報。這些頁面**沒有標明確切日期**，而且條款在 2026 年多次變動（支援文章的更新註記：2026-06-15「paused the previously-announced changes … nothing has changed」；2026-10-07 加入月度 API credits）。**決定之前請重讀官方頁面。**
+
+#### 6.7.1 四種方式比較
+
+![圖：四種認證與計費方式：訂閱登入、setup-token、Console API key、月度 API credits](figures/claude-coredump-auth-types.svg)
+
+| 方式 | 是什麼 | 計費或額度 | 限制 |
+|---|---|---|---|
+| **訂閱登入**（`/login`） | claude.ai 帳號（Pro、Max、Ultra、Team、Enterprise） | **訂閱的使用上限（額度制）**，不是按 token | 【官方†】OAuth 驗證「intended exclusively for purchasers of … subscription plans and is designed to support ordinary use of Claude Code and other native Anthropic applications」；**建置產品或服務的開發者，包含用 Agent SDK 的，應使用 Console 或雲端供應商的 API key** |
+| **`claude setup-token`** | **一年期的 OAuth token**，放在 `CLAUDE_CODE_OAUTH_TOKEN`，給 CI 或腳本用 | 用訂閱額度 | 【官方†】需要 Pro、Max、Ultra、Team 或 Enterprise；**只能做模型請求**；`--bare` 不讀；**不是 API key，也不是臨時的**；能否用於 Agent SDK 或 `claude -p`，頁面沒有明說 |
+| **Console API key** | Console 組織建立的一般 API key | **按 token 計費**（預付額度，或經 Sales 安排的月結） | 可用於 Messages API、Agent SDK、`claude -p`；【官方†】**`ANTHROPIC_API_KEY` 優先於訂閱登入**，非互動模式（`-p`）下「the key is always used when present」 |
+| **月度 API credits** | **不是另一種 key**：是 Console 組織的促銷餘額，用一般 API key 消耗 | Max $100／月；Ultra $200／月；Team 每 Standard 席位 $20、Premium 席位 $100，併成一個餘額、上限 $500 | 【官方†】**Free、Pro、Enterprise 不符資格**；涵蓋 Claude API、Managed Agents、Agent SDK、Playground，**不含 Claude Code**；月底失效、不累積；用完 API 停止 |
+
+補充：
+- **「臨時 API key」**：我沒有在官方頁面看到「由訂閱產生臨時 API key」。與它最接近的是 `apiKeyHelper`：一支回傳 API key 的腳本，頁面說用於「dynamic or rotating credentials, such as short-lived tokens fetched from a vault」，也就是**你自己管理的輪替機制**，不是訂閱產生的（【官方†】）。
+- **訂閱與 API 是分開的**：Pro 方案不含 Console 的 API 用量，Claude 帳號與 Console 帳號各自獨立（支援文章，來自搜尋摘要，我沒開啟原文）。
+- 【官方†】Agent SDK 與 `claude -p` 用訂閱登入時「still draw from your subscription limits」；用 API key 時才算 API 用量。
+
+#### 6.7.2 該用哪一種
+
+![圖：認證決策圖：自己互動用就訂閱登入；個人原型可試訂閱；正式服務用 Console API key；Max、Ultra、Team 再領月度 credits 折抵，其他購買額度](figures/claude-coredump-auth-choose.svg)
+
+- **只有「自己在終端機互動使用 Claude Code」是訂閱登入明確的正規用途。**
+- **個人原型或腳本**：技術上可以用訂閱跑 `claude -p` 或 `setup-token`，但它是額度制、頁面**完全沒提 `claude -p` 或自動化**，所以是灰色地帶；官方法律頁對邊界情況的說法是「contact sales」。
+- **正式服務、多人共用、處理公司案件**：依官方法律頁用 **Console API key**。個人帳號（Pro、Max、Ultra）也不適合放公司程式碼與 dump（本庫 [Claude-Context](Claude-Context.md) 的提醒）。
+
+#### 6.7.3 月度 credits 怎麼領、怎麼用完
+
+![圖：月度 API credits 的六個步驟：選 Console 組織並接受條款、出現在 Promotional credits、建立一般 API key、呼叫 API、週期結束失效、用完停止](figures/claude-coredump-auth-credits.svg)
+
+【官方†】要點：
+- **領取**：claude.ai 的「Settings > Billing」（Max、Ultra）或「Organization settings > Billing」（Team），在「API credits」選要接收的 Console 組織並接受條款。需要 Max／Ultra 訂閱者或 Team 的 Owner，加上 Console 的 Admin 或 Billing 角色；新訂閱者要等 7 天。
+- **一個方案只能連一個 Console 組織，一個組織只能收一個方案的 credits**；要換得聯絡客服。
+- **到期**：「Unused credits expire at the end of each billing cycle … and don't roll over」；先花 credits，再花購買的額度。
+- **用完**：沒有購買額度時「API requests stop until your next monthly API credits arrive」，錯誤是「Your credit balance is too low to access the Anthropic API」；「Usage is never charged to your Claude plan」。要繼續就購買額度或開自動儲值。
+- 頁面沒有提到 `claude -p`；但支援文章說 credits 涵蓋 `claude -p`（用 API key 時），**兩頁說法不完全一致**。頁面**沒有說明正式環境或商業用途的限制**，但它連到 credits 條款（`anthropic.com/legal/credit-terms`），**我沒有讀**。
+
+#### 6.7.4 套到 coredump 專案
+
+| 階段 | 建議用 | 原因與注意 |
+|---|---|---|
+| 階段 1：互動 Claude Code 驗證 | 訂閱登入 | 這是正規用途；但**先確認帳號類型與資料政策**，個人帳號不放公司 dump |
+| 階段 1 後半：用 `claude -p` 批次量成本 | **Console API key**（可用 credits 折抵） | 訂閱是額度制，量不出與 API 可比的每案成本（【推論】）；用 key 才有 6.2 的 token 成本 |
+| 階段 2：Messages API 最小版本 | Console API key | Messages API 需要 key；頁面沒有提到可用訂閱 |
+| 正式 Jira 自動分析服務 | Console API key ＋ **購買額度或自動儲值** | 官方法律頁；**不要把正式服務完全押在 credits 上**，credits 每月歸零、用完 API 就停，服務會中斷 |
+
+**credits 能撐多少案件（假設值，不是實測）**：以 6.3 的假設，每案期望成本約 $0.04–0.06，Max 的 $100 約夠 **1,700–2,500 案／月**（100 ÷ 0.06 ≈ 1,667；100 ÷ 0.04 ＝ 2,500）。請換成你們的實測數字。
+
+#### 6.7.5 容易踩的坑
+
+1. **環境有 `ANTHROPIC_API_KEY` 就用 API 計費**：你以為用訂閱，實際在扣 API 費用。要退回訂閱，先 `unset ANTHROPIC_API_KEY`，再用 `/status` 確認（【官方†】）。
+2. **setup-token 是一年期的長效憑證**：要放進 secrets 管理並定期輪替，不要寫進程式或 repo。
+3. **credits 月底歸零、用完就停**：服務要監控 Console 餘額，並設定自動儲值或購買額度。
+4. **憑證外洩的影響不同**：API key 洩漏直接產生費用；訂閱 token 洩漏則消耗你的訂閱額度。兩者都要妥善保管。
+5. **條款會變**：2026 年已有兩次公告；上線前重讀官方頁面，邊界情況聯絡 Anthropic Sales。
+
+#### 6.7.6 本節未驗證的項目
+
+- 以上官方內容由代理人讀取回報，**我沒有親自開啟頁面**；頁面都沒有確切日期。
+- **credits 條款內文**（`anthropic.com/legal/credit-terms`）我沒讀；是否限制正式環境，頁面沒說。
+- **setup-token 能否用於 Agent SDK 或 `claude -p`**，認證頁沒有明說（只在優先順序清單裡列出）。
+- **Messages API 能否用訂閱**：這幾頁都沒提；一般是用 Console key，但我沒有看到明文。
+- 你們的方案類型與合約（尤其 Enterprise）我不知道；Enterprise 不符 credits 資格，但可能有自己的合約條件。
 
 ---
 
@@ -402,6 +472,7 @@ Jira webhook → 薄服務（驗證、去重、jobs 表）
 - **這次沒有開啟任何官方頁面**，所以 Claude 部分只和本庫已整理的內容一致，沒有重新驗證。**n8n 與 LangChain／LangGraph 的功能我完全沒有查證**，標【推論】的都是類推。
 - 【本庫設計】來自 OpenAI 版：把 `openai` SDK 的判斷類推到 Claude Messages API 是【推論】；兩家 API 的細節（工具呼叫格式、快取、結構化輸出）不同，實作時請以 Claude 官方文件為準。
 - **Claude Agent SDK** 的細節（如何限制內建工具、能否逐步強制預算、hooks）我沒有查證。
+- **認證與計費（第 6.7 節）**：內容來自 Anthropic 官方頁面（認證、法律與合規、API credits、支援文章），由代理人讀取原文後回報（標【官方†】），**我沒有親自開啟**；頁面沒有確切日期，條款 2026 年多次變動，請重讀。credits 條款內文沒讀；setup-token 能否用於 Agent SDK 與 `claude -p`、Messages API 能否用訂閱，頁面都沒有明說。
 - **成本（第 6 節）**：價格取自 [Claude-Model](Claude-Model.md)（2026-10-06，我這次沒有重新確認）；示範用的 token 數、去重與升級比例、固定前綴大小**都是假設**，不是你們的資料；算式我用程式驗算過，但沒有實際呼叫 API 量測。cache 寫入價、Batch 折扣、Task Budgets 細節、思考 token 的計費方式，以及 n8n、Claude Code 方案、Managed Agents、LangSmith 的費用，我都沒有查證。
 - **Jira 整合（第 9 節）**：Jira webhook、JQL 過濾、Automation 行為來自搜尋結果對 Atlassian 官方頁面的摘要（標【官方\*】），**我沒有開啟原文**；社群說法標 🔎。Routines 與 `claude -p` 的內容取自本庫的 Claude-Code-CLI。n8n 與 LangChain 的官方價格頁我讀不到（網路被擋），所以沒有寫進文件。這一節是通用架構，不是針對你們 Jira 的設計，也沒有實測。
 - 我沒有你們的環境資訊（每日 core 量、平台、是否已有擷取程式、資料政策），所以結論有條件，見「請你確認」與第 11 節。
@@ -412,4 +483,5 @@ Jira webhook → 薄服務（驗證、去重、jobs 表）
 
 - 本庫：[OpenAI-Python-Agent](OpenAI-Python-Agent.md)（同一類系統的完整設計）、[Claude-Agent](Claude-Agent.md)、[Claude-Code-CLI](Claude-Code-CLI.md)、[Claude-Model](Claude-Model.md)、[CodeX-CLI](CodeX-CLI.md)、[Agentic-Engineering](Agentic-Engineering.md)。
 - Atlassian（第 9 節，網址來自搜尋結果，**我沒有開啟原文**）：Jira Cloud webhooks <https://developer.atlassian.com/cloud/jira/platform/webhooks/>、Automation webhooks <https://developer.atlassian.com/cloud/jira/service-desk/automation-webhooks>；二手：社群討論〈更新事件下載附件〉<https://community.developer.atlassian.com/t/download-attachment-in-jira-cloud-using-rest-api-for-issue-update-events/3224/2>（🔎）。
+- Anthropic（第 6.7 節，**由代理人讀取，我沒有親自開啟**）：認證 <https://code.claude.com/docs/en/authentication>、法律與合規 <https://code.claude.com/docs/en/legal-and-compliance>、API credits <https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers>、支援文章〈用你的方案使用 Claude Agent SDK〉<https://support.claude.com/en/articles/15036540-use-the-claude-agent-sdk-with-your-claude-plan>；搜尋結果網址（我沒開啟）：〈為什麼 API 用量要另外計費〉<https://support.claude.com/en/articles/9876003-i-have-a-paid-claude-subscription-pro-max-team-or-enterprise-plans-why-do-i-have-to-pay-separately-to-use-the-claude-api-and-console>。
 - Anthropic：*Building effective agents*：<https://www.anthropic.com/engineering/building-effective-agents>（區分 workflow 與 agent，建議先用簡單模式；本庫 [AI-Learning-Resources](AI-Learning-Resources.md) 已列，我這次沒重新開啟）。
