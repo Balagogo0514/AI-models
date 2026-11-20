@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" role="img" aria-labelledby="t d">
+  <title id="t">analyze_case 的迴圈：每一輪怎麼處理 stop_reason</title>
+  <desc id="d">迴圈從 messages 等於 facts 開始。先問預算是否耗盡，是就回傳 needs_human。否就呼叫 client.messages.create 並記帳。再看 stop_reason：tool_use 就逐一處理 tool_use 區塊，submit_report 要驗證，不過就回 is_error 讓模型改，通過就回傳報告並結束；其他工具先檢查工具預算，再在沙箱執行，失敗回 is_error 不中斷。然後把 assistant 的原始 content 含思考區塊與 tool_result 加進 messages，回到迴圈開頭。end_turn、max_tokens、refusal 等其他 stop_reason 一律回傳 needs_human。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="638.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">analyze_case 的迴圈</text>
+  <rect class="box" x="90.0" y="52.0" width="260" height="40" rx="8"/>
+  <text class="b" x="220" y="76" text-anchor="middle">messages = [facts]</text>
+  <path class="ln" d="M220.0,92.0 L220.0,112.0" marker-end="url(#a)"/>
+  <polygon class="acc" points="220,112.0 350.0,150 220,188.0 90.0,150"/>
+  <text class="b" x="220" y="154" text-anchor="middle">預算耗盡？</text>
+  <rect class="bad" x="420.0" y="122.0" width="200" height="56" rx="8"/>
+  <text class="b" x="520" y="146" text-anchor="middle">回傳 needs_human</text>
+  <text x="520" y="162" text-anchor="middle">（預算耗盡）</text>
+  <path class="ln" d="M350.0,150.0 L420.0,150.0" marker-end="url(#a)"/>
+  <text class="s" x="385" y="140" text-anchor="middle">是</text>
+  <path class="ln" d="M220.0,188.0 L220.0,222.0" marker-end="url(#a)"/>
+  <text class="s" x="232" y="208" text-anchor="middle">否</text>
+  <rect class="acc" x="70.0" y="222.0" width="300" height="56" rx="8"/>
+  <text class="b" x="220" y="246" text-anchor="middle">client.messages.create(…)</text>
+  <text x="220" y="262" text-anchor="middle">budget.charge_model(usage)</text>
+  <path class="ln" d="M220.0,278.0 L220.0,312.0" marker-end="url(#a)"/>
+  <polygon class="acc" points="220,312.0 350.0,350 220,388.0 90.0,350"/>
+  <text class="b" x="220" y="354" text-anchor="middle">stop_reason？</text>
+  <rect class="bad" x="420.0" y="318.0" width="200" height="64" rx="8"/>
+  <text class="b" x="520" y="338" text-anchor="middle">end_turn／max_tokens</text>
+  <text x="520" y="354" text-anchor="middle">refusal／其他</text>
+  <text x="520" y="370" text-anchor="middle">→ needs_human</text>
+  <path class="ln" d="M350.0,350.0 L420.0,350.0" marker-end="url(#a)"/>
+  <text class="s" x="385" y="340" text-anchor="middle">其他</text>
+  <path class="ln" d="M220.0,388.0 L220.0,420.0" marker-end="url(#a)"/>
+  <text class="s" x="262" y="408" text-anchor="middle">tool_use</text>
+  <rect class="good" x="50.0" y="435.0" width="340" height="86" rx="8"/>
+  <text class="b" x="220" y="458" text-anchor="middle">逐一處理每個 tool_use 區塊</text>
+  <text x="220" y="474" text-anchor="middle">submit_report：驗證，不過回 is_error</text>
+  <text x="220" y="490" text-anchor="middle">其他工具：檢查預算 → 沙箱執行</text>
+  <text x="220" y="506" text-anchor="middle">失敗回 is_error，不中斷</text>
+  <rect class="good" x="460.0" y="446.0" width="160" height="64" rx="8"/>
+  <text class="b" x="540" y="466" text-anchor="middle">submit_report</text>
+  <text x="540" y="482" text-anchor="middle">通過驗證</text>
+  <text x="540" y="498" text-anchor="middle">→ 回傳報告</text>
+  <path class="ln" d="M390.0,478.0 L460.0,478.0" marker-end="url(#a)"/>
+  <text class="s" x="425" y="468" text-anchor="middle">通過</text>
+  <path class="ln" d="M220.0,521.0 L220.0,546.0" marker-end="url(#a)"/>
+  <rect class="box" x="20.0" y="548.0" width="400" height="56" rx="8"/>
+  <text class="b" x="220" y="572" text-anchor="middle">messages += assistant 原始 content（含思考區塊）</text>
+  <text x="220" y="588" text-anchor="middle">messages += user：全部 tool_result</text>
+  <path class="ln" d="M20.0,576.0 L12.0,576.0 L12.0,150.0 L90.0,150.0" marker-end="url(#a)"/>
+  <text class="s" x="300" y="626" text-anchor="middle">每個 tool_use 都必須有對應的 tool_result；失敗用 is_error</text>
+</svg>

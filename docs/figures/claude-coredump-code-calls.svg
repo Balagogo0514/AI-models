@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 716" role="img" aria-labelledby="t d">
+  <title id="t">一個案件的 API 呼叫順序：Jira、Claude 與沙箱</title>
+  <desc id="d">四個角色：Jira、接收端、worker、Claude API。一，Jira 打 POST /jira/webhook 帶 token 送來 issue 事件。二，事件沒有附件清單時，接收端用 GET /rest/api/3/issue/{key} 再查。三，接收端把案件寫入 jobs 表。四，worker 用 GET /rest/api/3/attachment/content/{id} 下載附件。五，Jira 回 303 轉址到媒體網址，再回傳 core 位元組。六，worker 用 POST /v1/messages 送 facts 與工具。七，Claude 回 stop_reason 為 tool_use。八，worker 在沙箱執行 gdb。九，worker 回傳 tool_result。十，Claude 呼叫 submit_report。十一，worker 用 POST /rest/api/3/issue/{key}/comment 回寫 ADF comment。十二，worker 用 PUT /rest/api/3/issue/{key} 加 label。Jira 的端點未對照官方頁面。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="714.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">一個案件的 API 呼叫順序</text>
+  <rect class="acc" x="16.0" y="45.0" width="128" height="34" rx="8"/>
+  <text class="b" x="80" y="66" text-anchor="middle">Jira</text>
+  <line class="dash" x1="80" y1="80" x2="80" y2="680"/>
+  <rect class="acc" x="176.0" y="45.0" width="128" height="34" rx="8"/>
+  <text class="b" x="240" y="66" text-anchor="middle">接收端</text>
+  <line class="dash" x1="240" y1="80" x2="240" y2="680"/>
+  <rect class="acc" x="336.0" y="45.0" width="128" height="34" rx="8"/>
+  <text class="b" x="400" y="66" text-anchor="middle">worker</text>
+  <line class="dash" x1="400" y1="80" x2="400" y2="680"/>
+  <rect class="acc" x="496.0" y="45.0" width="128" height="34" rx="8"/>
+  <text class="b" x="560" y="66" text-anchor="middle">Claude API</text>
+  <line class="dash" x1="560" y1="80" x2="560" y2="680"/>
+  <path class="ln" d="M80.0,112.0 L240.0,112.0" marker-end="url(#a)"/>
+  <rect x="81.9" y="92" width="156.2" height="16" fill="var(--bg)"/>
+  <text class="s" x="160.0" y="104" text-anchor="middle">1 POST /jira/webhook?token=</text>
+  <path class="ln" d="M240.0,158.0 L80.0,158.0" marker-end="url(#a)"/>
+  <rect x="37.2" y="138" width="245.6" height="16" fill="var(--bg)"/>
+  <text class="s" x="160.0" y="150" text-anchor="middle">2 GET /rest/api/3/issue/{key}（事件無附件時）</text>
+  <path class="ln" d="M240.0,204.0 L400.0,204.0" marker-end="url(#a)"/>
+  <rect x="284.2" y="184" width="71.5" height="16" fill="var(--bg)"/>
+  <text class="s" x="320.0" y="196" text-anchor="middle">3 入 jobs 表</text>
+  <path class="ln" d="M400.0,250.0 L80.0,250.0" marker-end="url(#a)"/>
+  <rect x="123.5" y="230" width="233.0" height="16" fill="var(--bg)"/>
+  <text class="s" x="240.0" y="242" text-anchor="middle">4 GET /rest/api/3/attachment/content/{id}</text>
+  <path class="ln" d="M80.0,296.0 L400.0,296.0" marker-end="url(#a)"/>
+  <rect x="157.8" y="276" width="164.4" height="16" fill="var(--bg)"/>
+  <text class="s" x="240.0" y="288" text-anchor="middle">5 303 → 媒體網址 → core 位元組</text>
+  <path class="ln" d="M400.0,342.0 L560.0,342.0" marker-end="url(#a)"/>
+  <rect x="381.7" y="322" width="196.6" height="16" fill="var(--bg)"/>
+  <text class="s" x="480.0" y="334" text-anchor="middle">6 POST /v1/messages（facts＋tools）</text>
+  <path class="ln" d="M560.0,388.0 L400.0,388.0" marker-end="url(#a)"/>
+  <rect x="410.1" y="368" width="139.7" height="16" fill="var(--bg)"/>
+  <text class="s" x="480.0" y="380" text-anchor="middle">7 stop_reason = tool_use</text>
+  <rect class="good" x="320" y="420" width="160" height="28" rx="6"/>
+  <text x="400" y="439" text-anchor="middle">8 沙箱執行 gdb</text>
+  <path class="ln" d="M400.0,480.0 L560.0,480.0" marker-end="url(#a)"/>
+  <rect x="409.8" y="460" width="140.5" height="16" fill="var(--bg)"/>
+  <text class="s" x="480.0" y="472" text-anchor="middle">9 tool_result（重複 6–9）</text>
+  <path class="ln" d="M560.0,526.0 L400.0,526.0" marker-end="url(#a)"/>
+  <rect x="405.2" y="506" width="149.5" height="16" fill="var(--bg)"/>
+  <text class="s" x="480.0" y="518" text-anchor="middle">10 tool_use：submit_report</text>
+  <path class="ln" d="M400.0,572.0 L80.0,572.0" marker-end="url(#a)"/>
+  <rect x="138.4" y="552" width="203.2" height="16" fill="var(--bg)"/>
+  <text class="s" x="240.0" y="564" text-anchor="middle">11 POST …/issue/{key}/comment（ADF）</text>
+  <path class="ln" d="M400.0,618.0 L80.0,618.0" marker-end="url(#a)"/>
+  <rect x="150.0" y="598" width="180.1" height="16" fill="var(--bg)"/>
+  <text class="s" x="240.0" y="610" text-anchor="middle">12 PUT …/issue/{key}（加 label）</text>
+  <text class="s" x="320" y="700" text-anchor="middle">Jira 端點未對照官方頁面（見第 1 節）；Claude 端依官方文件</text>
+</svg>
