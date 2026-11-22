@@ -243,7 +243,7 @@ while True:
 | 方式 | 是什麼 | 計費或額度 | 限制 |
 |---|---|---|---|
 | **訂閱登入**（`/login`） | claude.ai 帳號（Pro、Max、Ultra、Team、Enterprise） | **訂閱的使用上限（額度制）**，不是按 token | 【官方†】OAuth 驗證「intended exclusively for purchasers of … subscription plans and is designed to support ordinary use of Claude Code and other native Anthropic applications」；**建置產品或服務的開發者，包含用 Agent SDK 的，應使用 Console 或雲端供應商的 API key** |
-| **`claude setup-token`** | **一年期的 OAuth token**，放在 `CLAUDE_CODE_OAUTH_TOKEN`，給 CI 或腳本用 | 用訂閱額度 | 【官方†】需要 Pro、Max、Ultra、Team 或 Enterprise；**只能做模型請求**；`--bare` 不讀；**不是 API key，也不是臨時的**；能否用於 Agent SDK 或 `claude -p`，頁面沒有明說 |
+| **`claude setup-token`** | **一年期的 OAuth token**，放在 `CLAUDE_CODE_OAUTH_TOKEN`，給 CI 或腳本用 | 用訂閱額度 | 【官方†】需要 Pro、Max、Ultra、Team 或 Enterprise；**只能做模型請求**；`--bare` 不讀；**不是 API key，也不是臨時的**；優先順序排第 5，限制見第 6.7.3 節；能否用於 Agent SDK 或 `claude -p`，頁面沒有明說 |
 | **Console API key** | Console 組織建立的一般 API key | **按 token 計費**（預付額度，或經 Sales 安排的月結） | 可用於 Messages API、Agent SDK、`claude -p`；【官方†】**`ANTHROPIC_API_KEY` 優先於訂閱登入**，非互動模式（`-p`）下「the key is always used when present」 |
 | **月度 API credits** | **不是另一種 key**：是 Console 組織的促銷餘額，用一般 API key 消耗 | Max $100／月；Ultra $200／月；Team 每 Standard 席位 $20、Premium 席位 $100，併成一個餘額、上限 $500 | 【官方†】**Free、Pro、Enterprise 不符資格**；涵蓋 Claude API、Managed Agents、Agent SDK、Playground，**不含 Claude Code**；月底失效、不累積；用完 API 停止 |
 
@@ -260,7 +260,49 @@ while True:
 - **個人原型或腳本**：技術上可以用訂閱跑 `claude -p` 或 `setup-token`，但它是額度制、頁面**完全沒提 `claude -p` 或自動化**，所以是灰色地帶；官方法律頁對邊界情況的說法是「contact sales」。
 - **正式服務、多人共用、處理公司案件**：依官方法律頁用 **Console API key**。個人帳號（Pro、Max、Ultra）也不適合放公司程式碼與 dump（本庫 [Claude-Context](Claude-Context.md) 的提醒）。
 
-#### 6.7.3 月度 credits 怎麼領、怎麼用完
+#### 6.7.3 setup-token 的使用限制
+
+`claude setup-token` 常被當成「訂閱版的 API key」，但它不是：它是**一年期的 OAuth token**，用訂閱額度，限制比 API key 多，而且官方有不少地方**沒有說**。以下取自 Claude Code 的認證頁、CLI 參考頁、法律與合規頁與 Chrome 整合頁（【官方†】，由代理人讀取原文後回報，我沒有親自開啟；頁面沒有確切日期，條款會變）。
+
+![圖：setup-token 能做的事、不能做的事，以及官方頁面沒說的事](figures/claude-coredump-auth-setuptoken-limits.svg)
+
+**官方明確寫出的限制**
+
+| 限制 | 內容 | 出處 |
+|---|---|---|
+| 需要訂閱方案 | 需要 Pro、Max、Ultra、Team 或 Enterprise；只有 Console 帳號不行 | 認證頁；CLI 參考頁寫「Requires a Claude subscription」 |
+| 只能做模型請求 | 「can only make model requests」，所以**不能建立 Remote Control session，也不能取得 claude.ai connectors**；本機設定的 MCP 仍可用 | 認證頁 |
+| `--bare` 不讀它 | 「Bare mode does not read `CLAUDE_CODE_OAUTH_TOKEN`」；要改用 `ANTHROPIC_API_KEY` 或 `apiKeyHelper` | 認證頁 |
+| 一年期，且不幫你保存 | 「a one-year OAuth token」；產生時只印在終端機，要自己設成 `CLAUDE_CODE_OAUTH_TOKEN` | 認證頁；CLI 參考頁 |
+| 優先順序排第 5 | 見下圖；`ANTHROPIC_API_KEY` 等會蓋過它 | 認證頁 |
+| `/login` 會切換 | 變數還在時執行 `/login`，目前 session 會切到新登入；要保留就得移除變數與可設定它的 settings 檔 | 認證頁 |
+| Chrome 整合保持關閉 | 用長效 token 時，即使帶 `--chrome`，整合仍關閉 | Chrome 整合頁 |
+| 管理員的缺口 | 認證頁說 `claude setup-token`「enforce only `forceLoginMethod`」，**不遵守 `forceLoginOrgUUID`**，所以可以產生到別的組織的 token | 認證頁 |
+
+![圖：認證優先順序：雲端供應商變數、ANTHROPIC_AUTH_TOKEN、ANTHROPIC_API_KEY、apiKeyHelper 優先於 setup-token；profile 與 /login 排在它後面](figures/claude-coredump-auth-precedence.svg)
+
+**優先順序的實務意義**：7 個來源中，雲端供應商變數、`ANTHROPIC_AUTH_TOKEN`、`ANTHROPIC_API_KEY`、`apiKeyHelper` 都比 setup-token 優先；【官方†】非互動模式（`-p`）下，`ANTHROPIC_API_KEY`「the key is always used when present」。所以**環境裡只要有 `ANTHROPIC_API_KEY`，你就不是在用訂閱，而是在扣 API 費用**。要退回訂閱：`unset ANTHROPIC_API_KEY`，再用 `/status` 確認。
+
+**官方頁面沒說的**（我不能替它們補答案）
+
+- 是否算進訂閱的使用上限。
+- 如何撤銷，或撤銷後會怎樣。
+- 能否在多台機器或多個人之間共用；頁面只說設在「wherever you want to authenticate」。
+- 搭配 `claude -p` 或 Agent SDK 時有沒有不同；頁面沒有把這個 token 和它們連在一起講。
+- 到期前有沒有提醒；「登入到期」的章節只講 `/login` 的登入。
+
+**法律頁相關的規定**（這頁**完全沒有提到 setup-token**，也沒說 CI 或自動化用訂閱 token 是允許或禁止）：OAuth 驗證「intended exclusively for purchasers of … subscription plans」；開發產品或服務的開發者，包含用 Agent SDK 的，「should use API key authentication」；開發者「may not collect, store, or intermediate Claude.ai credentials or session tokens」；客戶「may not pay for, resell, or intermediate Claude usage on their end users' behalf」；使用上限的前提是「ordinary, individual usage」。
+
+![圖：該不該用 setup-token 的決策圖：需要無瀏覽器環境用訂閱嗎、是你一個人的 CI 或腳本嗎、需要 Remote Control、connectors、Chrome 整合或 bare 嗎](figures/claude-coredump-auth-setuptoken-choose.svg)
+
+**套到 coredump 專案**（【建議】與【推論】）：
+
+- **一個人在自己的 CI 或腳本用**，頁面沒有禁止；符合決策圖最後一格的條件才用。
+- **團隊共用的 coredump 服務**：把一個人的 setup-token 放進去，是否算「ordinary, individual usage」、是否構成「intermediate」，頁面沒有說，**屬灰色地帶**；建議用 Console API key，邊界情況先問 Anthropic Sales。
+- **即使要用，也當成一年期憑證管理**：放進 secrets 管理、定期輪替、確認環境沒有 `ANTHROPIC_API_KEY`、用 `/status` 確認實際身分；`--bare` 的腳本要改用 API key。
+- 這個專案的 `claude -p` 批次量成本（[Claude-Coredump-MVP](Claude-Coredump-MVP.md) 階段 1）若用 setup-token，扣的是訂閱額度，量不出與 API 可比的每案成本；要量成本請用 Console API key。
+
+#### 6.7.4 月度 credits 怎麼領、怎麼用完
 
 ![圖：月度 API credits 的六個步驟：選 Console 組織並接受條款、出現在 Promotional credits、建立一般 API key、呼叫 API、週期結束失效、用完停止](figures/claude-coredump-auth-credits.svg)
 
@@ -271,7 +313,7 @@ while True:
 - **用完**：沒有購買額度時「API requests stop until your next monthly API credits arrive」，錯誤是「Your credit balance is too low to access the Anthropic API」；「Usage is never charged to your Claude plan」。要繼續就購買額度或開自動儲值。
 - 頁面沒有提到 `claude -p`；但支援文章說 credits 涵蓋 `claude -p`（用 API key 時），**兩頁說法不完全一致**。頁面**沒有說明正式環境或商業用途的限制**，但它連到 credits 條款（`anthropic.com/legal/credit-terms`），**我沒有讀**。
 
-#### 6.7.4 套到 coredump 專案
+#### 6.7.5 套到 coredump 專案
 
 | 階段 | 建議用 | 原因與注意 |
 |---|---|---|
@@ -282,7 +324,7 @@ while True:
 
 **credits 能撐多少案件（假設值，不是實測）**：以 6.3 的假設，每案期望成本約 $0.04–0.06，Max 的 $100 約夠 **1,700–2,500 案／月**（100 ÷ 0.06 ≈ 1,667；100 ÷ 0.04 ＝ 2,500）。請換成你們的實測數字。
 
-#### 6.7.5 容易踩的坑
+#### 6.7.6 容易踩的坑
 
 1. **環境有 `ANTHROPIC_API_KEY` 就用 API 計費**：你以為用訂閱，實際在扣 API 費用。要退回訂閱，先 `unset ANTHROPIC_API_KEY`，再用 `/status` 確認（【官方†】）。
 2. **setup-token 是一年期的長效憑證**：要放進 secrets 管理並定期輪替，不要寫進程式或 repo。
@@ -290,11 +332,11 @@ while True:
 4. **憑證外洩的影響不同**：API key 洩漏直接產生費用；訂閱 token 洩漏則消耗你的訂閱額度。兩者都要妥善保管。
 5. **條款會變**：2026 年已有兩次公告；上線前重讀官方頁面，邊界情況聯絡 Anthropic Sales。
 
-#### 6.7.6 本節未驗證的項目
+#### 6.7.7 本節未驗證的項目
 
 - 以上官方內容由代理人讀取回報，**我沒有親自開啟頁面**；頁面都沒有確切日期。
 - **credits 條款內文**（`anthropic.com/legal/credit-terms`）我沒讀；是否限制正式環境，頁面沒說。
-- **setup-token 能否用於 Agent SDK 或 `claude -p`**，認證頁沒有明說（只在優先順序清單裡列出）。
+- **setup-token**：能否用於 Agent SDK 或 `claude -p`、是否算進訂閱使用上限、如何撤銷、能否多機或多人共用、到期前有無提醒，官方頁面都沒有說（第 6.7.3 節）；CLI 參考頁後約 1.3 萬字代理人只拿到摘要。法律頁完全沒有提到 setup-token。
 - **Messages API 能否用訂閱**：這幾頁都沒提；一般是用 Console key，但我沒有看到明文。
 - 你們的方案類型與合約（尤其 Enterprise）我不知道；Enterprise 不符 credits 資格，但可能有自己的合約條件。
 
@@ -485,5 +527,5 @@ Jira webhook → 薄服務（驗證、去重、jobs 表）
 
 - 本庫：[OpenAI-Python-Agent](OpenAI-Python-Agent.md)（同一類系統的完整設計）、[Claude-Agent](Claude-Agent.md)、[Claude-Code-CLI](Claude-Code-CLI.md)、[Claude-Model](Claude-Model.md)、[CodeX-CLI](CodeX-CLI.md)、[Agentic-Engineering](Agentic-Engineering.md)。
 - Atlassian（第 9 節，網址來自搜尋結果，**我沒有開啟原文**）：Jira Cloud webhooks <https://developer.atlassian.com/cloud/jira/platform/webhooks/>、Automation webhooks <https://developer.atlassian.com/cloud/jira/service-desk/automation-webhooks>；二手：社群討論〈更新事件下載附件〉<https://community.developer.atlassian.com/t/download-attachment-in-jira-cloud-using-rest-api-for-issue-update-events/3224/2>（🔎）。
-- Anthropic（第 6.7 節，**由代理人讀取，我沒有親自開啟**）：認證 <https://code.claude.com/docs/en/authentication>、法律與合規 <https://code.claude.com/docs/en/legal-and-compliance>、API credits <https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers>、支援文章〈用你的方案使用 Claude Agent SDK〉<https://support.claude.com/en/articles/15036540-use-the-claude-agent-sdk-with-your-claude-plan>；搜尋結果網址（我沒開啟）：〈為什麼 API 用量要另外計費〉<https://support.claude.com/en/articles/9876003-i-have-a-paid-claude-subscription-pro-max-team-or-enterprise-plans-why-do-i-have-to-pay-separately-to-use-the-claude-api-and-console>。
+- Anthropic（第 6.7 節，**由代理人讀取，我沒有親自開啟**）：認證 <https://code.claude.com/docs/en/authentication>、CLI 參考 <https://code.claude.com/docs/en/cli-reference>、Chrome 整合 <https://code.claude.com/docs/en/chrome>、法律與合規 <https://code.claude.com/docs/en/legal-and-compliance>、API credits <https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers>、支援文章〈用你的方案使用 Claude Agent SDK〉<https://support.claude.com/en/articles/15036540-use-the-claude-agent-sdk-with-your-claude-plan>；搜尋結果網址（我沒開啟）：〈為什麼 API 用量要另外計費〉<https://support.claude.com/en/articles/9876003-i-have-a-paid-claude-subscription-pro-max-team-or-enterprise-plans-why-do-i-have-to-pay-separately-to-use-the-claude-api-and-console>。
 - Anthropic：*Building effective agents*：<https://www.anthropic.com/engineering/building-effective-agents>（區分 workflow 與 agent，建議先用簡單模式；本庫 [AI-Learning-Resources](AI-Learning-Resources.md) 已列，我這次沒重新開啟）。
