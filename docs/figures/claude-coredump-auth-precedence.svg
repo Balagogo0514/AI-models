@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">認證優先順序：setup-token 排第 5，環境裡有 API key 就不是在用訂閱</title>
+  <desc id="d">七個認證來源由高到低。一，雲端供應商的環境變數。二，ANTHROPIC_AUTH_TOKEN。三，ANTHROPIC_API_KEY，非互動的 claude -p 下，有 key 就一定使用。四，apiKeyHelper。五，CLAUDE_CODE_OAUTH_TOKEN，也就是 setup-token。六，Anthropic profile 或 federation 憑證。七，/login 的訂閱登入。一到四都優先於 setup-token；六與七排在它後面。要退回訂閱，先 unset ANTHROPIC_API_KEY，再用 status 確認。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">認證優先順序（由高到低）</text>
+  <rect class="bad" x="12" y="44" width="616" height="48" rx="8"/>
+  <text class="b" x="26" y="66">1 雲端供應商變數</text>
+  <text class="s" x="26" y="83">Bedrock、Vertex、Foundry</text>
+  <text class="b" x="616" y="74" text-anchor="end">優先於 setup-token</text>
+  <rect class="bad" x="12" y="100" width="616" height="48" rx="8"/>
+  <text class="b" x="26" y="130">2 ANTHROPIC_AUTH_TOKEN</text>
+  <text class="b" x="616" y="130" text-anchor="end">優先於 setup-token</text>
+  <rect class="bad" x="12" y="156" width="616" height="48" rx="8"/>
+  <text class="b" x="26" y="178">3 ANTHROPIC_API_KEY</text>
+  <text class="s" x="26" y="195">非互動 -p：有 key 就一定使用</text>
+  <text class="b" x="616" y="186" text-anchor="end">優先於 setup-token</text>
+  <rect class="bad" x="12" y="212" width="616" height="48" rx="8"/>
+  <text class="b" x="26" y="234">4 apiKeyHelper</text>
+  <text class="s" x="26" y="251">回傳 API key 的腳本</text>
+  <text class="b" x="616" y="242" text-anchor="end">優先於 setup-token</text>
+  <rect class="acc" x="12" y="268" width="616" height="48" rx="8"/>
+  <text class="b" x="26" y="290">5 CLAUDE_CODE_OAUTH_TOKEN</text>
+  <text class="s" x="26" y="307">setup-token 在這裡</text>
+  <text class="b" x="616" y="298" text-anchor="end">你在這</text>
+  <rect class="box" x="12" y="324" width="616" height="48" rx="8"/>
+  <text class="b" x="26" y="354">6 Anthropic profile／federation</text>
+  <text class="b" x="616" y="354" text-anchor="end">被 setup-token 蓋過</text>
+  <rect class="box" x="12" y="380" width="616" height="48" rx="8"/>
+  <text class="b" x="26" y="410">7 /login 的訂閱登入</text>
+  <text class="b" x="616" y="410" text-anchor="end">被 setup-token 蓋過</text>
+  <text class="b" x="320" y="452" text-anchor="middle">環境裡有 ANTHROPIC_API_KEY，你就不是在用訂閱，而是在扣 API 費用</text>
+  <text class="s" x="320" y="474" text-anchor="middle">要退回訂閱：unset ANTHROPIC_API_KEY，再用 /status 確認</text>
+  <text class="s" x="320" y="494" text-anchor="middle">出處：Claude Code 認證頁（代理人讀取回報）</text>
+</svg>
