@@ -216,4 +216,4 @@ schema 該寫什麼（【建議】）：
 
 - 原文：Andrej Karpathy，*LLM Wiki*（gist，2026-04-04）：<https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f>（代理人讀取）。
 - 二手整理（搜尋結果網址，**我沒有開啟**）：DataCamp <https://www.datacamp.com/blog/llm-wiki>、AFFiNE <https://affine.pro/blog/what-is-llm-wiki>、Analytics Vidhya <https://www.analyticsvidhya.com/blog/2026/04/llm-wiki-by-andrej-karpathy/>。
-- 本庫：[Enterprise-AI-Integration](Enterprise-AI-Integration.md)（企業 RAG 的做法，第 5 節）、[Claude-Coredump-Agent](Claude-Coredump-Agent.md)（fingerprint 去重、成本漏斗、安全）、[Claude-Coredump-Code](Claude-Coredump-Code.md)（分析流程與報告驗證）、[Claude-Coredump-MVP](Claude-Coredump-MVP.md)、[Claude-Context](Claude-Context.md)（`CLAUDE.md` 與記憶）。
+- 本庫：[Claude-Coredump-Wiki](Claude-Coredump-Wiki.md)（第 5 節構想的可執行實作範例）、[Enterprise-AI-Integration](Enterprise-AI-Integration.md)（企業 RAG 的做法，第 5 節）、[Claude-Coredump-Agent](Claude-Coredump-Agent.md)（fingerprint 去重、成本漏斗、安全）、[Claude-Coredump-Code](Claude-Coredump-Code.md)（分析流程與報告驗證）、[Claude-Coredump-MVP](Claude-Coredump-MVP.md)、[Claude-Context](Claude-Context.md)（`CLAUDE.md` 與記憶）。

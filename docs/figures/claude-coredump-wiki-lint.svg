@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">lint：不呼叫模型，先檢查機械可驗證的問題</title>
+  <desc id="d">七項檢查。孤立頁：頁面沒有被 index 收錄，警告。失效連結：本文連到不存在的頁面，錯誤。簽章指向不存在的根因頁，錯誤。沒有證據的根因：缺少 evidence_id，錯誤。同一簽章的案件指向不同根因，警告。已修復的版本仍出現：案件版本不低於修復版本，錯誤，可能是回歸或修復無效。久未出現：超過一百八十天沒有新案件，提示。有錯誤時，命令列結束碼為 1。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">lint 檢查項目</text>
+  <rect class="acc" x="12" y="44" width="230" height="52" rx="10"/>
+  <text x="24" y="75.0">孤立頁</text>
+  <line class="ln" x1="242" y1="70.0" x2="266" y2="70.0" marker-end="url(#a)"/>
+  <rect class="box" x="268" y="44" width="360" height="52" rx="10"/>
+  <text class="b" x="280" y="64.0">warn</text>
+  <text class="s" x="280" y="86.0">頁面沒被 index.md 收錄</text>
+  <rect class="acc" x="12" y="104" width="230" height="52" rx="10"/>
+  <text x="24" y="135.0">失效連結</text>
+  <line class="ln" x1="242" y1="130.0" x2="266" y2="130.0" marker-end="url(#a)"/>
+  <rect class="bad" x="268" y="104" width="360" height="52" rx="10"/>
+  <text class="b" x="280" y="124.0">error</text>
+  <text class="s" x="280" y="146.0">本文連到不存在的頁面</text>
+  <rect class="acc" x="12" y="164" width="230" height="52" rx="10"/>
+  <text x="24" y="195.0">簽章指向不存在的根因頁</text>
+  <line class="ln" x1="242" y1="190.0" x2="266" y2="190.0" marker-end="url(#a)"/>
+  <rect class="bad" x="268" y="164" width="360" height="52" rx="10"/>
+  <text class="b" x="280" y="184.0">error</text>
+  <text class="s" x="280" y="206.0">簽章頁的 root_cause 找不到頁面</text>
+  <rect class="acc" x="12" y="224" width="230" height="52" rx="10"/>
+  <text x="24" y="255.0">沒有證據的根因</text>
+  <line class="ln" x1="242" y1="250.0" x2="266" y2="250.0" marker-end="url(#a)"/>
+  <rect class="bad" x="268" y="224" width="360" height="52" rx="10"/>
+  <text class="b" x="280" y="244.0">error</text>
+  <text class="s" x="280" y="266.0">缺少 evidence_id</text>
+  <rect class="acc" x="12" y="284" width="230" height="52" rx="10"/>
+  <text x="24" y="315.0">同簽章指向不同根因</text>
+  <line class="ln" x1="242" y1="310.0" x2="266" y2="310.0" marker-end="url(#a)"/>
+  <rect class="box" x="268" y="284" width="360" height="52" rx="10"/>
+  <text class="b" x="280" y="304.0">warn</text>
+  <text class="s" x="280" y="326.0">案件之間互相矛盾</text>
+  <rect class="acc" x="12" y="344" width="230" height="52" rx="10"/>
+  <text x="24" y="375.0">已修復的版本仍出現</text>
+  <line class="ln" x1="242" y1="370.0" x2="266" y2="370.0" marker-end="url(#a)"/>
+  <rect class="bad" x="268" y="344" width="360" height="52" rx="10"/>
+  <text class="b" x="280" y="364.0">error</text>
+  <text class="s" x="280" y="386.0">案件版本 ≥ fixed_in：回歸或修復無效</text>
+  <rect class="acc" x="12" y="404" width="230" height="52" rx="10"/>
+  <text x="24" y="435.0">久未出現的簽章</text>
+  <line class="ln" x1="242" y1="430.0" x2="266" y2="430.0" marker-end="url(#a)"/>
+  <rect class="box" x="268" y="404" width="360" height="52" rx="10"/>
+  <text class="b" x="280" y="424.0">info</text>
+  <text class="s" x="280" y="446.0">超過 180 天沒有新案件，確認是否已不再發生</text>
+  <text class="s" x="320" y="506" text-anchor="middle">有 error 時，命令列 lint 的結束碼為 1，可接進 CI</text>
+</svg>

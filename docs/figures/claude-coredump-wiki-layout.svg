@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">wiki 的頁面與關係：案件、簽章、根因、模組</title>
+  <desc id="d">wiki 有四種頁面。案件頁，每個 Jira 案件一頁，frontmatter 有 signature 與 root_cause。簽章頁，一種 crash 簽章，列出案件與對應的根因。根因頁，一種根因，有狀態 open 或 fixed、修復版本與證據 ID。模組頁，列出該模組的簽章與根因。案件指向簽章，簽章指向根因，模組指向簽章與根因。index.md 與 log.md 由程式維護，不交給模型。待審的提案放在 _pending，不進 git，核准後才寫入頁面。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">頁面與關係</text>
+  <rect class="box" x="25.0" y="110.0" width="150" height="80" rx="8"/>
+  <text class="b" x="100" y="130" text-anchor="middle">cases/</text>
+  <text x="100" y="146" text-anchor="middle">案件頁</text>
+  <text x="100" y="162" text-anchor="middle">signature、root_cause</text>
+  <text x="100" y="178" text-anchor="middle">version、status</text>
+  <rect class="acc" x="245.0" y="110.0" width="150" height="80" rx="8"/>
+  <text class="b" x="320" y="130" text-anchor="middle">signatures/</text>
+  <text x="320" y="146" text-anchor="middle">簽章頁</text>
+  <text x="320" y="162" text-anchor="middle">cases、versions</text>
+  <text x="320" y="178" text-anchor="middle">root_cause</text>
+  <rect class="good" x="465.0" y="110.0" width="150" height="80" rx="8"/>
+  <text class="b" x="540" y="130" text-anchor="middle">root-causes/</text>
+  <text x="540" y="146" text-anchor="middle">根因頁</text>
+  <text x="540" y="162" text-anchor="middle">status、fixed_in</text>
+  <text x="540" y="178" text-anchor="middle">evidence_ids</text>
+  <path class="ln" d="M175.0,150.0 L245.0,150.0" marker-end="url(#a)"/>
+  <text class="s" x="210" y="140" text-anchor="middle">signature</text>
+  <path class="ln" d="M395.0,150.0 L465.0,150.0" marker-end="url(#a)"/>
+  <text class="s" x="430" y="140" text-anchor="middle">root_cause</text>
+  <rect class="box" x="220.0" y="265.0" width="200" height="70" rx="8"/>
+  <text class="b" x="320" y="288" text-anchor="middle">modules/</text>
+  <text x="320" y="304" text-anchor="middle">模組頁</text>
+  <text x="320" y="320" text-anchor="middle">signatures、root_causes</text>
+  <path class="ln" d="M320.0,265.0 L320.0,190.0" marker-end="url(#a)"/>
+  <path class="ln" d="M420.0,300.0 L540.0,300.0 L540.0,190.0" marker-end="url(#a)"/>
+  <rect class="zone" x="12" y="372" width="296" height="100" rx="10"/>
+  <text class="b" x="24" y="392">程式維護，不交給模型</text>
+  <text x="24" y="414">index.md：每頁一行摘要</text>
+  <text x="24" y="434">log.md：## [日期] 動作 | 內容</text>
+  <text x="24" y="454">git：每次核准一個 commit</text>
+  <rect class="bad" x="332" y="372" width="296" height="100" rx="10"/>
+  <text class="b" x="344" y="392">_pending/（待審，不進 git）</text>
+  <text x="344" y="414">propose 只寫這裡</text>
+  <text x="344" y="434">人工核准後才寫進頁面</text>
+  <text x="344" y="454">駁回就直接刪除</text>
+  <text class="s" x="320" y="500" text-anchor="middle">頁面用 markdown ＋ YAML frontmatter；slug 只允許 a–z、0–9、底線、連字號</text>
+</svg>
