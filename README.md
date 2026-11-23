@@ -2,7 +2,7 @@
 
 AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理與訓練、Claude Code／Codex 等 Agent 工具的使用與選型。以繁體中文撰寫。
 
-> 共 22 篇筆記。點標題即可開啟對應文件。
+> 共 23 篇筆記。點標題即可開啟對應文件。
 
 ## 學習資源
 
@@ -40,6 +40,7 @@ AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理�
 | [Claude coredump parser 最小實作計畫](docs/Claude-Coredump-MVP.md) | 階段 0 到 2：案例集、用 Claude Code 互動驗證、Python ＋ Messages API 最小版本（3 個唯讀工具、CaseBudget、報告 schema、評測 harness）、驗收與閘門決策；不給準確率門檻，區分官方、本庫設計與推論 |
 | [Claude coredump parser 範例程式碼](docs/Claude-Coredump-Code.md) | Jira webhook 到 Claude 工具迴圈再回寫 Jira 的可執行 Python 範例（約 660 行、24 個測試）；用真實 gdb 與 mock 驗證，標明未測真實 Jira 與 Claude API |
 | [LLM Wiki](docs/LLM-Wiki.md) | Karpathy 的 LLM Wiki 模式：三層結構（原始資料、wiki、schema）、ingest／query／lint、與 RAG 的逐項比較與決策圖、適用情況，以及用在 coredump 案例庫的設計構想；區分原文、二手與推論 |
+| [Claude coredump 案例庫：LLM Wiki 實作範例](docs/Claude-Coredump-Wiki.md) | 把 LLM Wiki 做成 coredump 案例庫的可執行 Python 範例（約 580 行、42 個測試）：簽章、頁面、propose 與人工核准、查詢五種狀態、lint、命令列；用真實 gdb 與 git 驗證，標明未測真實 Claude 改寫與真實 Jira |
 
 ## 其他
 

@@ -54,6 +54,7 @@ CATS = [
         ("Claude-Coredump-MVP", "coredump parser 的最小實作計畫：案例集、Claude Code 互動驗證、Python＋Messages API 最小版本、評測與閘門決策"),
         ("Claude-Coredump-Code", "coredump parser 的 Jira 與 Claude API 實際呼叫程式碼：webhook、jobs 表、工具迴圈、報告驗證與 24 個測試"),
         ("LLM-Wiki", "Karpathy 的 LLM Wiki 模式：三層結構、ingest／query／lint、與 RAG 的差別，以及用在 coredump 案例庫的設計構想"),
+        ("Claude-Coredump-Wiki", "LLM Wiki 用在 coredump 案例庫的實作範例：簽章、頁面、人工核准、查詢五種狀態、lint 與 42 個測試"),
     ]),
 ]
 

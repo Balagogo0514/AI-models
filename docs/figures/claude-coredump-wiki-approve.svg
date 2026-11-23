@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 660" role="img" aria-labelledby="t d">
+  <title id="t">approve：從待審提案到寫入 wiki，每一步的把關</title>
+  <desc id="d">approve 的步驟與把關。一，讀待審 JSON，case id 必須符合安全的正規表達式，擋掉 ../。二，選出信心最高的假設，產生根因 slug，若人工指定 slug 要通過檢查，路徑必須在 wiki 目錄內。三，寫案件頁，所有來自報告的文字都經 safe_text，去掉換行與 frontmatter 分隔線與連結。四，更新簽章頁，案件、版本、最近一次。五，根因頁：新的就建立；舊的若提供 merge 函式，就讓模型改寫，但必須通過 validate_merge：保留所有證據 ID、無禁用字眼、長度不暴增、本文不能以 frontmatter 開頭，失敗就退回附加並記 log。六，模組頁。七，重建 index、附加 log、git commit、刪除待審檔。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="658.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">approve 的步驟與把關</text>
+  <rect class="box" x="60.0" y="48.0" width="520" height="56" rx="8"/>
+  <text class="b" x="320" y="72" text-anchor="middle">1 讀待審 JSON</text>
+  <text x="320" y="88" text-anchor="middle">case id 只允許 [A-Za-z0-9_-]，擋 ../</text>
+  <path class="ln" d="M320.0,104.0 L320.0,132.0" marker-end="url(#a)"/>
+  <rect class="box" x="60.0" y="132.0" width="520" height="56" rx="8"/>
+  <text class="b" x="320" y="156" text-anchor="middle">2 選根因並產生 slug</text>
+  <text x="320" y="172" text-anchor="middle">check_slug ＋ 路徑必須在 wiki 目錄內</text>
+  <path class="ln" d="M320.0,188.0 L320.0,216.0" marker-end="url(#a)"/>
+  <rect class="acc" x="60.0" y="216.0" width="520" height="56" rx="8"/>
+  <text class="b" x="320" y="240" text-anchor="middle">3 寫案件頁</text>
+  <text x="320" y="256" text-anchor="middle">報告文字一律 safe_text：去換行、---、](</text>
+  <path class="ln" d="M320.0,272.0 L320.0,300.0" marker-end="url(#a)"/>
+  <rect class="acc" x="60.0" y="300.0" width="520" height="56" rx="8"/>
+  <text class="b" x="320" y="324" text-anchor="middle">4 更新簽章頁</text>
+  <text x="320" y="340" text-anchor="middle">案件、版本、first_seen／last_seen</text>
+  <path class="ln" d="M320.0,356.0 L320.0,384.0" marker-end="url(#a)"/>
+  <rect class="bad" x="60.0" y="384.0" width="520" height="56" rx="8"/>
+  <text class="b" x="320" y="408" text-anchor="middle">5 根因頁：新建，或讓模型合併</text>
+  <text x="320" y="424" text-anchor="middle">validate_merge：保留證據 ID、無禁用字眼、長度、無 frontmatter</text>
+  <path class="ln" d="M320.0,440.0 L320.0,468.0" marker-end="url(#a)"/>
+  <rect class="acc" x="60.0" y="468.0" width="520" height="56" rx="8"/>
+  <text class="b" x="320" y="492" text-anchor="middle">6 更新模組頁</text>
+  <text x="320" y="508" text-anchor="middle">簽章與根因的清單</text>
+  <path class="ln" d="M320.0,524.0 L320.0,552.0" marker-end="url(#a)"/>
+  <rect class="good" x="60.0" y="552.0" width="520" height="56" rx="8"/>
+  <text class="b" x="320" y="576" text-anchor="middle">7 重建 index、寫 log、git commit</text>
+  <text x="320" y="592" text-anchor="middle">刪除待審檔；merge 被拒會記 log 並退回附加</text>
+  <text class="s" x="320" y="648" text-anchor="middle">把關是程式碼，不是 prompt；每一項都有測試，其中 3 項做過變異測試（拿掉就失敗）</text>
+</svg>
