@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">三個操作：ingest、query、lint</title>
+  <desc id="d">三欄。Ingest 匯入：你放入新資料；LLM 讀它並與你討論；寫摘要頁；更新 index；更新相關頁面，一份資料可能動到十到十五頁；在 log 加一筆。Query 查詢：你提問；LLM 讀 index 找頁面；讀頁面回答並附引用；好的答案可以存回 wiki，讓知識累積。Lint 健檢：定期執行；找矛盾、過時說法、孤立頁面、缺少的概念與交叉引用；修正或向你提問；記進 log。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">三個操作</text>
+  <rect class="hd" x="12" y="44" width="196" height="28" rx="6"/>
+  <text class="b" x="110" y="63" text-anchor="middle">Ingest 匯入</text>
+  <rect class="acc" x="15.0" y="85.0" width="190" height="50" rx="8"/>
+  <text x="110" y="114" text-anchor="middle">你放入新資料</text>
+  <path class="ln" d="M110.0,135.0 L110.0,148.0" marker-end="url(#a)"/>
+  <rect class="acc" x="15.0" y="149.0" width="190" height="50" rx="8"/>
+  <text x="110" y="178" text-anchor="middle">LLM 讀它並與你討論</text>
+  <path class="ln" d="M110.0,199.0 L110.0,212.0" marker-end="url(#a)"/>
+  <rect class="acc" x="15.0" y="213.0" width="190" height="50" rx="8"/>
+  <text x="110" y="242" text-anchor="middle">寫摘要頁</text>
+  <path class="ln" d="M110.0,263.0 L110.0,276.0" marker-end="url(#a)"/>
+  <rect class="acc" x="15.0" y="277.0" width="190" height="50" rx="8"/>
+  <text x="110" y="306" text-anchor="middle">更新 index</text>
+  <path class="ln" d="M110.0,327.0 L110.0,340.0" marker-end="url(#a)"/>
+  <rect class="acc" x="15.0" y="341.0" width="190" height="50" rx="8"/>
+  <text x="110" y="362" text-anchor="middle">更新相關頁面</text>
+  <text x="110" y="378" text-anchor="middle">（一份常動 10–15 頁）</text>
+  <path class="ln" d="M110.0,391.0 L110.0,404.0" marker-end="url(#a)"/>
+  <rect class="acc" x="15.0" y="405.0" width="190" height="50" rx="8"/>
+  <text x="110" y="434" text-anchor="middle">在 log 加一筆</text>
+  <rect class="hd" x="222" y="44" width="196" height="28" rx="6"/>
+  <text class="b" x="320" y="63" text-anchor="middle">Query 查詢</text>
+  <rect class="good" x="225.0" y="85.0" width="190" height="50" rx="8"/>
+  <text x="320" y="114" text-anchor="middle">你提問</text>
+  <path class="ln" d="M320.0,135.0 L320.0,148.0" marker-end="url(#a)"/>
+  <rect class="good" x="225.0" y="149.0" width="190" height="50" rx="8"/>
+  <text x="320" y="178" text-anchor="middle">LLM 讀 index 找頁面</text>
+  <path class="ln" d="M320.0,199.0 L320.0,212.0" marker-end="url(#a)"/>
+  <rect class="good" x="225.0" y="213.0" width="190" height="50" rx="8"/>
+  <text x="320" y="234" text-anchor="middle">讀頁面並回答</text>
+  <text x="320" y="250" text-anchor="middle">（附引用）</text>
+  <path class="ln" d="M320.0,263.0 L320.0,276.0" marker-end="url(#a)"/>
+  <rect class="good" x="225.0" y="277.0" width="190" height="50" rx="8"/>
+  <text x="320" y="298" text-anchor="middle">好答案可存回 wiki</text>
+  <text x="320" y="314" text-anchor="middle">（知識累積）</text>
+  <rect class="hd" x="432" y="44" width="196" height="28" rx="6"/>
+  <text class="b" x="530" y="63" text-anchor="middle">Lint 健檢</text>
+  <rect class="box" x="435.0" y="85.0" width="190" height="50" rx="8"/>
+  <text x="530" y="114" text-anchor="middle">定期執行</text>
+  <path class="ln" d="M530.0,135.0 L530.0,148.0" marker-end="url(#a)"/>
+  <rect class="box" x="435.0" y="149.0" width="190" height="50" rx="8"/>
+  <text x="530" y="170" text-anchor="middle">找矛盾、過時、孤立頁</text>
+  <text x="530" y="186" text-anchor="middle">缺少的概念與連結</text>
+  <path class="ln" d="M530.0,199.0 L530.0,212.0" marker-end="url(#a)"/>
+  <rect class="box" x="435.0" y="213.0" width="190" height="50" rx="8"/>
+  <text x="530" y="242" text-anchor="middle">修正，或向你提問</text>
+  <path class="ln" d="M530.0,263.0 L530.0,276.0" marker-end="url(#a)"/>
+  <rect class="box" x="435.0" y="277.0" width="190" height="50" rx="8"/>
+  <text x="530" y="306" text-anchor="middle">記進 log</text>
+  <text class="s" x="320" y="506" text-anchor="middle">出處：Karpathy 的 LLM Wiki gist（代理人讀取）</text>
+</svg>

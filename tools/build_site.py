@@ -53,6 +53,7 @@ CATS = [
         ("Claude-Coredump-Agent", "coredump auto parser 的工具選型：Claude Code、n8n、LangChain、Claude SDK 的角色、架構、成本漏斗、安全與導入順序"),
         ("Claude-Coredump-MVP", "coredump parser 的最小實作計畫：案例集、Claude Code 互動驗證、Python＋Messages API 最小版本、評測與閘門決策"),
         ("Claude-Coredump-Code", "coredump parser 的 Jira 與 Claude API 實際呼叫程式碼：webhook、jobs 表、工具迴圈、報告驗證與 24 個測試"),
+        ("LLM-Wiki", "Karpathy 的 LLM Wiki 模式：三層結構、ingest／query／lint、與 RAG 的差別，以及用在 coredump 案例庫的設計構想"),
     ]),
 ]
 
