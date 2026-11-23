@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 672" role="img" aria-labelledby="t d">
+  <title id="t">把 LLM Wiki 用在 coredump 案例庫（我的設計構想）</title>
+  <desc id="d">新案件進來，先用 fingerprint 查 wiki 有沒有對應的根因頁。命中就引用既有根因頁與相關案件，仍要驗證版本是否相符。沒命中就由 Claude 分析，報告通過 schema 驗證，再經人工審閱，才 ingest：寫案件頁，更新簽章頁、根因頁、模組頁、index 與 log。wiki 是 markdown 加 git；定期 lint 檢查矛盾、過時與孤立頁。人工審閱是為了避免錯誤結論被累積。這是我的設計構想，沒有實作過。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="670.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">coredump 案例庫：查詢與寫入流程</text>
+  <rect class="box" x="40.0" y="50.0" width="300" height="44" rx="8"/>
+  <text class="b" x="190" y="76" text-anchor="middle">新案件：Jira ticket ＋ core</text>
+  <path class="ln" d="M190.0,94.0 L190.0,120.0" marker-end="url(#a)"/>
+  <polygon class="acc" points="190,120.0 340.0,162 190,204.0 40.0,162"/>
+  <text class="b" x="190" y="166" text-anchor="middle">簽章命中 wiki 的根因頁？</text>
+  <rect class="good" x="385.0" y="126.0" width="230" height="72" rx="8"/>
+  <text class="b" x="500" y="158" text-anchor="middle">引用既有根因頁與相關案件</text>
+  <text x="500" y="174" text-anchor="middle">仍要驗證版本是否相符</text>
+  <path class="ln" d="M340.0,162.0 L385.0,162.0" marker-end="url(#a)"/>
+  <text class="s" x="362" y="152" text-anchor="middle">是</text>
+  <path class="ln" d="M190.0,204.0 L190.0,244.0" marker-end="url(#a)"/>
+  <text class="s" x="202" y="230" text-anchor="middle">否</text>
+  <rect class="acc" x="40.0" y="244.0" width="300" height="56" rx="8"/>
+  <text class="b" x="190" y="268" text-anchor="middle">Claude 分析</text>
+  <text x="190" y="284" text-anchor="middle">（見 Claude-Coredump-Code）</text>
+  <path class="ln" d="M190.0,300.0 L190.0,330.0" marker-end="url(#a)"/>
+  <rect class="good" x="40.0" y="332.0" width="300" height="44" rx="8"/>
+  <text class="b" x="190" y="358" text-anchor="middle">報告通過 schema 驗證</text>
+  <path class="ln" d="M190.0,376.0 L190.0,406.0" marker-end="url(#a)"/>
+  <rect class="bad" x="40.0" y="406.0" width="300" height="52" rx="8"/>
+  <text class="b" x="190" y="436" text-anchor="middle">人工審閱：錯誤結論不要被累積</text>
+  <path class="ln" d="M190.0,458.0 L190.0,490.0" marker-end="url(#a)"/>
+  <rect class="acc" x="20.0" y="494.0" width="340" height="72" rx="8"/>
+  <text class="b" x="190" y="518" text-anchor="middle">Ingest：寫案件頁</text>
+  <text x="190" y="534" text-anchor="middle">更新簽章頁、根因頁、模組頁</text>
+  <text x="190" y="550" text-anchor="middle">更新 index、log</text>
+  <rect class="box" x="460.0" y="352.0" width="160" height="96" rx="8"/>
+  <text class="b" x="540" y="380" text-anchor="middle">case wiki</text>
+  <text x="540" y="396" text-anchor="middle">markdown ＋ git</text>
+  <text x="540" y="412" text-anchor="middle">簽章頁、根因頁</text>
+  <text x="540" y="428" text-anchor="middle">案件頁、index、log</text>
+  <path class="ln" d="M360.0,530.0 L540.0,530.0 L540.0,448.0" marker-end="url(#a)"/>
+  <text class="s" x="450" y="520" text-anchor="middle">寫入</text>
+  <path class="dash" d="M540.0,352.0 L500.0,200.0" marker-end="url(#a)"/>
+  <text class="s" x="538" y="290" text-anchor="middle">查詢</text>
+  <rect class="box" x="460.0" y="562.0" width="160" height="56" rx="8"/>
+  <text class="b" x="540" y="586" text-anchor="middle">定期 lint</text>
+  <text x="540" y="602" text-anchor="middle">矛盾、過時、孤立頁</text>
+  <path class="dash" d="M540.0,562.0 L540.0,448.0" marker-end="url(#a)"/>
+  <text class="s" x="320" y="658" text-anchor="middle">設計構想，沒有實作過；與既有的 fingerprint 去重並存，不取代案件資料庫</text>
+</svg>

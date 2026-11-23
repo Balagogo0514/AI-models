@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440" role="img" aria-labelledby="t d">
+  <title id="t">RAG 與 LLM Wiki：知識在什麼時候被整理</title>
+  <desc id="d">上排是一般 RAG：資料先切 chunk 並建立索引；提問時才檢索相關 chunk；LLM 現場推導答案；下一次提問重來，知識不累積。下排是 LLM Wiki：資料進來時，LLM 就把它編譯成 wiki 頁面並更新相關頁；提問時讀頁面回答；好的答案可以存回 wiki；知識持續累積。兩者互補，不是取代。代價是來源更新後要重新匯入，會有落差。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="438.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">知識在什麼時候被整理？</text>
+  <rect class="box" x="12" y="44" width="616" height="150" rx="10"/>
+  <text class="b" x="24" y="66">一般 RAG：提問時才檢索與推導</text>
+  <rect class="box" x="15.0" y="97.0" width="130" height="70" rx="8"/>
+  <text x="80" y="128" text-anchor="middle">資料</text>
+  <text x="80" y="144" text-anchor="middle">切 chunk、建索引</text>
+  <path class="ln" d="M145.0,132.0 L170.0,132.0" marker-end="url(#a)"/>
+  <rect class="box" x="170.0" y="97.0" width="130" height="70" rx="8"/>
+  <text x="235" y="136" text-anchor="middle">提問</text>
+  <path class="ln" d="M300.0,132.0 L325.0,132.0" marker-end="url(#a)"/>
+  <rect class="box" x="325.0" y="97.0" width="130" height="70" rx="8"/>
+  <text x="390" y="136" text-anchor="middle">檢索相關 chunk</text>
+  <path class="ln" d="M455.0,132.0 L480.0,132.0" marker-end="url(#a)"/>
+  <rect class="bad" x="480.0" y="97.0" width="130" height="70" rx="8"/>
+  <text x="545" y="128" text-anchor="middle">LLM 現場推導答案</text>
+  <text x="545" y="144" text-anchor="middle">下次重來，不累積</text>
+  <rect class="good" x="12" y="212" width="616" height="150" rx="10"/>
+  <text class="b" x="24" y="234">LLM Wiki：匯入時就編譯、之後持續維護</text>
+  <rect class="box" x="15.0" y="265.0" width="130" height="70" rx="8"/>
+  <text x="80" y="304" text-anchor="middle">資料進來</text>
+  <path class="ln" d="M145.0,300.0 L170.0,300.0" marker-end="url(#a)"/>
+  <rect class="box" x="170.0" y="265.0" width="130" height="70" rx="8"/>
+  <text x="235" y="296" text-anchor="middle">LLM 編譯成 wiki 頁</text>
+  <text x="235" y="312" text-anchor="middle">並更新相關頁</text>
+  <path class="ln" d="M300.0,300.0 L325.0,300.0" marker-end="url(#a)"/>
+  <rect class="box" x="325.0" y="265.0" width="130" height="70" rx="8"/>
+  <text x="390" y="304" text-anchor="middle">提問時讀頁面回答</text>
+  <path class="ln" d="M455.0,300.0 L480.0,300.0" marker-end="url(#a)"/>
+  <rect class="good" x="480.0" y="265.0" width="130" height="70" rx="8"/>
+  <text x="545" y="296" text-anchor="middle">好答案存回 wiki</text>
+  <text x="545" y="312" text-anchor="middle">知識累積</text>
+  <text class="b" x="320" y="392" text-anchor="middle">兩者互補，不是取代</text>
+  <text class="s" x="320" y="414" text-anchor="middle">代價：來源更新後要重新匯入，wiki 與最新事實之間會有落差（二手說法）</text>
+</svg>
