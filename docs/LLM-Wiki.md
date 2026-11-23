@@ -9,7 +9,7 @@
 
 - **LLM Wiki 是一個設計模式，不是軟體**：讓 LLM 在你和原始資料之間，**持續建立並維護一組互相連結的 markdown 頁面**，而不是每次提問都從原始檔重新推導。Karpathy 在 2026-04-04 以 gist 發佈，自稱是「intentionally abstract」的想法（【原文】）。
 - **三層、三個操作**：原始資料（唯讀）、wiki（LLM 維護）、schema（規定怎麼維護）；ingest（匯入）、query（查詢）、lint（健檢）（第 1–2 節）。
-- **與 RAG 的差別在時機**：RAG 在提問時才檢索與推導；LLM Wiki 在匯入時就把知識整理成頁面，之後持續維護（第 3 節）。兩者互補，不是取代。
+- **與 RAG 的差別在時機**：RAG 在提問時才檢索與推導；LLM Wiki 在匯入時就把知識整理成頁面，之後持續維護。兩者互補，不是取代；**逐項比較與決策圖見第 3 節**（資料量大、更新頻繁、需要權限過濾偏向 RAG；需要累積、可讀、有人審閱偏向 LLM Wiki）。
 - **適用規模**：gist 說用 `index.md` 就能在「約 100 份資料、數百頁」的規模下運作；更大的規模我沒有資料（第 6 節）。
 - **用在 coredump 案例庫**：每個分析完的案件寫回一頁，下次相同簽章的案件先查 wiki。這與既有的 fingerprint 去重同方向，但**要加人工審閱，否則錯誤結論會被累積**（第 5 節）。
 - **最大風險**：LLM 的錯誤會被寫進頁面並被後續引用，gist 本身沒有列出自己的限制（【原文】），這是我的推論。
@@ -55,13 +55,55 @@
 
 ---
 
-## 3. 與 RAG 的差別
+## 3. 與 RAG 比較
+
+### 3.1 差別在「知識什麼時候被整理」
 
 ![圖：RAG 在提問時才檢索與推導，不累積；LLM Wiki 在匯入時就編譯成頁面並持續維護，好答案存回 wiki](figures/llm-wiki-vs-rag.svg)
 
 - 【原文】RAG 在查詢時「retrieves relevant chunks」；LLM Wiki 則是「The knowledge is compiled once and then _kept current_, not re-derived on every query」。gist 把 NotebookLM、ChatGPT 檔案上傳與多數 RAG 系統，視為「沒有累積」的基準。
-- **兩者互補**（【二手】）：LLM Wiki 的整理發生在匯入時，RAG 發生在查詢時；實務上常見搭配，而不是擇一。
+- **兩者互補，不是取代**（【二手】）：LLM Wiki 的整理發生在匯入時，RAG 發生在查詢時；實務上常見搭配，而不是擇一。
 - **代價**（【二手】）：來源更新後要重新匯入，wiki 與最新事實之間會有落差；需要定期 lint 與審閱。我沒有開啟這些二手來源的原文。
+
+### 3.2 逐項比較
+
+RAG 一欄的描述取自本庫 [Enterprise-AI-Integration](Enterprise-AI-Integration.md) 對企業 RAG 的整理（【本庫】）；LLM Wiki 一欄取自 gist（【原文】）。**沒有標記來源的欄位是我的推論。**
+
+| 面向 | RAG | LLM Wiki |
+|---|---|---|
+| **整理時機** | 查詢時：檢索相關 chunk，現場推導答案（【原文】） | 匯入時：編譯成頁面，之後持續維護（【原文】） |
+| **知識會累積嗎** | 不會，每次提問重來（【原文】稱它為「沒有累積」的基準） | 會，好的答案可以存回 wiki（【原文】） |
+| **資料形態** | chunk ＋ 向量索引，常加關鍵字索引（hybrid）（【本庫】） | markdown 頁面 ＋ `index.md`，進 git（【原文】） |
+| **檢索方式** | 向量或 hybrid 檢索，再 rerank（【本庫】） | LLM 先讀 `index.md` 找頁面，再讀頁面；gist 說約 100 份資料、數百頁的規模不需要 embedding 式 RAG（【原文】） |
+| **規模** | 本庫的企業 RAG 設計以大量內部資料為前提（【推論】） | gist 只談到約 100 份資料、數百頁；更大的我沒有資料 |
+| **權限控制** | 檢索時依使用者身分與權限過濾（【本庫】） | gist 沒有討論；摘要頁是衍生內容，可能含有讀者不該看的原文資訊，要自己設計（【推論】） |
+| **更新來源後** | 重建或增量更新索引 | 要重新匯入，wiki 與最新事實之間會有落差（【二手】） |
+| **可追溯性** | 可引用 chunk 原文 | 引用的是 LLM 改寫過的頁面，要靠每頁標註來源才能回查（【推論】） |
+| **主要錯誤風險** | 檢索漏掉或檢錯，答案跟著錯 | 整理錯誤被寫進頁面，並被後續引用而累積（【推論】） |
+| **成本落點** | 建索引（embedding）與每次查詢的檢索加生成 | 每次匯入要讀寫多頁（一份資料常動到 10–15 頁，【原文】），查詢只讀少量頁面；我沒有數字（【推論】） |
+| **精確字串**（型號、錯誤碼） | hybrid 的關鍵字檢索通常較準（【本庫】） | 靠 `index.md`、`grep` 或 `qmd` 這類本機搜尋（【原文】提到 `qmd`）；精確度我沒驗證 |
+| **人能不能直接讀** | 索引是黑箱，只能看回答與引用（【推論】） | 就是人可讀的 markdown 與 git 歷史（【原文】） |
+
+### 3.3 怎麼選
+
+![圖：選 RAG 還是 LLM Wiki 的決策圖：只需要精確比對就用資料庫；資料量大或更新頻繁偏向 RAG；需要權限過濾偏向 RAG；需要累積、可讀、有人審閱才用 LLM Wiki](figures/llm-wiki-vs-rag-choose.svg)
+
+【建議】決策圖是依本庫資料與 gist 整理的，**沒有實測比較**：
+
+- **偏向 LLM Wiki**：資料量中小、希望知識能累積、有人審閱、需要人也能直接讀。
+- **偏向 RAG**：資料量大、更新頻繁、需要依權限過濾、需要精確引用原文。
+- **只需要精確比對**（簽章、錯誤碼、編號）：用資料庫或關鍵字搜尋就夠，兩者都不需要。
+- **搭配使用**：二手說法認為兩者互補，例如 wiki 負責整理過的敘述、RAG 負責大量原始文件的檢索；組合的效果我沒驗證。
+- **不確定時**：先從簡單做法開始（小量資料甚至可以直接放進 context），再用自己的案例比較。
+
+### 3.4 套到 coredump 案例庫
+
+![圖：三種機制各負責什麼：fingerprint 加案件資料庫做精確比對，LLM Wiki 做敘述與關聯，RAG 在案件量大時才選用](figures/llm-wiki-vs-rag-roles.svg)
+
+【推論】沒有實作過：
+- 「這個簽章出現過嗎」是**精確比對**，用案件資料庫與 fingerprint 去重，不需要 RAG，也不需要 wiki（見 [Claude-Coredump-Agent](Claude-Coredump-Agent.md) 的成本漏斗第 0 層）。
+- 「根因是什麼、哪些版本修好、有哪些相關案件」是**敘述與關聯**，才是 wiki 的位置（第 5 節）。
+- 「在大量舊報告中找相似描述」才輪到 RAG；本專案目前沒有這個需求的資料，所以列為選用。
 
 ---
 
@@ -164,6 +206,7 @@ schema 該寫什麼（【建議】）：
 - 資料日期 2026-11-23。**我沒有實作過 LLM Wiki，也沒有在 coredump 案例上試過。**
 - **【原文】** 來自 Karpathy 的 gist（標題 *LLM Wiki*，檔名 `llm-wiki.md`，頁面顯示建立於 2026-04-04）：代理人讀取，本文為逐字讀取，**留言串只有摘要**；我沒有親自開啟頁面。gist 說自己是「intentionally abstract」，**沒有列出自己的限制**。
 - **【二手】** 來自搜尋結果的摘要（DataCamp、AFFiNE、Analytics Vidhya 等的整理），我沒有開啟原文；其中「與 RAG 互補」「更新有落差」「30 多個社群實作」是二手說法。
+- **第 3.2 節的 RAG 欄**取自本庫 [Enterprise-AI-Integration](Enterprise-AI-Integration.md) 對企業 RAG 的整理（標【本庫】）；**沒有標來源的欄位是我的推論**。**我沒有任何 LLM Wiki 與 RAG 在準確率、成本、延遲上的實測比較**，決策圖是依描述整理的建議。
 - **第 4–5 節是我的設計構想**：目錄結構、schema 範例、頁面類型、流程與風險，都是依 gist 描述與本庫的 coredump 設計整理，沒有驗證。
 - 沒有評估過：成本與準確率、案件量遠大於數百頁時的表現、簽章正規化與誤命中、與 Jira 與既有案件資料庫的整合。
 
@@ -173,4 +216,4 @@ schema 該寫什麼（【建議】）：
 
 - 原文：Andrej Karpathy，*LLM Wiki*（gist，2026-04-04）：<https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f>（代理人讀取）。
 - 二手整理（搜尋結果網址，**我沒有開啟**）：DataCamp <https://www.datacamp.com/blog/llm-wiki>、AFFiNE <https://affine.pro/blog/what-is-llm-wiki>、Analytics Vidhya <https://www.analyticsvidhya.com/blog/2026/04/llm-wiki-by-andrej-karpathy/>。
-- 本庫：[Claude-Coredump-Agent](Claude-Coredump-Agent.md)（fingerprint 去重、成本漏斗、安全）、[Claude-Coredump-Code](Claude-Coredump-Code.md)（分析流程與報告驗證）、[Claude-Coredump-MVP](Claude-Coredump-MVP.md)、[Claude-Context](Claude-Context.md)（`CLAUDE.md` 與記憶）。
+- 本庫：[Enterprise-AI-Integration](Enterprise-AI-Integration.md)（企業 RAG 的做法，第 5 節）、[Claude-Coredump-Agent](Claude-Coredump-Agent.md)（fingerprint 去重、成本漏斗、安全）、[Claude-Coredump-Code](Claude-Coredump-Code.md)（分析流程與報告驗證）、[Claude-Coredump-MVP](Claude-Coredump-MVP.md)、[Claude-Context](Claude-Context.md)（`CLAUDE.md` 與記憶）。
