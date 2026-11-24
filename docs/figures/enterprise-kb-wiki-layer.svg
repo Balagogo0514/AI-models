@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 620" role="img" aria-labelledby="t d">
+  <title id="t">經驗層（LLM Wiki）在企業知識庫中的位置與資料流</title>
+  <desc id="d">左邊是來源，唯讀：ticket 與 issue、事故檢討、runbook 與值班紀錄、分析報告。經過 ingest，由 AI 分析並寫草稿，人工核准才寫入，也就是 propose 再 approve。schema 文件如 CLAUDE.md 或 AGENTS.md 規定怎麼匯入、查詢與健檢。右邊是經驗層：wiki 用 markdown 加 git，含問題或症狀頁、根因頁、元件頁、案件頁、index 與 log；另有結構化的案件資料庫，存簽章、版本與狀態。下方：使用者或 AI 應用經閘道層查詢，先查簽章，答案附引用；定期 lint 由程式與人執行。這是設計構想，coredump 範例只實作了簽章查詢。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="618.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">經驗層的位置與資料流</text>
+  <rect class="box" x="12.0" y="63.0" width="156" height="46" rx="8"/>
+  <text x="90" y="90" text-anchor="middle">ticket／issue</text>
+  <rect class="box" x="12.0" y="125.0" width="156" height="46" rx="8"/>
+  <text x="90" y="152" text-anchor="middle">事故檢討</text>
+  <rect class="box" x="12.0" y="187.0" width="156" height="46" rx="8"/>
+  <text x="90" y="214" text-anchor="middle">runbook、值班紀錄</text>
+  <rect class="box" x="12.0" y="249.0" width="156" height="46" rx="8"/>
+  <text x="90" y="276" text-anchor="middle">分析報告</text>
+  <line class="ln" x1="182" y1="86" x2="182" y2="272"/>
+  <text class="s" x="90" y="342" text-anchor="middle">來源（唯讀）</text>
+  <path class="ln" d="M182.0,179.0 L214.0,179.0" marker-end="url(#a)"/>
+  <rect class="bad" x="218.0" y="124.0" width="148" height="110" rx="8"/>
+  <text class="b" x="292" y="159" text-anchor="middle">ingest</text>
+  <text x="292" y="175" text-anchor="middle">AI 分析、寫草稿</text>
+  <text x="292" y="191" text-anchor="middle">人工核准才寫入</text>
+  <text x="292" y="207" text-anchor="middle">propose → approve</text>
+  <rect class="acc" x="218.0" y="302.0" width="148" height="56" rx="8"/>
+  <text class="b" x="292" y="326" text-anchor="middle">schema</text>
+  <text x="292" y="342" text-anchor="middle">CLAUDE.md／AGENTS.md</text>
+  <path class="dash" d="M292.0,302.0 L292.0,234.0" marker-end="url(#a)"/>
+  <rect class="zone" x="444" y="60" width="184" height="292" rx="10"/>
+  <text class="b" x="536" y="80" text-anchor="middle">經驗層</text>
+  <rect class="good" x="456.0" y="110.0" width="160" height="116" rx="8"/>
+  <text class="b" x="536" y="140" text-anchor="middle">wiki（markdown＋git）</text>
+  <text x="536" y="156" text-anchor="middle">問題／症狀頁</text>
+  <text x="536" y="172" text-anchor="middle">根因頁、元件頁</text>
+  <text x="536" y="188" text-anchor="middle">案件頁</text>
+  <text x="536" y="204" text-anchor="middle">index、log</text>
+  <rect class="good" x="456.0" y="264.0" width="160" height="56" rx="8"/>
+  <text class="b" x="536" y="288" text-anchor="middle">案件資料庫</text>
+  <text x="536" y="304" text-anchor="middle">簽章、版本、狀態</text>
+  <path class="ln" d="M366.0,160.0 L456.0,160.0" marker-end="url(#a)"/>
+  <text class="s" x="410" y="150" text-anchor="middle">寫入</text>
+  <path class="ln" d="M366.0,210.0 L400.0,210.0 L400.0,292.0 L456.0,292.0" marker-end="url(#a)"/>
+  <rect class="box" x="50.0" y="417.0" width="200" height="46" rx="8"/>
+  <text class="b" x="150" y="444" text-anchor="middle">使用者／AI 應用</text>
+  <path class="ln" d="M150.0,463.0 L150.0,486.0" marker-end="url(#a)"/>
+  <rect class="acc" x="40.0" y="497.0" width="560" height="46" rx="8"/>
+  <text class="b" x="320" y="524" text-anchor="middle">閘道層：身分、權限、稽核</text>
+  <path class="ln" d="M536.0,497.0 L536.0,352.0" marker-end="url(#a)"/>
+  <text class="s" x="566" y="430" text-anchor="middle">查詢</text>
+  <rect class="box" x="265.0" y="417.0" width="150" height="46" rx="8"/>
+  <text class="b" x="340" y="436" text-anchor="middle">定期 lint</text>
+  <text x="340" y="452" text-anchor="middle">程式＋人</text>
+  <path class="dash" d="M400.0,417.0 L480.0,352.0" marker-end="url(#a)"/>
+  <text class="s" x="320" y="566" text-anchor="middle">查詢先查簽章、答案附引用；設計構想；coredump 範例（Claude-Coredump-Wiki）只實作了簽章查詢</text>
+  <text class="s" x="320" y="590" text-anchor="middle">wiki 頁面型態可泛化：問題或症狀、根因、元件、案件</text>
+</svg>
