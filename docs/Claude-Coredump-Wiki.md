@@ -1,7 +1,7 @@
 # Claude coredump 案例庫：LLM Wiki 的實作範例（Python）
 
 > 資料日期：2026-11-23  
-> 範圍：把 [LLM-Wiki](LLM-Wiki.md) 的模式做成 coredump 案例庫的**可執行範例**：簽章、頁面、propose／人工核准／ingest、查詢、lint、命令列，並接進 [Claude-Coredump-Code](Claude-Coredump-Code.md) 的 worker。  
+> 範圍：把 [Enterprise-Knowledge-Base](Enterprise-Knowledge-Base.md) 第 5 節的 LLM Wiki 模式做成 coredump 案例庫的**可執行範例**：簽章、頁面、propose／人工核准／ingest、查詢、lint、命令列，並接進 [Claude-Coredump-Code](Claude-Coredump-Code.md) 的 worker。  
 > 讀法：**✅** 表示我在這個環境**實際執行並通過測試**；**【建議】** 是我的設計取捨；**【推論】** 是我的類推，沒有直接依據。  
 > ⚠️ **只用 mock 與本機的真實 `gdb`、`git` 驗證過；沒有呼叫真實的 Jira 或 Claude API，也沒有用真實的案例量、真實模型改寫頁面試過。** 範例依賴 [Claude-Coredump-Code](Claude-Coredump-Code.md) 的 `coredump_parser` 套件。
 
@@ -12,7 +12,7 @@
 - **人在迴圈**：分析完只放進 `_pending/`，**人工核准才寫進 wiki**（命令列 `approve`）；駁回就刪除。
 - **查詢有五種狀態**：miss 才呼叫模型；`unknown_cause`、`known_open`、`known_fixed` 引用 wiki、**不呼叫模型**；`regression`（已標記修復的版本又出現）**不能帶過**，重新分析（第 5 節）。
 - **驗證中發現並修掉一個真實的錯誤**：多執行緒的 core 用 `thread apply all bt` 時，第一個區塊常是閒置的 thread，崩潰的 thread 反而排最後，簽章會算錯；改成載入 core 後直接下 `bt`（目前 thread ＝ 崩潰的 thread）（第 3 節）。
-- **建好之後的分工**：人、AI、程式各做什麼、沒有 AI 時什麼照常，見 [LLM-Wiki](LLM-Wiki.md) 第 6 節。
+- **建好之後的分工**：人、AI、程式各做什麼、沒有 AI 時什麼照常，見 [Enterprise-Knowledge-Base](Enterprise-Knowledge-Base.md) 第 5.5 節。
 - **沒測的**：真實 Claude 改寫頁面的品質、真實 Jira、大量案件、多人並行寫入（第 1 節）。簽章正規化很簡單（前 3 個非 libc 的函式名稱），**不處理內聯、模板、優化後的 frame、版本間函式改名**。
 
 ---
@@ -843,7 +843,7 @@ if __name__ == "__main__":
 - **錯誤會被累積**：人工核准是主要防線；**不要為了省事自動核准**（【建議】）。
 - **資料外送與敏感資料**：頁面是從 dump 的分析衍生的，可能含客戶資料或機密；wiki 放在哪、誰能讀、能不能送給外部 API，要依公司政策（見 [Claude-Coredump-Agent](Claude-Coredump-Agent.md) 第 7 節）。`claude_merge` 會把既有頁面送給 Claude。
 - **並行寫入**：範例沒有檔案鎖；多個 worker 同時 `approve` 可能互相覆蓋頁面（沒測）。人工核准通常是序列的，但自動化前要處理（【推論】）。
-- **權限**：wiki 頁面的讀取權限沒有設計；摘要頁可能含有讀者不該看的原文資訊（見 [LLM-Wiki](LLM-Wiki.md) 第 3.2 節）。
+- **權限**：wiki 頁面的讀取權限沒有設計；摘要頁可能含有讀者不該看的原文資訊（見 [Enterprise-Knowledge-Base](Enterprise-Knowledge-Base.md) 第 5.3 節）。
 
 ---
 
@@ -870,8 +870,8 @@ if __name__ == "__main__":
 
 ## 10. 參考
 
-- 本庫：[LLM-Wiki](LLM-Wiki.md)（模式、與 RAG 的比較、coredump 構想）、[Claude-Coredump-Code](Claude-Coredump-Code.md)（Jira 與 Claude 的實際呼叫程式碼；本範例依賴它）、[Claude-Coredump-Agent](Claude-Coredump-Agent.md)（fingerprint 去重、成本、安全）、[Claude-Coredump-MVP](Claude-Coredump-MVP.md)。
-- 原文：Andrej Karpathy，*LLM Wiki*（gist，2026-04-04）：<https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f>（代理人讀取，見 LLM-Wiki 文件）。
+- 本庫：[Enterprise-Knowledge-Base](Enterprise-Knowledge-Base.md)（第 5 節：LLM Wiki 模式、與 RAG 的比較、建好之後的分工）、[Claude-Coredump-Code](Claude-Coredump-Code.md)（Jira 與 Claude 的實際呼叫程式碼；本範例依賴它）、[Claude-Coredump-Agent](Claude-Coredump-Agent.md)（fingerprint 去重、成本、安全）、[Claude-Coredump-MVP](Claude-Coredump-MVP.md)。
+- 原文：Andrej Karpathy，*LLM Wiki*（gist，2026-04-04）：<https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f>（代理人讀取，見 Enterprise-Knowledge-Base 第 5 節）。
 
 ---
 

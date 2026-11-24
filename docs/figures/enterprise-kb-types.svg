@@ -64,5 +64,5 @@
   <rect class="box" x="258" y="332" width="370" height="64" rx="10"/>
   <text class="b" x="270" y="358.0">資料庫或關鍵字搜尋</text>
   <text class="s" x="270" y="380.0">精確比對，不需要 RAG 或 wiki</text>
-  <text class="s" x="320" y="428" text-anchor="middle">依本庫 Enterprise-AI-Integration 與 LLM-Wiki 整理；不依部門分，依型態分</text>
+  <text class="s" x="320" y="428" text-anchor="middle">依本庫 Enterprise-AI-Integration 與第 5 節整理；不依部門分，依型態分</text>
 </svg>
