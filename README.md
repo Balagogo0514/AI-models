@@ -2,7 +2,7 @@
 
 AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理與訓練、Claude Code／Codex 等 Agent 工具的使用與選型。以繁體中文撰寫。
 
-> 共 24 篇筆記。點標題即可開啟對應文件。
+> 共 23 篇筆記。點標題即可開啟對應文件。
 
 ## 學習資源
 
@@ -30,7 +30,7 @@ AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理�
 | [Claude Code Context 組成](docs/Claude-Context.md) | 送給 LLM 的 context 如何組成、記憶（CLAUDE.md／auto memory／逐字稿）放在哪、彼此是否取代 |
 | [建立公司內部 plugin](docs/Claude-Plugin-Internal.md) | 把 skill、agent、MCP、local knowledge 包成內部 plugin：結構、manifest、測試、發佈與全公司強制啟用 |
 | [企業整合模型：RAG、MCP、流程與資源判斷](docs/Enterprise-AI-Integration.md) | 六個整合層次、八階段流程、RAG 與 MCP 怎麼接內部資料與系統、權限階梯、API／自架／微調的資源與成本判斷 |
-| [企業知識庫：依知識型態分層的架構與選型](docs/Enterprise-Knowledge-Base.md) | 公司內有多個不同功能的知識庫（功能開發、issue 排查）時：依知識型態選機制（RAG、LLM Wiki＋案件資料庫、MCP／API 工具、程式碼搜尋、資料庫）、統一入口與閘道層、共同 metadata 與生命週期、導入順序與要避免的事；設計建議，不指定產品 |
+| [企業知識庫：依知識型態分層的架構與選型](docs/Enterprise-Knowledge-Base.md) | 公司內有多個不同功能的知識庫（功能開發、issue 排查）時：依知識型態選機制（RAG、LLM Wiki＋案件資料庫、MCP／API 工具、程式碼搜尋、資料庫）、統一入口與閘道層、LLM Wiki 經驗層的運作與建好之後的分工、共同 metadata 與生命週期、導入順序與要避免的事；設計建議，不指定產品 |
 | [Claude × React 本機開發](docs/Claude-React.md) | 在本機用 Claude Code 開發 React：CLAUDE.md、權限、dev server 與測試、Chrome 整合與 Playwright MCP、hooks、worktree 與 `/batch`、CI，以及用 Codex 做同樣的事（AGENTS.md、sandbox、Browser plugin）；區分官方功能與建議做法 |
 | [Claude Code 多 Agent 與 Code Review](docs/Claude-Agent.md) | 平行工作方式選型、多 Agent code review、追蹤彙整，含 fastpath refcount 實戰範例 |
 | [Claude Code Skill／Plugin 比較](docs/Claude-Code-Skills.md) | superpowers、planning-with-files 與 grill-me 的比較 |
@@ -40,7 +40,6 @@ AI 模型、Agent 工程與開發工具的中文筆記集，涵蓋模型原理�
 | [Claude coredump 自動分析：工具選型](docs/Claude-Coredump-Agent.md) | 開發 coredump auto parser 時，Claude Code、n8n、LangChain、Claude SDK 等工具各自的角色、建議架構、成本估算與槓桿、訂閱／setup-token／API key／月度 credits 的差異、限制與決策、Jira 事件整合（含是否需要 n8n、Python 常駐服務、只用 Claude Code）、安全邊界與導入順序；區分官方、本庫設計與推論 |
 | [Claude coredump parser 最小實作計畫](docs/Claude-Coredump-MVP.md) | 階段 0 到 2：案例集、用 Claude Code 互動驗證、Python ＋ Messages API 最小版本（3 個唯讀工具、CaseBudget、報告 schema、評測 harness）、驗收與閘門決策；不給準確率門檻，區分官方、本庫設計與推論 |
 | [Claude coredump parser 範例程式碼](docs/Claude-Coredump-Code.md) | Jira webhook 到 Claude 工具迴圈再回寫 Jira 的可執行 Python 範例（約 660 行、24 個測試）；用真實 gdb 與 mock 驗證，標明未測真實 Jira 與 Claude API |
-| [LLM Wiki](docs/LLM-Wiki.md) | Karpathy 的 LLM Wiki 模式：三層結構（原始資料、wiki、schema）、ingest／query／lint、與 RAG 的逐項比較與決策圖、建好之後人／AI／程式的分工、適用情況，以及用在 coredump 案例庫的設計構想；區分原文、二手與推論 |
 | [Claude coredump 案例庫：LLM Wiki 實作範例](docs/Claude-Coredump-Wiki.md) | 把 LLM Wiki 做成 coredump 案例庫的可執行 Python 範例（約 580 行、42 個測試）：簽章、頁面、propose 與人工核准、查詢五種狀態、lint、命令列；用真實 gdb 與 git 驗證，標明未測真實 Claude 改寫與真實 Jira |
 
 ## 其他

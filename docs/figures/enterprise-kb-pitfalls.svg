@@ -64,5 +64,5 @@
   <rect class="box" x="278" y="332" width="350" height="64" rx="10"/>
   <text class="b" x="290" y="358.0">先一個場景，由輕到重</text>
   <text class="s" x="290" y="380.0">上一層解決不了才往下一層</text>
-  <text class="s" x="320" y="428" text-anchor="middle">依本庫 Enterprise-AI-Integration 與 LLM-Wiki 整理</text>
+  <text class="s" x="320" y="428" text-anchor="middle">依本庫 Enterprise-AI-Integration 與第 5 節整理</text>
 </svg>
