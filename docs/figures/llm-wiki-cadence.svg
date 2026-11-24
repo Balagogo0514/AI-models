@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">運作中的維運節奏（建議）</title>
+  <desc id="d">五種節奏。每個案件：程式查簽章；沒命中才請 AI 分析；人核准；程式寫入。每天：程式跑 lint；人處理 error，也就是回歸、沒有證據與失效連結。每週或每月：人與 AI 一起看 warn 與 info，例如同簽章不同根因、久未出現；清理待審區；檢討誤命中與漏命中。每次改模型、prompt 或規則：用案例集回歸，人比對結果。規模變大時：檢討 index 是否夠用、是否加搜尋。這是我的建議，沒有長期運作的實測。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">維運節奏</text>
+  <rect class="acc" x="12" y="44" width="616" height="78" rx="10"/>
+  <text class="b" x="26" y="74">每個案件</text>
+  <text class="s" x="26" y="98">程式 → AI → 人 → 程式</text>
+  <text x="200" y="86">程式查簽章 → 沒命中才由 AI 分析 → 人核准 → 程式寫入</text>
+  <rect class="box" x="12" y="132" width="616" height="78" rx="10"/>
+  <text class="b" x="26" y="162">每天</text>
+  <text class="s" x="26" y="186">程式、人</text>
+  <text x="200" y="174">程式跑 lint；人處理 error（回歸、沒證據、失效連結）</text>
+  <rect class="box" x="12" y="220" width="616" height="78" rx="10"/>
+  <text class="b" x="26" y="250">每週或每月</text>
+  <text class="s" x="26" y="274">人 ＋ AI</text>
+  <text x="200" y="262">看 warn 與 info；清理待審區；檢討誤命中與漏命中</text>
+  <rect class="acc" x="12" y="308" width="616" height="78" rx="10"/>
+  <text class="b" x="26" y="338">改模型、prompt 或規則時</text>
+  <text class="s" x="26" y="362">人 ＋ 程式</text>
+  <text x="200" y="350">用案例集回歸，人比對結果；記錄版本</text>
+  <rect class="box" x="12" y="396" width="616" height="78" rx="10"/>
+  <text class="b" x="26" y="426">規模變大時</text>
+  <text class="s" x="26" y="450">人 ＋ AI</text>
+  <text x="200" y="438">檢討 index.md 夠不夠、是否加搜尋</text>
+  <text class="s" x="320" y="500" text-anchor="middle">節奏是我的建議；沒有長期運作的實測</text>
+</svg>
