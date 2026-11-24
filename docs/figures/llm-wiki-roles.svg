@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">建好之後：人、AI、程式的分工</title>
+  <desc id="d">三欄分工。人：審閱與核准、標記已修復、決定簽章與規則、處理 lint 的 error、決定資料與權限政策。AI：分析沒看過的案件、選用地改寫根因頁的敘述、選用地做語意 lint 找矛盾與過時；原模式還會回答自然語言問題，但我們的實作沒有做。程式：算簽章與查詢、寫 frontmatter 與 index 與 log 與 git commit、機械 lint、路徑與文字安全、預算與合併把關。下方是一個案件的交接：程式查 wiki，沒命中才由 AI 分析，人審閱核准，程式寫入。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">三方分工</text>
+  <rect class="hd" x="12" y="44" width="196" height="28" rx="6"/>
+  <text class="b" x="110" y="63" text-anchor="middle">人</text>
+  <rect class="acc" x="12" y="80" width="196" height="250" rx="10"/>
+  <text x="24" y="108">• 審閱與核准（不能省）</text>
+  <text x="24" y="136">• 標記已修復、駁回</text>
+  <text x="24" y="164">• 決定簽章與規則</text>
+  <text x="24" y="192">• 處理 lint 的 error</text>
+  <text x="24" y="220">• 資料與權限政策</text>
+  <rect class="hd" x="222" y="44" width="196" height="28" rx="6"/>
+  <text class="b" x="320" y="63" text-anchor="middle">AI（Claude）</text>
+  <rect class="good" x="222" y="80" width="196" height="250" rx="10"/>
+  <text x="234" y="108">• 分析沒看過的案件</text>
+  <text x="234" y="136">• （選用）改寫根因頁敘述</text>
+  <text x="234" y="164">• （選用）語意 lint：</text>
+  <text x="234" y="181">  找矛盾、過時</text>
+  <text x="234" y="209">• （原模式）回答問題：</text>
+  <text x="234" y="226">  我們的實作沒有做</text>
+  <rect class="hd" x="432" y="44" width="196" height="28" rx="6"/>
+  <text class="b" x="530" y="63" text-anchor="middle">程式</text>
+  <rect class="box" x="432" y="80" width="196" height="250" rx="10"/>
+  <text x="444" y="108">• 算簽章、查 wiki</text>
+  <text x="444" y="136">• frontmatter、index、log</text>
+  <text x="444" y="164">• git commit</text>
+  <text x="444" y="192">• 機械 lint</text>
+  <text x="444" y="220">• 路徑與文字安全</text>
+  <text x="444" y="248">• 預算與 merge 把關</text>
+  <text class="b" x="320" y="362" text-anchor="middle">一個案件的交接</text>
+  <rect class="box" x="14.0" y="388.0" width="132" height="64" rx="8"/>
+  <text class="b" x="80" y="416" text-anchor="middle">程式</text>
+  <text x="80" y="432" text-anchor="middle">算簽章、查 wiki</text>
+  <path class="ln" d="M146.0,420.0 L174.0,420.0" marker-end="url(#a)"/>
+  <rect class="good" x="174.0" y="388.0" width="132" height="64" rx="8"/>
+  <text class="b" x="240" y="416" text-anchor="middle">AI</text>
+  <text x="240" y="432" text-anchor="middle">沒命中才分析</text>
+  <path class="ln" d="M306.0,420.0 L334.0,420.0" marker-end="url(#a)"/>
+  <rect class="acc" x="334.0" y="388.0" width="132" height="64" rx="8"/>
+  <text class="b" x="400" y="416" text-anchor="middle">人</text>
+  <text x="400" y="432" text-anchor="middle">審閱、核准</text>
+  <path class="ln" d="M466.0,420.0 L494.0,420.0" marker-end="url(#a)"/>
+  <rect class="box" x="494.0" y="388.0" width="132" height="64" rx="8"/>
+  <text class="b" x="560" y="416" text-anchor="middle">程式</text>
+  <text x="560" y="432" text-anchor="middle">寫頁面、commit</text>
+  <text class="s" x="320" y="480" text-anchor="middle">命中既有簽章時，只有「程式」一格，不呼叫模型</text>
+  <text class="s" x="320" y="500" text-anchor="middle">依本庫兩份文件與實作整理；沒有長期運作的實測</text>
+</svg>

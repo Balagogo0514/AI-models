@@ -12,6 +12,7 @@
 - **人在迴圈**：分析完只放進 `_pending/`，**人工核准才寫進 wiki**（命令列 `approve`）；駁回就刪除。
 - **查詢有五種狀態**：miss 才呼叫模型；`unknown_cause`、`known_open`、`known_fixed` 引用 wiki、**不呼叫模型**；`regression`（已標記修復的版本又出現）**不能帶過**，重新分析（第 5 節）。
 - **驗證中發現並修掉一個真實的錯誤**：多執行緒的 core 用 `thread apply all bt` 時，第一個區塊常是閒置的 thread，崩潰的 thread 反而排最後，簽章會算錯；改成載入 core 後直接下 `bt`（目前 thread ＝ 崩潰的 thread）（第 3 節）。
+- **建好之後的分工**：人、AI、程式各做什麼、沒有 AI 時什麼照常，見 [LLM-Wiki](LLM-Wiki.md) 第 6 節。
 - **沒測的**：真實 Claude 改寫頁面的品質、真實 Jira、大量案件、多人並行寫入（第 1 節）。簽章正規化很簡單（前 3 個非 libc 的函式名稱），**不處理內聯、模板、優化後的 frame、版本間函式改名**。
 
 ---
