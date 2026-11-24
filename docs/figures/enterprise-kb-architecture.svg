@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" role="img" aria-labelledby="t d">
+  <title id="t">企業知識庫的分層架構：統一入口，依型態選機制，各自保留來源</title>
+  <desc id="d">由上到下四層加一個橫跨的底座。第一層：使用者與 AI 應用，包含問答入口、Claude Code 與 IDE、Jira 等內部應用。第二層：入口與閘道層，負責身分、權限、稽核、金鑰、配額、遮罩與評測。第三層：四種機制，RAG 處理規格與設計文件；LLM Wiki 加案件資料庫處理排查經驗；MCP 或 API 工具處理即時系統；程式碼搜尋處理 repo。第四層：各機制背後各自保留原本的來源與負責人。最下方的共同底座橫跨所有層：metadata、權限、評測集與回歸、過期審查。這是設計建議，沒有在你們的環境驗證。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="638.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">分層架構</text>
+  <rect class="box" x="35.0" y="48.0" width="170" height="40" rx="8"/>
+  <text x="120" y="72" text-anchor="middle">問答入口</text>
+  <rect class="box" x="235.0" y="48.0" width="170" height="40" rx="8"/>
+  <text x="320" y="72" text-anchor="middle">Claude Code／IDE</text>
+  <rect class="box" x="435.0" y="48.0" width="170" height="40" rx="8"/>
+  <text x="520" y="72" text-anchor="middle">Jira 等內部應用</text>
+  <rect class="acc" x="12" y="104" width="616" height="70" rx="10"/>
+  <text class="b" x="320" y="128" text-anchor="middle">入口 ＋ 閘道層</text>
+  <text x="320" y="150" text-anchor="middle">身分、權限、稽核、金鑰、配額、遮罩、評測</text>
+  <path class="ln" d="M120.0,88.0 L120.0,104.0" marker-end="url(#a)"/>
+  <path class="ln" d="M320.0,88.0 L320.0,104.0" marker-end="url(#a)"/>
+  <path class="ln" d="M520.0,88.0 L520.0,104.0" marker-end="url(#a)"/>
+  <path class="ln" d="M84.0,174.0 L84.0,208.0" marker-end="url(#a)"/>
+  <rect class="good" x="12.0" y="208.0" width="144" height="108" rx="8"/>
+  <text class="b" x="84" y="250" text-anchor="middle">RAG</text>
+  <text x="84" y="266" text-anchor="middle">規格與設計文件</text>
+  <text x="84" y="282" text-anchor="middle">權限過濾、附引用</text>
+  <path class="ln" d="M84.0,316.0 L84.0,356.0" marker-end="url(#a)"/>
+  <rect class="box" x="12.0" y="360.0" width="144" height="64" rx="8"/>
+  <text x="84" y="388" text-anchor="middle">文件庫與</text>
+  <text x="84" y="404" text-anchor="middle">Wiki 頁面</text>
+  <path class="ln" d="M241.0,174.0 L241.0,208.0" marker-end="url(#a)"/>
+  <rect class="good" x="169.0" y="208.0" width="144" height="108" rx="8"/>
+  <text class="b" x="241" y="242" text-anchor="middle">LLM Wiki ＋</text>
+  <text x="241" y="258" text-anchor="middle">案件資料庫</text>
+  <text x="241" y="274" text-anchor="middle">排查經驗</text>
+  <text x="241" y="290" text-anchor="middle">人工核准才寫入</text>
+  <path class="ln" d="M241.0,316.0 L241.0,356.0" marker-end="url(#a)"/>
+  <rect class="box" x="169.0" y="360.0" width="144" height="64" rx="8"/>
+  <text x="241" y="388" text-anchor="middle">案件與 issue</text>
+  <text x="241" y="404" text-anchor="middle">紀錄、原始資料</text>
+  <path class="ln" d="M398.0,174.0 L398.0,208.0" marker-end="url(#a)"/>
+  <rect class="acc" x="326.0" y="208.0" width="144" height="108" rx="8"/>
+  <text class="b" x="398" y="250" text-anchor="middle">MCP／API 工具</text>
+  <text x="398" y="266" text-anchor="middle">即時系統：ticket、</text>
+  <text x="398" y="282" text-anchor="middle">build、日誌</text>
+  <path class="ln" d="M398.0,316.0 L398.0,356.0" marker-end="url(#a)"/>
+  <rect class="box" x="326.0" y="360.0" width="144" height="64" rx="8"/>
+  <text x="398" y="388" text-anchor="middle">內部系統</text>
+  <text x="398" y="404" text-anchor="middle">（唯讀起步）</text>
+  <path class="ln" d="M555.0,174.0 L555.0,208.0" marker-end="url(#a)"/>
+  <rect class="acc" x="483.0" y="208.0" width="144" height="108" rx="8"/>
+  <text class="b" x="555" y="250" text-anchor="middle">程式碼搜尋</text>
+  <text x="555" y="266" text-anchor="middle">repo、commit、</text>
+  <text x="555" y="282" text-anchor="middle">blame</text>
+  <path class="ln" d="M555.0,316.0 L555.0,356.0" marker-end="url(#a)"/>
+  <rect class="box" x="483.0" y="360.0" width="144" height="64" rx="8"/>
+  <text x="555" y="396" text-anchor="middle">Git repo</text>
+  <text class="s" x="320" y="454" text-anchor="middle">各自保留原本的來源與負責人，不搬進同一個庫</text>
+  <rect class="zone" x="12" y="480" width="616" height="120" rx="10"/>
+  <text class="b" x="320" y="504" text-anchor="middle">共同底座（橫跨所有層）</text>
+  <text x="28" y="530">• metadata：負責人、適用範圍與版本、狀態、來源連結、最後確認日期</text>
+  <text x="28" y="552">• 權限：檢索與工具都依使用者身分；可追溯、可稽核</text>
+  <text x="28" y="574">• 評測集與回歸；過期審查</text>
+  <text class="s" x="320" y="622" text-anchor="middle">設計建議；不指定產品；沒有在你們的環境驗證</text>
+</svg>

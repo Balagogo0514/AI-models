@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440" role="img" aria-labelledby="t d">
+  <title id="t">要避免的五件事</title>
+  <desc id="d">五件事與對策。把所有內容塞進同一個向量庫：依型態選機制，型態、更新與權限不同會互相拖累。AI 自動寫入而沒有人審閱：核准後才寫入，錯誤會被累積。忽略權限：檢索時依身分過濾，摘要頁是衍生內容也要控管。沒有負責人與過期機制：每份知識有負責人與最後確認日期。一次做完：先一個場景，由輕到重。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="438.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">要避免的事 → 對策</text>
+  <rect class="acc" x="12" y="44" width="240" height="64" rx="10"/>
+  <text x="24" y="81.0">全部塞進同一個向量庫</text>
+  <line class="ln" x1="252" y1="76.0" x2="276" y2="76.0" marker-end="url(#a)"/>
+  <rect class="box" x="278" y="44" width="350" height="64" rx="10"/>
+  <text class="b" x="290" y="70.0">依型態選機制</text>
+  <text class="s" x="290" y="92.0">型態、更新、權限不同會互相拖累</text>
+  <rect class="acc" x="12" y="116" width="240" height="64" rx="10"/>
+  <text x="24" y="153.0">AI 自動寫入、沒人審閱</text>
+  <line class="ln" x1="252" y1="148.0" x2="276" y2="148.0" marker-end="url(#a)"/>
+  <rect class="bad" x="278" y="116" width="350" height="64" rx="10"/>
+  <text class="b" x="290" y="142.0">核准後才寫入</text>
+  <text class="s" x="290" y="164.0">錯誤會被累積並被後續引用</text>
+  <rect class="acc" x="12" y="188" width="240" height="64" rx="10"/>
+  <text x="24" y="225.0">忽略權限</text>
+  <line class="ln" x1="252" y1="220.0" x2="276" y2="220.0" marker-end="url(#a)"/>
+  <rect class="box" x="278" y="188" width="350" height="64" rx="10"/>
+  <text class="b" x="290" y="214.0">檢索與工具都依身分過濾</text>
+  <text class="s" x="290" y="236.0">摘要頁是衍生內容，也要控管</text>
+  <rect class="acc" x="12" y="260" width="240" height="64" rx="10"/>
+  <text x="24" y="297.0">沒有負責人與過期機制</text>
+  <line class="ln" x1="252" y1="292.0" x2="276" y2="292.0" marker-end="url(#a)"/>
+  <rect class="box" x="278" y="260" width="350" height="64" rx="10"/>
+  <text class="b" x="290" y="286.0">每份知識有 owner 與確認日期</text>
+  <text class="s" x="290" y="308.0">否則知識庫會腐爛</text>
+  <rect class="acc" x="12" y="332" width="240" height="64" rx="10"/>
+  <text x="24" y="369.0">一次做完</text>
+  <line class="ln" x1="252" y1="364.0" x2="276" y2="364.0" marker-end="url(#a)"/>
+  <rect class="box" x="278" y="332" width="350" height="64" rx="10"/>
+  <text class="b" x="290" y="358.0">先一個場景，由輕到重</text>
+  <text class="s" x="290" y="380.0">上一層解決不了才往下一層</text>
+  <text class="s" x="320" y="428" text-anchor="middle">依本庫 Enterprise-AI-Integration 與 LLM-Wiki 整理</text>
+</svg>
