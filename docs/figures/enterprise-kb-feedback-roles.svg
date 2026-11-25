@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 560" role="img" aria-labelledby="t d">
+  <title id="t">知識回饋整理：人、AI、程式的分工</title>
+  <desc id="d">三欄分工。程式：收集與去重回饋、依規則分類與路由、跑評測集回歸、寫入頁面與 log、提醒逾期的回饋。AI：把零散回饋整理成草稿、找出相關頁面與可能重複、提出修正建議、整理查無結果的問題；不直接寫入。人：確認回饋屬實、決定怎麼改、核准或駁回、處理權限問題、決定評測集與政策。下方三條規則：使用者的修正本身要查證，不能直接當事實；草稿與回饋都是衍生內容，依權限控管；回饋要有負責人與期限。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="558.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">三方分工</text>
+  <rect class="hd" x="12" y="44" width="196" height="28" rx="6"/>
+  <text class="b" x="110" y="63" text-anchor="middle">程式</text>
+  <rect class="box" x="12" y="80" width="196" height="220" rx="10"/>
+  <text x="24" y="112">• 收集與去重回饋</text>
+  <text x="24" y="150">• 依規則分類、路由</text>
+  <text x="24" y="188">• 跑評測集回歸</text>
+  <text x="24" y="226">• 寫入頁面與 log、commit</text>
+  <text x="24" y="264">• 提醒逾期、統計指標</text>
+  <rect class="hd" x="222" y="44" width="196" height="28" rx="6"/>
+  <text class="b" x="320" y="63" text-anchor="middle">AI</text>
+  <rect class="good" x="222" y="80" width="196" height="220" rx="10"/>
+  <text x="234" y="112">• 把零散回饋整理成草稿</text>
+  <text x="234" y="150">• 找相關頁面與可能重複</text>
+  <text x="234" y="188">• 提出修正建議</text>
+  <text x="234" y="226">• 彙整查無結果的問題</text>
+  <text x="234" y="264">• 不直接寫入</text>
+  <rect class="hd" x="432" y="44" width="196" height="28" rx="6"/>
+  <text class="b" x="530" y="63" text-anchor="middle">人</text>
+  <rect class="acc" x="432" y="80" width="196" height="220" rx="10"/>
+  <text x="444" y="112">• 確認回饋屬實</text>
+  <text x="444" y="150">• 決定怎麼改</text>
+  <text x="444" y="188">• 核准或駁回（不能省）</text>
+  <text x="444" y="226">• 處理權限問題</text>
+  <text x="444" y="264">• 決定評測集與政策</text>
+  <text class="b" x="320" y="332" text-anchor="middle">三條規則（建議）</text>
+  <rect class="box" x="12" y="348" width="616" height="52" rx="10"/>
+  <text class="b" x="26" y="370">使用者的修正也要查證</text>
+  <text class="s" x="26" y="390">人確認屬實後才寫入，不能直接當成事實</text>
+  <rect class="box" x="12" y="410" width="616" height="52" rx="10"/>
+  <text class="b" x="26" y="432">草稿與回饋是衍生內容</text>
+  <text class="s" x="26" y="452">可能含有原文權限外的資訊，依權限控管</text>
+  <rect class="box" x="12" y="472" width="616" height="52" rx="10"/>
+  <text class="b" x="26" y="494">每則回饋有負責人與期限</text>
+  <text class="s" x="26" y="514">沒人處理，回饋管道很快就沒人用</text>
+  <text class="s" x="320" y="548" text-anchor="middle">分工與第 5.5 節一致；沒有實作或長期運作的實測</text>
+</svg>
