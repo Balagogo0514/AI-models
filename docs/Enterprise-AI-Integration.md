@@ -1,11 +1,13 @@
 # 企業如何把內部技術與模型結合：RAG、MCP、流程與資源判斷
 
 > 資料來源：Anthropic〈[Pricing](https://platform.claude.com/docs/en/about-claude/pricing)〉（單價與折扣，2026-11-07 讀取）；Claude Code 官方〈[Connect Claude Code to tools via MCP](https://code.claude.com/docs/en/mcp.md)〉；本庫〈[Post-Training](Post-Training.md)〉〈[Transformer-Attention](Transformer-Attention.md)〉。其餘流程與判斷為業界通行做法的整理。
-> 更新日期：2026-11-07
+> 更新日期：2026-11-07（§7.7 於 2026-11-27 補充）
 >
 > 標記：✅ 官方文件明載　🛠 業界通行做法（非官方標準，依場景調整）　⚠️ 未能驗證，或示意數字需用自己的情況重算
 >
 > 本文的重點是「怎麼判斷」，不是給固定答案。涉及價格的數字會變動，請以官方定價頁為準。
+>
+> ⚠️ §7.7（開源模型結合 LoRA，2026-11-27 補充）所引用的 PEFT、vLLM、Qwen3、QLoRA 資訊，**來自搜尋結果的摘要；撰寫時這些官方頁面無法連線，沒有開啟原頁**，所以一律標 ⚠️；旗標、端點與授權請以你所用版本的官方文件為準。
 >
 > ⚠️ MCP 官方規格站（modelcontextprotocol.io）在撰寫時無法連線，所以協定層的說明（server 暴露哪些能力）沒有對照規格驗證；Claude Code 端的行為、安全警告與設定都以其官方文件為準。
 
@@ -34,7 +36,7 @@
 | 2 RAG | 模型不知道內部事實 | 答案要依據內部文件 | 本文 §五 |
 | 3 工具／MCP 整合 | 要**即時**資料或**執行動作** | 答案是「現在的值」或要寫入系統 | 本文 §六 |
 | 4 Agent 編排 | 多步驟、需要模型自己決定下一步 | 固定流程寫不完所有分支 | 〈[Agentic-Engineering](Agentic-Engineering.md)〉 |
-| 5 微調 | 行為、格式、術語 | RAG 與提示詞都改善不了行為 | 〈[Post-Training](Post-Training.md)〉 |
+| 5 微調 | 行為、格式、術語 | RAG 與提示詞都改善不了行為 | 〈[Post-Training](Post-Training.md)〉；開源模型（如 Qwen）結合 LoRA 見本文 §7.7 |
 | 6 自建模型服務 | 資料不能出境、規模化後的成本與延遲 | 合規或成本交叉點逼你自架 | 本文 §七 |
 
 > 圖中的點數是**相對等級**，用來比較層次之間的差異，不是精確數字。🛠
@@ -347,6 +349,71 @@ POC 階段一個小團隊兼任多個角色即可；規模化後再拆分。**�
 - **算力**：視方法而定（全量微調、LoRA 等參數高效方法所需資源差異很大）。
 - **維運**：微調後的模型要自己部署、版本管理與回歸測試；基礎模型換版時可能要重做。
 - **前提**：先確認問題真的是**行為、格式或術語**，而不是檢索或資料品質問題。
+- **用開源模型（如 Qwen）做 LoRA 的流程、部署與風險**：見 §7.7。
+
+### 7.7 用開源模型（例如 Qwen）結合 LoRA 🛠
+
+> 本節是設計建議，**沒有實作或實測**，不給超參數、資料量或硬體的固定數字。外部資訊（PEFT、vLLM、Qwen3、QLoRA）標 ⚠️：來自搜尋結果摘要，沒有開啟原頁。
+
+**LoRA 是什麼**：凍結基礎模型，只訓練額外的低秩矩陣（adapter）；PEFT 的 `LoraConfig` 以 `r`、`lora_alpha`（縮放預設為 `lora_alpha / r`）與 `target_modules`（可設 `"all-linear"`）設定 ⚠️。adapter 通常遠小於基礎模型 🛠，可以單獨保存、載入，也可以合併進基礎模型。
+
+#### 一、先確認該不該用 LoRA
+
+![圖：改什麼用什麼：公司文件與最新資訊用 RAG；輸出格式、語氣、術語用 LoRA；固定的推理或標註習慣先試提示詞再 LoRA；即時資料與精確數字用 API 工具；檢索沒找到則修檢索](figures/enterprise-integration-lora-fit.svg)
+
+- **事實用 RAG，行為用 LoRA**：公司文件、規格與最新資訊會過時、要可追溯、可刪除、可依權限過濾，LoRA 做不到；LoRA 適合答對但**格式、語氣或術語**不符規範的情況（見〈[Post-Training](Post-Training.md)〉的失敗類型與對策）。兩者是搭配，不是二選一（本文 §5.1）。
+- **先做錯誤分析**：用評測集看答錯的題目屬於哪一類；檢索失敗通常要先修檢索，微調幫不上忙（〈[Post-Training](Post-Training.md)〉）。
+- **先確認提示詞做不到**：能用提示詞與輸出格式限制解決的，就不必訓練。
+
+#### 二、流程
+
+![圖：LoRA 的七個步驟：確認問題、準備資料、訓練、評測、登錄、部署、監控與回歸；評測沒過回到訓練或資料；基礎模型換版或資料更新時回到資料與訓練重做](figures/enterprise-integration-lora-pipeline.svg)
+
+1. **確認問題**：是行為、格式或術語，不是檢索或資料品質。
+2. **準備資料**：高品質的「輸入→理想輸出」，有人審查（本文 §7.2、§7.6）。**先處理權限與個資**（見下方「治理與風險」）；**評測集與訓練資料分開**，否則看不出過擬合。
+3. **訓練**：用 PEFT 等工具；記憶體不夠時可用 QLoRA。超參數用評測集決定，我不給數字。
+4. **評測**：與微調前對比；沒過就回到資料或訓練，不要硬上線。
+5. **登錄**：記錄 adapter 版本、**基礎模型版本**、資料版本與評測結果，才能回滾與追查。
+6. **部署**：動態載入 adapter，或合併成獨立模型（見下節）。
+7. **監控與回歸**：線上品質與錯誤樣本；每次換基礎模型、資料或超參數都重跑評測集。
+
+#### 三、訓練端
+
+- **QLoRA**：把基礎模型量化成 4 位元再訓練 LoRA，進一步降記憶體。論文摘要的標題結果是 65B 模型可在單張 48GB GPU 上微調 ⚠️；那是平均值，實際取決於 batch size 與序列長度，本文 §7.5 的記憶體估算方式（權重加執行時開銷）仍適用於估算起點，但訓練還有梯度、優化器狀態與啟動值，**我沒有訓練記憶體的估算依據**。
+- **Qwen**：搜尋結果引述 Qwen3 官方部落格，稱其稠密與 MoE 模型採 Apache 2.0 授權，NVIDIA NeMo 等也列有 Qwen3 的 LoRA 微調 ⚠️。**我沒有確認你們要用的具體版本與大小，Qwen 之後可能有新版；授權請看該版本的模型卡，不要憑記憶。**
+- **選哪個基礎模型**：用你們的評測集比，不要只看公開排行；先試較小的模型，能達標就不必用大的（比較方式見本文 §7.3）。
+
+#### 四、服務端：兩種部署方式
+
+![圖：兩種部署：A 動態載入，一個推理服務載入基礎模型，多個 adapter 共用權重，請求以 model 欄位指定 adapter；B 合併，用 merge_and_unload 合進基礎模型成為獨立模型；共同限制是 adapter 對應特定基礎模型版本](figures/enterprise-integration-lora-serving.svg)
+
+| 做法 | 說明 | 適合 | 代價 |
+|---|---|---|---|
+| **A 動態載入 adapter** | vLLM 啟動時啟用 LoRA 並用 `--lora-modules 名稱=路徑` 掛多個 adapter；請求在 `model` 欄位指定 adapter 名稱；`max_loras`、`max_lora_rank` 等設定套用到整個服務 ⚠️ | 多個團隊或任務各一個 adapter，共用基礎權重 | 版本相依；**動態載入對延遲與吞吐的影響我沒有資料** |
+| **B 合併成獨立模型** | PEFT 的 `merge_and_unload()` 把 adapter 合進基礎模型，當成一般模型部署 ⚠️ | 只有一個微調模型 | 每個版本是一整份權重，儲存與切換較重；量化模型的合併限制請查 PEFT 文件 |
+
+- vLLM 另有執行期載入與卸載 adapter 的端點（舊版需設環境變數 `VLLM_ALLOW_RUNTIME_LORA_UPDATING`），**搜尋摘要提到文件警告：動態載入不應用在非隔離、非完全可信的環境** ⚠️。企業環境建議只讓部署流程載入已登錄、已評測的 adapter，不開放給使用者上傳。
+- 接到本文的架構：閘道層依任務或使用者選擇 `model` 名稱，身分、權限、稽核與配額照舊（§4.1）。
+- 旗標與端點會隨 vLLM 版本變動，請以所用版本的文件為準。
+
+#### 五、治理與風險
+
+| 風險 | 說明 | 做法 |
+|---|---|---|
+| adapter 綁定基礎模型版本 | 【推論】基礎模型換版，adapter 通常要重訓；§7.6 的「基礎模型換版時可能要重做」就是這件事 | 登錄基礎模型版本；換版前先評估重訓成本 |
+| 訓練資料的權限與個資 | 【推論】模型可能複述訓練資料，而權重沒有權限過濾 | 先遮罩或排除敏感資料；adapter 的使用範圍與資料權限一致 |
+| 把事實灌進模型 | 會過時、難更新、難刪除（含需要刪除資料的合規要求） | 事實交給 RAG；LoRA 只管行為 |
+| 沒有評測就上線 | 看不出變好還是變差 | 評測集分開；每次換版回歸 |
+| 版本與回滾 | adapter 一多就難追查 | 每個 adapter 有版本、評測紀錄與回滾路徑 |
+| 自架成本 | 算力之外還有維運、監控與資安；稼動率低時通常比 API 貴（§7.5） | 先用 API 做 POC，算出交叉點再決定（§7.3） |
+
+#### 六、需要先確認的事
+
+1. 痛點是**行為、格式或術語**，還是檢索或資料品質？有沒有已經做過 RAG 但仍不夠的具體案例？
+2. 資料**能不能出企業邊界**？這決定能不能用雲端 GPU 訓練。
+3. 有沒有高品質、可審查的訓練資料？誰能標註與審查？
+4. 有幾種任務要各自微調？一個 adapter 還是多個？
+5. 現有 GPU 與維運能力？預計用 Qwen 的哪個版本與大小？
 
 ---
 
@@ -402,6 +469,7 @@ POC 階段一個小團隊兼任多個角色即可；規模化後再拆分。**�
 | 用 RAG 就是在訓練模型 | 不改權重；是推論時檢索 |
 | 有 MCP 就不需要 RAG | MCP 適合即時資料與動作，不適合在大量非結構化文件上做相關性排序 |
 | 向量檢索一定比關鍵字好 | 精確字串（型號、條款）常常是關鍵字更準，hybrid 通常較穩 🛠 |
+| 用 LoRA 就能讓模型記住公司文件 | 不適合灌事實：會過時、難更新、難刪除、無法依權限過濾；事實交給 RAG，LoRA 管行為與格式（§7.7） |
 | 多接 MCP server 一定吃光 context | Claude Code 預設用 tool search，只先載入名稱 ✅ |
 
 ---
@@ -412,5 +480,6 @@ POC 階段一個小團隊兼任多個角色即可；規模化後再拆分。**�
 - 〈[Transformer-Attention](Transformer-Attention.md)〉：KV cache 與記憶體瓶頸
 - 〈[Claude-Model](Claude-Model.md)〉：各模型規格與價格
 - 〈[Claude-Context](Claude-Context.md)〉：Claude Code 的 context 組成與 MCP 工具名稱載入時機
+- §7.7 引用的外部資料（**搜尋結果的摘要，沒有開啟原頁**）：Hugging Face〈[PEFT LoRA 文件](https://huggingface.co/docs/peft/developer_guides/lora)〉、vLLM〈[LoRA 文件](https://docs.vllm.ai/en/stable/features/lora/)〉、Qwen〈[Qwen3 部落格](https://qwenlm.github.io/blog/qwen3/)〉、NVIDIA〈[NeMo Qwen3 文件](https://docs.nvidia.com/nemo-framework/user-guide/25.09/llms/qwen3.html)〉、〈[QLoRA 論文](https://arxiv.org/abs/2305.14314)〉
 - Anthropic〈[Pricing](https://platform.claude.com/docs/en/about-claude/pricing)〉
 - Claude Code〈[Connect Claude Code to tools via MCP](https://code.claude.com/docs/en/mcp.md)〉

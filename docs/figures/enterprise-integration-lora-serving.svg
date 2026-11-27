@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="t d">
+  <title id="t">LoRA 的兩種部署方式：動態載入 adapter，或合併成獨立模型</title>
+  <desc id="d">上方是閘道層，依任務或使用者選模型名稱。左邊是動態載入：一個推理服務載入基礎模型，旁邊掛多個 adapter，請求在 model 欄位指定 adapter 名稱，共用同一份基礎權重；適合多個團隊或任務各一個 adapter。右邊是合併：用 PEFT 的 merge_and_unload 把 adapter 合進基礎模型，當成一般模型部署；適合只有一個微調模型，但每個版本是完整權重。兩者共同的限制：adapter 要對應同一個基礎模型版本，基礎模型換版就要重訓。這是設計建議，沒有實測。</desc>
+  <style>
+    svg { --bg:#ffffff; --fg:#1c2330; --muted:#5b6678; --line:#c9cfda; --accent:#2f5fd0; --warn:#b4531a; --good:#1f7a4d; }
+    @media (prefers-color-scheme: dark) {
+      svg { --bg:#161b22; --fg:#e6e9ef; --muted:#9aa4b5; --line:#39414f; --accent:#8fb0ff; --warn:#e5a06a; --good:#5cc796; }
+    }
+    text { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; fill: var(--fg); font-size: 12.5px; }
+    .m { fill: var(--muted); }
+    .s { fill: var(--muted); font-size: 11px; }
+    .b { font-weight: 700; }
+    .t { font-size: 15px; font-weight: 700; }
+    .mono { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; }
+    .monob { font-variant-ligatures: none; font-family: "JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace; font-size: 11.5px; font-weight: 700; }
+    .at { fill: var(--accent); } .wt { fill: var(--warn); } .gt { fill: var(--good); }
+    .frame { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .acc { fill: var(--accent); fill-opacity: .12; stroke: var(--accent); stroke-width: 1.2; }
+    .bad { fill: var(--warn); fill-opacity: .12; stroke: var(--warn); stroke-width: 1.2; }
+    .good { fill: var(--good); fill-opacity: .12; stroke: var(--good); stroke-width: 1.2; }
+    .zone { fill: var(--accent); fill-opacity: .05; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .hd { fill: var(--accent); fill-opacity: .14; }
+    .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+    .ar { fill: var(--muted); }
+    .dotf { fill: var(--accent); } .dote { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .curve { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .curve2 { fill: none; stroke: var(--warn); stroke-width: 2.2; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .tick { stroke: var(--muted); stroke-width: 1; }
+    .bin { fill: var(--accent); fill-opacity: .38; } .bout { fill: var(--accent); } .onacc { fill: var(--bg); font-size: 10.5px; }
+  </style>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+  <rect class="frame" x="0.6" y="0.6" width="638.8" height="518.8" rx="12"/>
+  <text class="t" x="320" y="28" text-anchor="middle">兩種部署方式</text>
+  <rect class="acc" x="40.0" y="48.0" width="560" height="44" rx="8"/>
+  <text class="b" x="320" y="74" text-anchor="middle">閘道層：身分、權限、稽核、配額；依任務選 model 名稱</text>
+  <rect class="box" x="12" y="116" width="300" height="300" rx="10"/>
+  <text class="b" x="162" y="140" text-anchor="middle">A 動態載入 adapter</text>
+  <text class="s" x="162" y="160" text-anchor="middle">一個推理服務，多個 adapter</text>
+  <rect class="good" x="37.0" y="186.0" width="250" height="56" rx="8"/>
+  <text class="b" x="162" y="210" text-anchor="middle">基礎模型（例如 Qwen）</text>
+  <text x="162" y="226" text-anchor="middle">共用同一份權重</text>
+  <rect class="box" x="10.0" y="288.0" width="92" height="56" rx="8"/>
+  <text class="b" x="56" y="312" text-anchor="middle">adapter A</text>
+  <text x="56" y="328" text-anchor="middle">團隊甲</text>
+  <path class="ln" d="M56.0,288.0 L56.0,242.0" marker-end="url(#a)"/>
+  <rect class="box" x="116.0" y="288.0" width="92" height="56" rx="8"/>
+  <text class="b" x="162" y="312" text-anchor="middle">adapter B</text>
+  <text x="162" y="328" text-anchor="middle">任務乙</text>
+  <path class="ln" d="M162.0,288.0 L162.0,242.0" marker-end="url(#a)"/>
+  <rect class="box" x="222.0" y="288.0" width="92" height="56" rx="8"/>
+  <text class="b" x="268" y="312" text-anchor="middle">adapter C</text>
+  <text x="268" y="328" text-anchor="middle">任務丙</text>
+  <path class="ln" d="M268.0,288.0 L268.0,242.0" marker-end="url(#a)"/>
+  <text class="s" x="162" y="372" text-anchor="middle">請求的 model 欄位指定 adapter 名稱</text>
+  <text class="s" x="162" y="392" text-anchor="middle">適合：多個團隊或任務各一個 adapter</text>
+  <rect class="box" x="328" y="116" width="300" height="300" rx="10"/>
+  <text class="b" x="478" y="140" text-anchor="middle">B 合併成獨立模型</text>
+  <text class="s" x="478" y="160" text-anchor="middle">merge_and_unload 後當一般模型部署</text>
+  <rect class="good" x="353.0" y="186.0" width="250" height="56" rx="8"/>
+  <text class="b" x="478" y="210" text-anchor="middle">基礎模型 ＋ adapter</text>
+  <text x="478" y="226" text-anchor="middle">合併成一份完整權重</text>
+  <rect class="box" x="353.0" y="288.0" width="250" height="56" rx="8"/>
+  <text class="b" x="478" y="312" text-anchor="middle">獨立的推理服務</text>
+  <text x="478" y="328" text-anchor="middle">每個版本是一整份權重</text>
+  <path class="ln" d="M478.0,288.0 L478.0,242.0" marker-end="url(#a)"/>
+  <text class="s" x="478" y="372" text-anchor="middle">適合：只有一個微調模型</text>
+  <text class="s" x="478" y="392" text-anchor="middle">代價：儲存與切換較重</text>
+  <path class="ln" d="M162.0,92.0 L162.0,116.0" marker-end="url(#a)"/>
+  <path class="ln" d="M478.0,92.0 L478.0,116.0" marker-end="url(#a)"/>
+  <rect class="bad" x="12" y="430" width="616" height="70" rx="10"/>
+  <text class="b" x="24" y="454">共同限制（推論）</text>
+  <text x="24" y="476">adapter 對應特定基礎模型版本，基礎模型換版就要重訓；每個 adapter 要有版本與回滾。</text>
+  <text class="s" x="320" y="514" text-anchor="middle">設計建議；沒有實測；旗標與端點請以所用 vLLM 版本的文件為準</text>
+</svg>
